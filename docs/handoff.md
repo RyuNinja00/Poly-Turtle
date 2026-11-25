@@ -4,14 +4,14 @@ The target is the single-spool box supplied with the Polymaker PolyDryer. The ol
 
 ## Design decisions
 
-1. Reuse the two original powered BoxTurtle wheels and tires. The current carrier targets the V1.0 matched 8 × 80 mm shaft and 15/30-tooth gears. V1.1 uses a 5 × 60 mm shaft with a flat and 12/22-tooth gears. The two tire STLs are byte-identical. Confirm the donor before changing the carrier.
-2. Keep the factory rear passive roller. Its position and working diameter determine the spool center. The model assumes an 8 × 95 mm roller from the printable-body reference.
+1. The baseline reuses both original driven wheels and tires. A smaller printed wheel and TPU tire are under consideration after measuring the molded box. The current carrier targets the V1.0 matched 8 × 80 mm shaft and 15/30-tooth gears. V1.1 uses a 5 × 60 mm shaft with a flat and 12/22-tooth gears. The two tire STLs are byte-identical. Confirm the donor before changing the carrier.
+2. Keep the factory rear passive roller. Its position and working diameter determine the spool center. The measured working diameter is 8 mm. The 95 mm length in the model came from the printable-body reference.
 3. Preserve the stock lid if possible. The particular stock-lid pose tested with a 205 × 78 mm spool does not clear. The raised option is 35.4 mm taller than the two-port printed lid and gives about 2.09 mm of sampled clearance to the assembled Smol feeder and PREP switch position. The build uses the V1.0 roller and a Smol feeder reference extracted from V1.1 CAD.
 4. Fit with the lid shut, spool turning and box on the dock matters. Sealing, thermal performance, spool loading, idler access, and actual feeding and rewinding are open tests.
 
 ## Next work
 
-The repository currently contains no caliper readings from the actual box. Record the diameter of the surface the spool rolls on, its crown depth, and the floor or rib depths at the four longitudinal stations and four lateral tracks shown in the guide. Also measure the opposite wall, the intended spool, and its clearance under the closed lid. Keep the bridge datum and left/right orientation with the readings.
+Start with the [molded-box data, probe diagram and six outstanding readings](measurements/README.md). The retained rear axle is 22 mm above the floor reference. The measured 129 mm wheel stations rule out the stock wheel lips in the current pose. The Ø30 lip / Ø28 TPU tread is a candidate. Check the wheel and gear tracks before committing to a new drive position. The existing CAD and printable bench carrier represent the original trial.
 
 Bring the measurements into the assembly using the rear axle as the reference. The trial driven axle is 128.57 mm forward and 0.27 mm below the reference rear axle. Check the wheel lips, driven gear, carrier tabs, opposite wall and both dock openings first. Nominal proxy penetrations are about 1.25–1.33 mm at the two wheels, 1.24 mm at the driven gear and 1.04 mm at the carrier. A different floor profile or roller diameter changes the result.
 
