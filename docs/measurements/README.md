@@ -45,6 +45,33 @@ Use the same rigid bridge across the flat lid-seating ledges on the two long wal
 
 For a lip of radius r, its lower edge at a forward station x within its radius is at bridge depth 159.27 + sqrt(r² − (x − 128.57)²). Subtract that depth from the measured surface depth to obtain vertical clearance. Smaller depths indicate a higher obstruction. Check the gear using its own CAD profile. Include the rest of the [guide grid](../PolyDryer-Caliper-Guide.pdf), including x = 145 where applicable, when shaping the carrier. Record actual spool OD and width, opposite-wall gap at spool-center height, spool rise, and closed-lid roof clearance before freezing the layout.
 
+## Photo-derived estimates — 2026-11-25
+
+These are exploratory estimates from the existing photos. They are not probe readings. Scale comes from the ruler tick pitch in the overhead view (3.49 px/mm by FFT), the Ø14 bearing in the end view (about 6.4 px/mm), and the known z = 22 axle and z = 28 support tops. These cross-check within about 1 mm. Expect ±2–3 mm error from perspective. Clear molded features at different lateral depths overlap in the end views.
+
+| Feature | Estimate | Source |
+|---|---:|---|
+| Rear / front factory axle on overhead ruler | 21.7 / 128.0 → pitch about 106.3 | 1000017854.jpg, tick-calibrated |
+| Factory bearing lateral position | about ±42 from midplane | Overhead, bearing centers 295 px apart |
+| Front bearing cradle, forward face | x ≈ 115 (front axle + 8.5–9), solid from floor to top z = 28 | End view 1000017858.jpg; overhead clear block beside the bearing |
+| Cradle block lateral extent | about 30–45 mm each side of center | Overhead |
+| Front plug well (teal top z = 4.8) | x ≈ 110 to 125 open teal; clear rim/frame to x ≈ 134–135 | Overhead teal mask |
+| End-wall loop / bracket | x ≈ 135–150, central band about ±20 | Overhead and end view |
+
+### Predicted probe readings (bridge top at z = 181, so depth = 181 − z)
+
+| Marker | Predicted surface | Predicted depth | Confidence |
+|---|---|---:|---|
+| Yellow 117, ±42 | Plug-well floor/plug top, about 2 mm forward of the cradle face. If the rod touches the cradle, it reads about 153. | ≈ 176 | Low. Station sits on a 23 mm step. |
+| Red 136, ±42 | Just past the rounded corner of the plug rim: well floor or rim slope | 165–176 | Low |
+| Teal 129, ±13.5 | Clear plug-rim band (x ≈ 125–135 near center): rim up to the z ≈ 16.2 crest, or plug top | 165–176 | Low |
+
+Use these readings to prepare for the probes. Do not use them in place of probes.
+
+### Finding that does not depend on the six probes
+
+The ±42 wheel-lip tracks run through the factory front bearing cradles. With the axle at (128.57, 21.73), the Ø30 lip reaches back to x = 113.6 at z = 21.7. The cradle face is at x ≈ 115 and its top is at z = 28, so the overlap is about 1.4 mm horizontally at lip-center height. The Ø47.6 stock lip reaches back to x = 104.8 and overlaps the cradle and the front factory roller by much more. With the front roller still installed, the Ø30 lip is about 0.3 mm from its Ø14 bearing (x ≤ 113.3). Unless the cradle is cut, the axle must move forward to about x ≥ 131 for a Ø30 lip with 1 mm clearance. That move takes the lip front to x ≈ 146, toward the end bracket. Alternatively, move the wheel tracks inboard of the cradle (|y| < 30), but this misses 78 mm spool flanges at ±37–39. When probing, also measure (a) the cradle's forward face x and top z at ±42 and (b) the x and z of the plug-rim crest at ±42 and ±13.5. See [photo-profile-estimate.png](photo-profile-estimate.png) for both lip circles drawn on the calibrated end view.
+
 ## Evidence and references
 
 - Eight [original photos](photos/) show the roller spacing, bearing seats, curved ribs and installed teal plugs. The annotated diagram uses the overhead view 1000017854.jpg. Photo estimates are suitable for an exploratory layout.
