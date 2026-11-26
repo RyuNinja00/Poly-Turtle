@@ -9,3 +9,7 @@ The published geometry and guide are ready to open. These Python sources preserv
 5. Run python sheet.py for the overview and scale drawing, then python calipers.py to append the measurement pages. Run python qa.py for sampled checks of the raised feeder and the lower components against the reference meshes.
 
 The saved model poses are defined in design.py and assemble.py. Surface sampling is an approximation. The archived CAD results, findings and worksheet are the reference snapshot for the current revision.
+
+## Printed lid (cad/08)
+
+`build/lid/` turns `cad/05` into the printable rev 1 lid without a CAD kernel: `cliplid.py` clips jojo's lid exactly at the plate top and caps it; `printed_lid.py` builds the hood and feeder carrier as signed-distance solids (surface nets, 0.4 mm); `checks.py` samples clearances against the cad/01 Smol and PREP references and packs `cad/08-Printed-lid.zip`; `render.py` draws `docs/printed-lid.png`. Run `clouds.py` first (needs the restored cad/01). See [docs/printed-lid.md](../docs/printed-lid.md).

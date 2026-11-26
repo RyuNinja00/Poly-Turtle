@@ -2,3 +2,7 @@
 downloads/
 cad/01-Single-lane-fit-study.step
 cad/03-Stock-lid-interference-trial.step
+cad/08-printed-lid/
+build/lid/clouds.pkl
+build/lid/sdf.npz
+__pycache__/

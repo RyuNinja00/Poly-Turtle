@@ -37,4 +37,4 @@ The distances involving meshes are signed surface samples. They describe the cho
 - PolyDryer Lid Interior Reference Dimensions, EmeraldFlame. Public Domain per Printables. The reference was transformed into assembly coordinates. https://www.printables.com/model/1747851
 - PolyDryer In-Lid Desiccant Container, EmeraldFlame. GPL v3. Measurements of the curved groove were used to locate the spool-axis reference. https://www.printables.com/model/1757829
 - Drybox To Fit Polydryer, Extrutim. File 04 is a translated copy of the printable body used as a proxy. CC Attribution–NonCommercial–ShareAlike. https://www.printables.com/model/872878
-- Printed Lid for Polydryer Box, jojo, based on work by Extrutim and Cipism. File 05 adapts the two-port model and retains its CC Attribution–NonCommercial–ShareAlike license. https://www.printables.com/model/1441905
+- Printed Lid for Polydryer Box, jojo, based on work by Extrutim and Cipism. Files 05 and 08 (cad/08-Printed-lid.zip) adapt the two-port model and retain its CC Attribution–NonCommercial–ShareAlike license. https://www.printables.com/model/1441905

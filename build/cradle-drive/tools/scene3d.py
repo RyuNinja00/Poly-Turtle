@@ -87,7 +87,7 @@ def subdivide(tri, base, max_edge):
         tri = np.concatenate([tri[~big], new]); base = np.concatenate([base[~big], np.tile(base[big], (4, 1))])
     return tri, base
 
-def draw(ax, view, items, edge=False, alpha=1.0, max_edge=7.0):
+def draw(ax, view, items, edge=False, alpha=1.0, max_edge=7.0, lw=0.15):
     tris, cols = [], []
     for item in items:
         (V, T), c = item[-2], item[-1]
@@ -102,7 +102,7 @@ def draw(ax, view, items, edge=False, alpha=1.0, max_edge=7.0):
     col = np.clip(shade[:, None] * base + 0.08, 0, 1)
     P2 = np.stack([tri @ view.r, tri @ view.u], -1)
     pc = PolyCollection(P2[order], facecolors=col[order], edgecolors=col[order] if not edge else '#33333355',
-                        linewidths=0.15, alpha=alpha, zorder=3)
+                        linewidths=lw, alpha=alpha, zorder=3)
     ax.add_collection(pc); ax.autoscale_view(); ax.set_aspect('equal'); ax.axis('off')
 
 def frame(ax, view, lo, hi, pad=0.06):

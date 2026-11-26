@@ -13,6 +13,15 @@ The target is the single-spool box supplied with the Polymaker PolyDryer. The ol
 
 The drive moved into the factory front cradles. Details are in [cradle-drive.md](cradle-drive.md). One printed roller with an integrated 15T gear runs on the factory rod. The treads are TPU, the printed 17T pinion goes on the V1.0 N20, and the bracket keys into the left cradle slot and holds the motor with zip ties. The spool pose, lid, feeder, LOAD, PREP and paths are unchanged, and the lane LED is removed. The `--gearset v1pinion` option keeps the V1.0 pinion at 41 % rewind speed. Next: take the five measurements listed in cradle-drive.md, adjust `PITCH` if needed, print, then bench-test payout, mesh and rewind. The section below records the revision 1 plan.
 
+## Printed lid rev 1 (2026-11-26)
+
+Answer to "does this need a new lid?": yes. [printed-lid.md](printed-lid.md) describes it. It keeps jojo's two-port lid (Printables 1441905) exactly up to the plate top and replaces the cad/05 clearance pocket with three parts:
+- 08b, a hood bonded on, which carries the PREP block, the M12 gland and the roof screws.
+- 08c, a feeder carrier that takes the trayframe's place under the Smol's two downward bolts, using V1 heat-set inserts.
+- The two-screw drop-out service path.
+
+While designing the PREP inlet guide, I found that the archived pose has the inlet at the high end of the downward-tilted feeder axis. Filament from the spool would need a turn of about 110° inside the hood, so that pose has to change, or the filament has to go outside and come back in, before a working lane is possible. That is the next design decision. The parts are parameterised on the Smol frame so they can follow a new pose.
+
 ## Next work (revision 1, superseded)
 
 Start with the [molded-box data, probe diagram and six outstanding readings](measurements/README.md). The retained rear axle is 22 mm above the floor reference. The measured 129 mm wheel stations rule out the stock wheel lips in the current pose. The Ø30 lip / Ø28 TPU tread is a candidate. Check the wheel and gear tracks before committing to a new drive position. The existing CAD and printable bench carrier represent the original trial.
