@@ -1,5 +1,7 @@
 # Molded PolyDryer Box measurements — 2026-11-24
 
+> **Current status (revision 2c).** The drive now sits in the factory front cradles, so the drive positions, wheel sizes and probe stations discussed below belong to revision 1 and are kept as history. The measurements that finalize the current design are in the [final-measurements picture guide](finalize-guide.md). Where an estimate below disagrees with that guide, the guide wins. In particular, the cradle plates' inner faces must be at least 39.5 mm from the centre line (F ≥ 79). The photo estimate of "about 30–45" for the cradle block below was too rough to use.
+
 Use the interior floor at the user's height measurements as z = 0. Positive z is up. Forward distance x starts at the retained rear factory axle and increases toward the proposed drive. Lateral offsets are from the spool midplane. All units are mm.
 
 | Feature | Value | Basis |

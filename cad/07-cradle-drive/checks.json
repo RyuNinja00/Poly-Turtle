@@ -1,56 +1,56 @@
 {
  "gearset": "fast",
  "motor bracket": {
-  "spool": 11.64,
+  "spool": 11.65,
   "rotating drive": 0.15,
-  "front cradle plates (x98-115, |y|39.5-45.5, z<=28, minus slot)": 0.4,
-  "plug-rim crest band (x124-135, z<=16.2)": 4.12,
-  "end-wall loop (x>=135, |y|<=20)": 2.7,
+  "front cradle plates (rod-9..rod+8, |y|39.5-45.5, z<=28, minus slot)": 0.4,
+  "plug-rim crest band (rod+17..rod+28, z<=16.2)": 4.12,
+  "end-wall loop (x>=rod+28, |y|<=20)": 2.7,
   "floor / plug top under the rod (z<=4.8)": 10.25
  },
  "N20 (dense envelope)": {
   "spool": 7.49,
   "rotating drive": 2.5,
-  "front cradle plates (x98-115, |y|39.5-45.5, z<=28, minus slot)": 19.76,
-  "plug-rim crest band (x124-135, z<=16.2)": 6.77,
-  "end-wall loop (x>=135, |y|<=20)": 8.18,
+  "front cradle plates (rod-9..rod+8, |y|39.5-45.5, z<=28, minus slot)": 19.76,
+  "plug-rim crest band (rod+17..rod+28, z<=16.2)": 6.77,
+  "end-wall loop (x>=rod+28, |y|<=20)": 8.18,
   "floor / plug top under the rod (z<=4.8)": 18.17
  },
  "N20 (donor vertices)": {
   "spool": 9.04,
   "rotating drive": 3.53,
-  "front cradle plates (x98-115, |y|39.5-45.5, z<=28, minus slot)": 20.42,
-  "plug-rim crest band (x124-135, z<=16.2)": 7.28,
-  "end-wall loop (x>=135, |y|<=20)": 8.8,
+  "front cradle plates (rod-9..rod+8, |y|39.5-45.5, z<=28, minus slot)": 20.42,
+  "plug-rim crest band (rod+17..rod+28, z<=16.2)": 7.28,
+  "end-wall loop (x>=rod+28, |y|<=20)": 8.8,
   "floor / plug top under the rod (z<=4.8)": 18.68
  },
  "pinion (tip circle)": {
   "spool": 6.65,
   "rotating drive (gear band skipped: meshing)": 0.5,
-  "front cradle plates (x98-115, |y|39.5-45.5, z<=28, minus slot)": 27.05,
-  "plug-rim crest band (x124-135, z<=16.2)": 4.11,
-  "end-wall loop (x>=135, |y|<=20)": 4.37,
+  "front cradle plates (rod-9..rod+8, |y|39.5-45.5, z<=28, minus slot)": 27.05,
+  "plug-rim crest band (rod+17..rod+28, z<=16.2)": 4.11,
+  "end-wall loop (x>=rod+28, |y|<=20)": 4.37,
   "floor / plug top under the rod (z<=4.8)": 15.2
  },
  "roller gear (tip circle)": {
   "spool (tread contact = 0 by design)": 5.48,
-  "front cradle plates (x98-115, |y|39.5-45.5, z<=28, minus slot)": 27.05,
-  "plug-rim crest band (x124-135, z<=16.2)": 9.46,
-  "end-wall loop (x>=135, |y|<=20)": 19.5,
+  "front cradle plates (rod-9..rod+8, |y|39.5-45.5, z<=28, minus slot)": 27.05,
+  "plug-rim crest band (rod+17..rod+28, z<=16.2)": 9.46,
+  "end-wall loop (x>=rod+28, |y|<=20)": 19.5,
   "floor / plug top under the rod (z<=4.8)": 8.7
  },
  "roller": {
   "spool (tread contact = 0 by design)": 2.98,
-  "front cradle plates (x98-115, |y|39.5-45.5, z<=28, minus slot)": 0.6,
-  "plug-rim crest band (x124-135, z<=16.2)": 9.49,
-  "end-wall loop (x>=135, |y|<=20)": 19.5,
+  "front cradle plates (rod-9..rod+8, |y|39.5-45.5, z<=28, minus slot)": 0.6,
+  "plug-rim crest band (rod+17..rod+28, z<=16.2)": 9.49,
+  "end-wall loop (x>=rod+28, |y|<=20)": 19.5,
   "floor / plug top under the rod (z<=4.8)": 8.72
  },
  "treads": {
   "spool (tread contact = 0 by design)": 0.0,
-  "front cradle plates (x98-115, |y|39.5-45.5, z<=28, minus slot)": 0.5,
-  "plug-rim crest band (x124-135, z<=16.2)": 8.98,
-  "end-wall loop (x>=135, |y|<=20)": 19.08,
+  "front cradle plates (rod-9..rod+8, |y|39.5-45.5, z<=28, minus slot)": 0.5,
+  "plug-rim crest band (rod+17..rod+28, z<=16.2)": 8.98,
+  "end-wall loop (x>=rod+28, |y|<=20)": 19.08,
   "floor / plug top under the rod (z<=4.8)": 8.22
  },
  "tread tangency |C-front| - (R_flange + R_tread)": 0.0,
@@ -66,9 +66,9 @@
   0.113,
   0.25
  ],
- "bracket vs rotating, outside the key bushing": 4.0,
+ "bracket vs rotating, outside the key bushing": 3.98,
  "key bushing radial clearance on Ø8 rod": 0.15,
- "assembly: treads passing the motor floor (radial)": 1.02,
+ "assembly: treads passing the motor floor (radial)": 1.0,
  "assembly: roller gear never passes a bracket part (gear starts past the bracket by)": 1.0,
  "assembly: N20 lowered vertically, min distance to rod axis - CD": 0.0,
  "axial gaps key | roller | bearing": [

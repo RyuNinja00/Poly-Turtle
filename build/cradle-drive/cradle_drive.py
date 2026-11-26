@@ -16,7 +16,7 @@ Box coordinates (mm): X forward from the rear factory axle, Y lateral from the
 spool midplane (same sense as the archived fit study), Z up from the interior floor.
 Archived fit-study model -> box: X = x + 54.5, Z = z - rz + 22, rz = -sqrt(106.5^2 - 54.5^2).
 """
-import argparse, json, pickle, sys
+import argparse, json, os, pickle, sys
 from pathlib import Path
 import numpy as np
 sys.path.insert(0, str(Path(__file__).parent / 'tools'))
@@ -29,7 +29,7 @@ STEP01 = ROOT / 'cad' / '01-Single-lane-fit-study.step'   # run transport/restor
 RZ = -np.sqrt(106.5 ** 2 - 54.5 ** 2)
 MODEL_TO_BOX = np.array([54.5, 0.0, 22.0 - RZ])
 ROD_Z = 22.0                       # both factory axles (measured rear; front from photos)
-PITCH = 107.0                      # nominal factory roller pitch (photos 106-109) -> MEASURE
+PITCH = float(os.environ.get('POLYTURTLE_PITCH', 107.0))   # measured roller pitch; nominal 107 from photos -> MEASURE
 FLANGE_R, ENVELOPE_R, SPOOL_W = 102.5, 97.5, 78.0
 dx = -6.072124302839878            # archived spool centre (design.py)
 dz = RZ + np.sqrt(106.5 ** 2 - (dx + 54.5) ** 2)
@@ -57,7 +57,8 @@ BEARING_MODEL_C = np.array([74.075, -17.82, -91.765])
 T_BEARING = np.array([PITCH, 42.0, ROD_Z]) - BEARING_MODEL_C
 FACE_Y = 5.45                      # N20 gearbox face; pinion starts 1 mm beyond it, as on V1.0
 CORE_R, BORE_R, BUSH_R = 6.0, 4.1, 4.15
-TOP_Z, FLOOR_X0, CROSS_X = 36.0, 117.0, (128.8, 132.3)
+TOP_Z = 36.0
+FLOOR_GAP, TIE_GAP, CROSS_T = 1.0, 1.98, 3.5   # tread->motor floor (assembly), motor->cross member, cross member thickness
 Y = dict(key=(-44.0, -40.0), bearing=(40.0, 44.0), roller=(-39.5, 39.5),
          tread_l=(-39.0, -21.5), tread_r=(21.5, 39.0), motor=(FACE_Y - 25.2, FACE_Y))
 
@@ -74,6 +75,8 @@ class Layout:
         self.Y = dict(Y, pinion=band, gear=band)
         self.Y['chamfer'] = (band[1], band[1] + (self.GEAR_OD / 2 - CORE_R))     # 45 deg support under the teeth
         self.FLOOR_TOP = self.A_Z - 6.53 - 0.05
+        self.FLOOR_X0 = PITCH + TREAD_R + FLOOR_GAP                 # treads slide past it during assembly
+        x0 = self.A_X + 5.69 + TIE_GAP; self.CROSS_X = (x0, x0 + CROSS_T)
         self.OUT = ROOT / 'cad' / '07-cradle-drive' / ('' if gearset == 'fast' else 'v1-pinion-variant')
         self.OUT.mkdir(parents=True, exist_ok=True)
 
@@ -110,18 +113,18 @@ class Layout:
     def bracket(self, h=0.2, sdf_only=False):
         """Cradle key (replaces the left bearing in its slot) + bar on the cradle top + cross member
         + open-top motor floor with a rear stop and two zip-tie slots."""
-        g = Grid((PITCH - 9, Y['key'][0] - 1.5, 13.0), (CROSS_X[1] + 2, FACE_Y + 1.5, TOP_Z + 1.5), h)
+        g = Grid((PITCH - 9, Y['key'][0] - 1.5, 13.0), (self.CROSS_X[1] + 2, FACE_Y + 1.5, TOP_Z + 1.5), h)
         x0, z0, w = PITCH, ROD_Z, 6.95
         key = union(cyl_y(g, x0, z0, w, *Y['key']), box(g, (x0 - w, Y['key'][0], z0), (x0 + w, Y['key'][1], CRADLE_TOP + 0.6)))
-        bar = box(g, (x0 - 7.0, Y['key'][0], CRADLE_TOP + 0.4), (CROSS_X[1], Y['key'][1] - 1.0, TOP_Z))
+        bar = box(g, (x0 - 7.0, Y['key'][0], CRADLE_TOP + 0.4), (self.CROSS_X[1], Y['key'][1] - 1.0, TOP_Z))
         fz0 = self.FLOOR_TOP - 2.6
-        cross = box(g, (CROSS_X[0], Y['key'][0], fz0), (CROSS_X[1], FACE_Y, TOP_Z))
-        floor = box(g, (FLOOR_X0, Y['motor'][0] - 1.65, fz0), (CROSS_X[0] + 0.5, FACE_Y, self.FLOOR_TOP))
-        stop = box(g, (FLOOR_X0, Y['motor'][0] - 1.65, fz0), (CROSS_X[0] + 0.5, Y['motor'][0] - 0.2, self.A_Z - 4.0))
+        cross = box(g, (self.CROSS_X[0], Y['key'][0], fz0), (self.CROSS_X[1], FACE_Y, TOP_Z))
+        floor = box(g, (self.FLOOR_X0, Y['motor'][0] - 1.65, fz0), (self.CROSS_X[0] + 0.5, FACE_Y, self.FLOOR_TOP))
+        stop = box(g, (self.FLOOR_X0, Y['motor'][0] - 1.65, fz0), (self.CROSS_X[0] + 0.5, Y['motor'][0] - 0.2, self.A_Z - 4.0))
         s = union(key, bar, cross, floor, stop)
         holes = [cyl_y(g, x0, z0, BUSH_R, -100, 100)]
         for yc in (-13.0, 0.5):
-            holes.append(box(g, (self.A_X + 5.74, yc - 1.6, fz0 - 1), (CROSS_X[0], yc + 1.6, self.FLOOR_TOP + 1)))
+            holes.append(box(g, (self.A_X + 5.74, yc - 1.6, fz0 - 1), (self.CROSS_X[0], yc + 1.6, self.FLOOR_TOP + 1)))
         s = subtract(s, *holes)
         return (s, g) if sdf_only else surface_nets(s, g)
 

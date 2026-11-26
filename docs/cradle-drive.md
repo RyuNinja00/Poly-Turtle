@@ -16,12 +16,12 @@ Revision 2c simplifies the build:
 
 | Part | Qty | Source |
 |---|---:|---|
-| Roller with 15T m1 gear (`07a-Roller-with-gear.stl`) | 1 | Print in ASA, upright, with the +Y end on the bed. A 45° chamfer supports the teeth, so no supports are needed. |
-| Treads, OD 17.96 / ID 11.6 / 17.5 long (`07b-Tread-sleeve-TPU-L/R.stl`) | 2 | Print in TPU 95A, upright, 100 % infill. Press them onto the roller. |
+| Roller with 15T m1 gear (`07a-Roller-with-gear.stl`) | 1 | Print in ASA, upright, with the bearing-side end (+Y) on the bed. A 45° chamfer supports the teeth, so no supports are needed. |
+| Treads, OD 17.96 / ID 11.6 / 17.5 long (`07b-Tread-sleeve-TPU-L/R.stl`; L = key side, R = bearing side) | 2 | Print in TPU 95A, upright, 100 % infill. Press them onto the roller. |
 | Pinion 17T m1, N20 D bore (`07c-Pinion-17T-N20.stl`) | 1 | Print in ASA, flat. |
 | Motor bracket with cradle key (`07d-Motor-bracket-cradle-key.stl`) | 1 | Print in ASA, upside down: the shared top face at Z 36 goes on the bed, and no supports are needed. |
 | N20 motor | 1 | V1.0 |
-| Ø8 rod and the right-hand bearing | 1 | The factory front roller. Only the left bearing comes off. |
+| Ø8 rod and the bearing-side bearing | 1 | The factory front roller. Only the key-side bearing comes off. |
 | Small zip ties | 2 | — |
 
 That is 5 printed parts, the V1.0 N20, the factory rod and bearing, and 2 zip ties. The V1.0 MR148s are spares. If the factory bearing won't come off the rod, a V1.0 MR148 on a new Ø8 rod (about 88 mm, cut to the factory length) does the same job. Print the rigid parts in ASA, ABS or PC. PETG softens near the dryer's top settings.
@@ -30,15 +30,17 @@ That is 5 printed parts, the V1.0 N20, the factory rod and bearing, and 2 zip ti
 
 ## Assembly
 
-1. Lift out the factory front roller and slide the bearing off its left end.
-2. Push the left rod end through the bracket's key bushing.
-3. Press both TPU treads onto the roller. Slide the roller onto the rod from the right end, gear end first toward the bracket. The left tread passes the motor floor with 1.0 mm to spare.
-4. Lower the rod into both cradles: the bearing goes into the right slot and the key tab into the left. The bar lies on the cradle top.
+**Key side** is the front cradle you pick for the bracket's key tab. **Bearing side** is the other front cradle. In the CAD the key side is −Y. To build it the other way round, mirror the printed parts about Y = 0.
+
+1. Lift out the factory front roller and slide the bearing off its key-side end.
+2. Push the key-side rod end through the bracket's key bushing.
+3. Press both TPU treads onto the roller. Turn the roller so the gear, which sits a little off centre, is on the bearing side, with the 45° chamfer facing the bearing end. Slide it onto the rod from the bearing end. The key-side tread passes the motor floor with 1.0 mm to spare.
+4. Lower the rod into both cradles: the bearing goes into the bearing-side slot and the key tab into the key-side slot. The bar lies on the cradle top.
 5. Press the pinion onto the N20 shaft so it sits 1 mm from the gearbox face, as on V1.0. A 1 mm shim makes this easy. For the V1.0-pinion option, leave the V1.0 pinion as it is.
 6. Lower the N20 straight down onto the motor floor with the gearbox face toward the gear. On the way down it never gets closer to the gear than its final centre distance, so turn the roller slightly to line up the teeth. Fasten it with zip ties through the two floor slots, one around the gearbox and one around the can. The can end rests against the rear stop.
 7. Turn the roller by hand to check the mesh and free payout.
 
-**Service.** For the motor, cut the two ties and lift it out. For the treads, lift the rod out of the cradles, slide off the bearing and then the roller. To put the motor on the other side, mirror all printed parts about Y = 0 in the slicer.
+**Service.** For the motor, cut the two ties and lift it out. For the treads, lift the rod out of the cradles, then slide off the bearing and the roller.
 
 The N20 leads run up the front end wall to the lid harness. Without the LED, the lid harness carries stepper (4), LOAD (2), PREP (2) and N20 (2). Remove the lane LED from the AFC configuration.
 
@@ -48,14 +50,14 @@ The N20 leads run up the front end wall to the lid harness. Without the LED, the
 |---|---:|
 | Roller gear tips to a full Ø195 filament wind | 5.48 |
 | Roller core to the spool flange | 2.98 |
-| Bracket / N20 envelope / pinion to spool | 11.6 / 7.5 / 6.7 |
+| Bracket / N20 envelope / pinion to spool | 11.7 / 7.5 / 6.7 |
 | Bracket to rotating parts outside the bushing / bushing radial play | 4.0 / 0.15 |
 | N20 envelope to rotating parts | 2.5 |
 | N20 to bracket (seated) / zip-tie gap beside the motor | 0.05 / 1.98 |
 | Pinion to bracket overall / to the bracket floor (axial) | 1.01 / 1.0 |
 | 15T/17T mesh over a full tooth cycle: interference / min flank gap / tip-to-root | 0.000 / 0.11 / 0.25 |
 | Pinion to plug-rim crest band / to estimated end-wall loop | 4.1 / 4.4 |
-| Bracket to estimated end-wall loop (x ≥ 135) | 2.7 |
+| Bracket to estimated end-wall loop (P ≈ 24) | 2.7 |
 | Bar to cradle top (resting) | 0.4 |
 | Assembly: treads passing the motor floor | 1.0 |
 | Axial gaps: key to roller / roller to bearing | 0.5 / 0.5 |
@@ -65,13 +67,18 @@ The v1pinion results are in `cad/07-cradle-drive/v1-pinion-variant/checks.json`.
 
 ## Measurements that confirm or adjust this revision
 
-The step-by-step picture guide is in [measurements/finalize-guide.md](measurements/finalize-guide.md), and a printable version with a record sheet is in [PolyDryer-Finalize-Guide.pdf](PolyDryer-Finalize-Guide.pdf).
+The [picture guide](measurements/finalize-guide.md) shows where and how to take each of these. A [printable PDF with a record sheet](PolyDryer-Finalize-Guide.pdf) is also available. The limits below come from `finalize_guide.py`, which computes them from the design parameters.
 
-1. **Roller pitch**, centre to centre: outside span across both rods minus 8. This sets the tread OD: 106 → 16.91, 107 → 17.96, 108 → 19.02, 109 → 20.09. Change `PITCH` in `cradle_drive.py` and re-run.
-2. **Front cradle slot**: width (expect 14), plate thickness, slot centres ±Y, whether the slot walls are vertical up to Z 28, and the inner face |Y|. The inner face must be ≥ 39.5.
-3. **Factory front rod**: length, and whether the left bearing slides off.
-4. Forward X of the **plug-rim crest** near the centre line, and the rear face X of the **end-wall loop**. The bracket assumes the loop starts at x ≥ 135.
-5. **Rear wall gap W** at spool-centre height. This was open before and is unchanged by this revision.
+1. **Roller pitch** = (A + B) / 2, where A is the outside span across both rods and B is the inside span between them, read at three stations. This sets the tread OD: 106 → 16.91, 107 → 17.96, 108 → 19.02, 109 → 20.09. Anything from 104 to 110 passes every check once `PITCH` is set. Below 105 the TPU tread wall gets thin.
+2. **Front cradle slots**:
+   - E, the bearing outer faces measured on the bench: ≈ 88
+   - S, the key-side slot width: 13.9–14.4
+   - H, slot top to slot bottom: ≈ 13
+   - T, plate thickness: record it
+   - F, between the inboard plate faces below the slots: ≥ 79
+3. **Factory front rod**: length L ≥ E and diameter d = 8.0. Also note whether the key-side bearing slides off.
+4. **Clear space in front of the front rod**: P, from the rod front surface to the first surface in front of it (the end-wall loop, or the end wall where there is no loop), must be ≥ 22.3 at the key side, the centre line and the bearing side. The layout was drawn for about 24. Also take six bridge depth readings, 8 and 16 mm in front of the rod front surface. Every depth must be ≥ 162, which means nothing rises above Z 19.
+5. **Rear-wall gap W** at spool-centre height, with your largest spool on the stock rollers: W ≥ 6.1. The cradle drive moves the spool 5.1 mm toward the rear wall.
 
 Bench-test free payout, roller spin on the rod, and loaded rewind before running AFC.
 

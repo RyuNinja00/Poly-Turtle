@@ -11,7 +11,7 @@ python checks.py                            # checks.json (clearances, gear mesh
 python cradle_drive.py --gearset v1pinion   # V1.0-pinion option -> cad/07-cradle-drive/v1-pinion-variant/
 python checks.py --gearset v1pinion
 python render.py                            # docs/cradle-drive-overview.png
-python finalize_guide.py                    # measurement picture guide (docs/measurements/finalize/, PDF)
+python finalize_guide.py                    # measurement picture guide with 3D scenes (guide_scenes.py, tools/scene3d.py)
 python make_step.py out.step && python verify_step.py out.step
 ```
 

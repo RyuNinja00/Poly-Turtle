@@ -1,6 +1,6 @@
 """Clearance, assembly-sequence and mesh checks for the cradle drive (box coordinates).
 Usage: python checks.py [--gearset fast|v1pinion]"""
-import argparse, json, pickle, numpy as np
+import argparse, json, os, pickle, numpy as np
 from pathlib import Path
 from cradle_drive import *
 from scipy.ndimage import map_coordinates
@@ -31,10 +31,11 @@ def box_clear(P, lo, hi):
     return np.linalg.norm(np.maximum(q, 0), axis=1) + np.minimum(q.max(1), 0)
 
 FEATURES = {   # approximate molded features (photo-derived, +/-2-3 mm): see docs/measurements
-    'front cradle plates (x98-115, |y|39.5-45.5, z<=28, minus slot)': [((98, -45.5, 0), (115, -39.5, CRADLE_TOP)), ((98, 39.5, 0), (115, 45.5, CRADLE_TOP))],
-    'plug-rim crest band (x124-135, z<=16.2)': [((124, -45, 0), (135, 45, CREST_Z))],
-    'end-wall loop (x>=135, |y|<=20)': [((135, -20, 0), (150, 20, 55))],
-    'floor / plug top under the rod (z<=4.8)': [((90, -45, 0), (135, 45, 4.8))],
+    # positions relative to the front rod (photo estimates at pitch 107 shifted with PITCH)
+    'front cradle plates (rod-9..rod+8, |y|39.5-45.5, z<=28, minus slot)': [((PITCH - 9, -45.5, 0), (PITCH + 8, -39.5, CRADLE_TOP)), ((PITCH - 9, 39.5, 0), (PITCH + 8, 45.5, CRADLE_TOP))],
+    'plug-rim crest band (rod+17..rod+28, z<=16.2)': [((PITCH + 17, -45, 0), (PITCH + 28, 45, CREST_Z))],
+    'end-wall loop (x>=rod+28, |y|<=20)': [((PITCH + 28, -20, 0), (PITCH + 43, 20, 55))],
+    'floor / plug top under the rod (z<=4.8)': [((PITCH - 17, -45, 0), (PITCH + 28, 45, 4.8))],
 }
 slot = lambda P: (np.abs(P[:, 0] - PITCH) < 7.05) & (P[:, 2] > 14.9) & (np.abs(P[:, 1]) > 39.4)
 def feat(P, name, is_rotor_or_key):
@@ -65,7 +66,7 @@ s, g = L.bracket(sdf_only=True)
 sd = lambda P: map_coordinates(s, ((P - g.lo) / g.h).T, order=1, mode='nearest')
 res['N20 vs bracket: deepest point (negative = inside)'] = round(float(sd(np.concatenate([D['n20'], D['n20_env']])).min()), 2)
 res['N20 resting gap above the motor floor'] = round(float(L.A_Z - 6.53 - L.FLOOR_TOP), 2)
-res['N20 to cross member (zip-tie gap)'] = round(float(CROSS_X[0] - (L.A_X + 5.69)), 2)
+res['N20 to cross member (zip-tie gap)'] = round(float(L.CROSS_X[0] - (L.A_X + 5.69)), 2)
 res['pinion vs bracket (SDF)'] = round(float(sd(statics['pinion (tip circle)']).min()), 2)
 if L.name == 'v1pinion': res['V1.0 pinion vertices vs bracket (SDF)'] = round(float(sd(D['v1_pinion']).min()), 2)
 res['pinion to bracket floor (axial)'] = round(float(L.Y['pinion'][0] - FACE_Y), 2)
@@ -76,7 +77,7 @@ Pb = parts['07d-Motor-bracket-cradle-key'][0]; rc = rotating_clear(Pb); kb = (Pb
 res['bracket vs rotating, outside the key bushing'] = round(float(rc[~kb].min()), 2)
 res['key bushing radial clearance on Ø8 rod'] = round(float(rc[kb].min()), 2)
 # assembly: bracket on rod -> roller (treads on) slid on from +Y -> bearing -> drop into cradles -> N20 dropped in from above
-res['assembly: treads passing the motor floor (radial)'] = round(float(FLOOR_X0 - (PITCH + TREAD_R)), 2)
+res['assembly: treads passing the motor floor (radial)'] = round(float(L.FLOOR_X0 - (PITCH + TREAD_R)), 2)
 res['assembly: roller gear never passes a bracket part (gear starts past the bracket by)'] = round(float(L.Y['gear'][0] - FACE_Y), 2)
 dz = np.linspace(0, 40, 401)
 res['assembly: N20 lowered vertically, min distance to rod axis - CD'] = round(float(np.hypot(L.A_X - PITCH, L.A_Z + dz - ROD_Z).min() - L.CD), 4)
@@ -85,4 +86,5 @@ res['narrowest spool fully on treads (mm)'] = 2 * Y['tread_r'][0]
 res['tread OD needed for pitch 106 / 107 / 108 / 109'] = [round(tread_od_for_pitch(p), 2) for p in (106, 107, 108, 109)]
 res['negative clearances'] = [(k, kk, vv) for k, v in res.items() if isinstance(v, dict) for kk, vv in v.items() if vv < 0]
 print(json.dumps(res, indent=1, ensure_ascii=False))
-json.dump(res, open(L.OUT / 'checks.json', 'w'), indent=1, ensure_ascii=False)
+out = Path(os.environ.get('POLYTURTLE_CHECKS_OUT', L.OUT / 'checks.json'))
+json.dump(res, open(out, 'w'), indent=1, ensure_ascii=False)
