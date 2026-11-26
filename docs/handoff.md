@@ -13,14 +13,11 @@ The target is the single-spool box supplied with the Polymaker PolyDryer. The ol
 
 The drive moved into the factory front cradles. Details are in [cradle-drive.md](cradle-drive.md). One printed roller with an integrated 15T gear runs on the factory rod. The treads are TPU, the printed 17T pinion goes on the V1.0 N20, and the bracket keys into the left cradle slot and holds the motor with zip ties. The spool pose, lid, feeder, LOAD, PREP and paths are unchanged, and the lane LED is removed. The `--gearset v1pinion` option keeps the V1.0 pinion at 41 % rewind speed. Next: take the five measurements listed in cradle-drive.md, adjust `PITCH` if needed, print, then bench-test payout, mesh and rewind. The section below records the revision 1 plan.
 
-## Printed lid rev 1 (2026-11-26)
+## Printed lid rev 2 (2026-11-26)
 
-Answer to "does this need a new lid?": yes. [printed-lid.md](printed-lid.md) describes it. It keeps jojo's two-port lid (Printables 1441905) exactly up to the plate top and replaces the cad/05 clearance pocket with three parts:
-- 08b, a hood bonded on, which carries the PREP block, the M12 gland and the roof screws.
-- 08c, a feeder carrier that takes the trayframe's place under the Smol's two downward bolts, using V1 heat-set inserts.
-- The two-screw drop-out service path.
+Does this need a new lid? Yes. [printed-lid.md](printed-lid.md) covers the details. Jojo's two-port lid (Printables 1441905) is kept exactly up to the plate top, and the old outlet hole is closed. A hood is bonded on. One feeder carrier takes the trayframe's place: the Smol's two downward bolts go into V1 heat-set inserts, and the carrier also holds the PREP block, a curved inlet guide and two towers. Two roof screws drop the whole module out for service.
 
-While designing the PREP inlet guide, I found that the archived pose has the inlet at the high end of the downward-tilted feeder axis. Filament from the spool would need a turn of about 110° inside the hood, so that pose has to change, or the filament has to go outside and come back in, before a working lane is possible. That is the next design decision. The parts are parameterised on the Smol frame so they can follow a new pose.
+Rev 1 kept the archived feeder pose. That pose had the inlet at the high end of a downward-tilted axis, so filament would have needed about a 110° turn. Rev 2 turns the Smol and PREP end for end and tilts them to 40° uphill toward −X. The inlet is now low at +X, fed up the +X side of the spool: the turn is 8° at the guide mouth on a full spool and 46° on a near-empty spool, followed by a smooth R20 bend. The outlet leaves through a PC4-M10 boss in the hood's −X wall. The hood grows from 35.4 to 45.9 mm above the lid. The spool pose and the cradle drive are unchanged. Load the spool so it pays out up its +X side. Next: check the guide-mouth clearance at the box's +X wall, then bench-feed the module before bonding the hood.
 
 ## Next work (revision 1, superseded)
 

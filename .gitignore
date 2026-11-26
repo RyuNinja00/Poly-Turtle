@@ -6,3 +6,4 @@ cad/08-printed-lid/
 build/lid/clouds.pkl
 build/lid/sdf.npz
 __pycache__/
+build/lid/occ.npz

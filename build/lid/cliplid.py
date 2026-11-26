@@ -97,3 +97,35 @@ def clipped_lid(src):
 if __name__ == '__main__':
     V, T = clipped_lid(HERE.parents[1] / 'cad' / '05-Raised-lid-clearance-shell.stl')
     print(mk.check_mesh(V, T), V.min(0), V.max(0))
+
+
+# ------------------------------------------------------------------ rev 2: close the old outlet
+OUT_P = np.array([80.77093, -1.52380, 90.51962])      # cad/05 outlet hole axis (design.py Rf/Tf)
+OUT_D = np.array([0.90750, 0.0, -0.42005]); OUT_R = 2.15
+
+def plug_outlet(V, T):
+    """Remove the 4.3 mm cylinder wall cut through jojo's +X end wall in cad/05
+    and cap both openings, restoring a solid wall (rev 2 feeds the outlet
+    through the hood instead)."""
+    d = V - OUT_P; t = d @ (OUT_D / np.linalg.norm(OUT_D))
+    r = np.linalg.norm(d - np.outer(t, OUT_D / np.linalg.norm(OUT_D)), axis=1)
+    on = np.abs(r - OUT_R) < 0.03
+    wall = on[T].all(1)
+    T = T[~wall]
+    e = np.concatenate([T[:, [0, 1]], T[:, [1, 2]], T[:, [2, 0]]])
+    key = np.sort(e, 1); u, inv, c = np.unique(key, axis=0, return_inverse=True, return_counts=True)
+    open_e = e[c[inv] == 1]                          # directed boundary edges
+    nxt = {a: b for a, b in open_e}
+    loops, seen = [], set()
+    for s in nxt:
+        if s in seen: continue
+        L = [s]; seen.add(s); k = nxt[s]
+        while k != s: L.append(k); seen.add(k); k = nxt[k]
+        loops.append(L)
+    assert len(loops) == 2, len(loops)
+    newV = [V]; caps = []; n = len(V)
+    for L in loops:
+        c0 = V[L].mean(0); newV.append(c0[None]); ci = n; n += 1
+        # boundary edges run a->b on the kept faces; cap runs b->a
+        caps += [[ci, L[(i + 1) % len(L)], L[i]] for i in range(len(L))]
+    return np.concatenate(newV), np.concatenate([T, np.array(caps)])

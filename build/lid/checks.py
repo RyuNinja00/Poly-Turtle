@@ -1,76 +1,81 @@
-"""Clearance and assembly checks for the 08 printed lid (writes checks.json)."""
-import sys, json, pickle, numpy as np
+"""Clearance, routing and assembly checks for the 08 printed lid, rev 2 (writes checks.json, packs the zip)."""
+import sys, json, pickle, zipfile, numpy as np
 from pathlib import Path
 from scipy.ndimage import map_coordinates
 HERE = Path(__file__).resolve().parent; ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE.parent / 'cradle-drive' / 'tools'))
 import meshkit as mk
 import printed_lid as P
+import occ as O
+from pose import TF0, A0, V0
+W0 = np.cross(V0, A0)
 
-D = np.load(HERE / 'sdf.npz')
-def sample(name, pts):
-    s, lo, h = D['s' + name[0]], D[name[0] + 'lo'], D[name[0] + 'h']
-    idx = ((pts - lo) / h).T
-    return map_coordinates(s, idx, order=1, mode='nearest')
+D = np.load(HERE / 'sdf.npz'); OCC = np.load(HERE / 'occ.npz')['occ']
+def sample(part, pts):
+    k = part[0]; s, lo, h = D['s' + k], D[k + 'lo'], D[k + 'h']
+    return map_coordinates(s, ((pts - lo) / h).T, order=1, mode='nearest')
 
-def local(X):
-    d = X - P.TF; return np.stack([d @ P.A, d @ P.W, d @ P.V_], -1)
-
-clouds = pickle.load(open(HERE / 'clouds.pkl', 'rb'))
-smol, prep = clouds['smol'], clouds['prep']
-Ls = local(smol)
+cl = pickle.load(open(HERE / 'clouds.pkl', 'rb'))
+smol0, prep0 = cl['smol'], cl['prep']
+smol, prep = P.POSE(smol0), P.POSE(prep0)
+d0 = smol0 - TF0; Ls = np.stack([d0 @ A0, d0 @ W0, d0 @ V0], -1)
 iface = (Ls[:, 1] > 16.0) & (Ls[:, 2] < P.BASE_V + 0.05) & (Ls[:, 0] > -34) & (Ls[:, 0] < 48)
-res = {}
-def clr(tag, name, pts):
-    d = sample(name, pts); i = int(np.argmin(d))
-    res[tag] = dict(min_mm=round(float(d[i]), 2), at=pts[i].round(1).tolist(), n=int(len(pts)))
-clr('hood_vs_smol', 'hood', smol)
-clr('hood_vs_prep', 'hood', prep)
-clr('carrier_vs_smol(excl. replaced trayframe interface)', 'carrier', smol[~iface])
-clr('carrier_vs_prep', 'carrier', prep)
+
+res = dict(pose=dict(alpha_deg=P.ALPHA, inlet_xyz=list(P.INLET), note='travel rises toward -X; inlet/PREP low at +X'))
+def clr(tag, part, pts):
+    d = sample(part, pts); i = int(np.argmin(d))
+    res[tag] = dict(min_mm=round(float(d[i]), 2), at=pts[i].round(1).tolist())
+clr('hood_vs_smol', 'hood', smol); clr('hood_vs_prep', 'hood', prep)
+clr('carrier_vs_smol (excl. replaced trayframe interface)', 'carrier', smol[~iface])
+clr('carrier_vs_prep (switch sits on the block)', 'carrier', prep)
 res['replaced_interface_points'] = int(iface.sum())
 
-Vh = mk.read_stl(ROOT / 'cad/08-printed-lid/08b-hood.stl').reshape(-1, 3)
-Vc = mk.read_stl(ROOT / 'cad/08-printed-lid/08c-feeder-carrier.stl').reshape(-1, 3)
-Vh = np.unique(Vh.round(3), axis=0); Vc = np.unique(Vc.round(3), axis=0)
+def verts(name):
+    t = mk.read_stl(ROOT / 'cad/08-printed-lid' / name).reshape(-1, 3); return np.unique(t.round(3), axis=0)
+Vh, Vc = verts('08b-hood.stl'), verts('08c-feeder-carrier.stl')
 clr('carrier_vs_hood', 'hood', Vc[::3])
 
-# spool envelope (cad/01 frame): centre (x, z) = (-6.072, 3.354), R 102.5, |y| <= 39
-def spool(V):
-    m = np.abs(V[:, 1]) <= 39.0
-    r = np.hypot(V[m, 0] + 6.072, V[m, 2] - 3.354) - 102.5
+SC = np.array([-6.072, 3.354])
+def spool(V, R=102.5):
+    m = np.abs(V[:, 1]) <= 39.0; r = np.hypot(V[m, 0] - SC[0], V[m, 2] - SC[1]) - R
     i = int(np.argmin(r)); return dict(min_mm=round(float(r[i]), 2), at=V[m][i].round(1).tolist())
+res['smol_prep_vs_spool'] = spool(np.concatenate([smol, prep]))
 res['hood_vs_spool'] = spool(Vh); res['carrier_vs_spool'] = spool(Vc)
+res['hood_below_plate_in_lid'] = int(O.lookup(OCC, Vh[Vh[:, 2] < P.PLATE_TOP - 0.3]).sum())
+res['carrier_in_lid'] = int(O.lookup(OCC, Vc[Vc[:, 2] < P.PLATE_TOP - 0.3]).sum())
+res['smol_prep_in_lid'] = int(O.lookup(OCC, np.concatenate([smol, prep])).sum())
 
-# lid body occupancy by +z ray parity
-tri = mk.read_stl(ROOT / 'cad/08-printed-lid/08a-lid-body.stl')
-a, b, c = tri[:, 0], tri[:, 1], tri[:, 2]; e1, e2 = b - a, c - a
-def inside_lid(pts):
-    out = np.zeros(len(pts), bool)
-    hz = np.cross(np.array([0, 0, 1.0]), e2); det = (e1 * hz).sum(1); ok = np.abs(det) > 1e-12
-    for s in range(0, len(pts), 400):
-        p = pts[s:s + 400, None, :]; sv = p - a[None]
-        inv = np.where(ok, 1 / np.where(ok, det, 1), 0)
-        u = inv * (sv * hz[None]).sum(-1); q = np.cross(sv, e1[None]); v = inv * q[..., 2]; t = inv * (e2[None] * q).sum(-1)
-        hit = ok & (u >= 0) & (v >= 0) & (u + v <= 1) & (t > 0)
-        out[s:s + 400] = hit.sum(1) % 2 == 1
-    return out
-below = Vh[Vh[:, 2] < P.PLATE_TOP - 0.05]
-res['hood_below_plate_inside_lid'] = int(inside_lid(below).sum()); res['hood_below_plate_vertices'] = int(len(below))
-cs = Vc[::4]; res['carrier_inside_lid'] = int(inside_lid(cs).sum()); res['carrier_vertices_tested'] = int(len(cs))
+# drop-in: carrier + Smol + PREP go straight up through the opening
+fp = np.concatenate([Vc, smol, prep])
+res['module_xy_range'] = [round(float(v), 2) for v in (fp[:, 0].min(), fp[:, 0].max(), fp[:, 1].min(), fp[:, 1].max())]
+res['module_fits_opening'] = bool(fp[:, 0].min() > P.RING_IN[0] and fp[:, 0].max() < P.RING_IN[1] and fp[:, 1].min() > P.RING_IN[2] and fp[:, 1].max() < P.RING_IN[3])
+res['module_bottom_z'] = round(float(fp[:, 2].min()), 2)
 
-# carrier / Smol module drops in vertically through the lid opening
-opening = (P.RING_IN[0], P.RING_IN[1], P.RING_IN[2], P.RING_IN[3])
-fp = np.concatenate([Vc, smol])
-res['module_footprint_xy'] = [fp[:, 0].min().round(2), fp[:, 0].max().round(2), fp[:, 1].min().round(2), fp[:, 1].max().round(2)]
-res['module_fits_opening'] = bool(fp[:, 0].min() > opening[0] and fp[:, 0].max() < opening[1] and fp[:, 1].min() > opening[2] and fp[:, 1].max() < opening[3])
-# nothing hangs from the hood over the module footprint except the towers' own screws
-res['prep_block_x_max'] = float(np.round((P.TF + P.PREP_BLOCK['u'][1] * P.A + P.PREP_BLOCK['v'][0] * P.V_)[0], 2))
-res['bolt_insert_axes'] = {k: (P.TF + u * P.A + w * P.W + P.BASE_V * P.V_).round(2).tolist() for k, (u, w) in P.BOLTS.items()}
-res['roof_screws_xy'] = {k: list(v) for k, v in P.SCREW_XY.items()}
+# inlet routing: free filament from the +X side of the spool to the guide mouth
+m, t = P.mouth()
+M = P.glob(m[0], 0, m[1]); Tm = t[0] * P.A + t[1] * P.V_            # forward direction at the mouth
+inlet_rows = []
+for R in (102.5, 80.0, 60.0, 45.0):
+    pin = np.array([M[0], M[2]]); dv = pin - SC; L = np.linalg.norm(dv)
+    th = np.arcsin(R / L); base = np.arctan2(-dv[1], -dv[0]); best = None
+    for s in (1, -1):
+        ang = base + s * th; tdir = np.array([np.cos(ang), np.sin(ang)]); tp = pin + tdir * np.sqrt(L * L - R * R)
+        if best is None or tp[0] > best[0][0]: best = (tp, -tdir)
+    tp, inc = best
+    turn_mouth = float(np.degrees(np.arccos(np.clip(inc @ np.array([Tm[0], Tm[2]]), -1, 1))))
+    seg = np.linspace(np.array([tp[0], M[1], tp[1]]), M - Tm * 1.0, 60)
+    hit_c = float(sample('carrier', seg[:-3]).min()); hit_lid = int(O.lookup(OCC, seg).sum())
+    smol_gap = float(np.min(np.linalg.norm(smol[None, ::7] - seg[:, None], axis=2)))
+    inlet_rows.append(dict(spool_radius=R, leaves_spool_at=[round(float(tp[0]), 1), round(float(tp[1]), 1)],
+                           turn_at_mouth_deg=round(turn_mouth, 1), path_clear_of_carrier_mm=round(hit_c, 2),
+                           path_points_in_lid=hit_lid, path_to_smol_mm=round(smol_gap, 2)))
+res['inlet_routing'] = inlet_rows
+res['guide'] = dict(radius=P.GUIDE['R'], sweep_deg=P.GUIDE['sweep'], bore=2 * P.GUIDE['r_bore'], mouth_xyz=M.round(2).tolist())
+res['outlet'] = dict(axis_at_wall_xyz=P.glob(57.7, 0, 0).round(2).tolist(), boss_u=[P.OUTLET['u_in'], P.OUTLET['u_out']], hole=P.OUTLET['hole'])
+res['bolt_insert_axes'] = {k: P.glob(u, w, P.BASE_V).round(2).tolist() for k, (u, w) in P.BOLTS.items()}
+res['roof_screws_xy'] = {k: [round(float(c), 2) for c in v] for k, v in P.SCREWS.items()}
+res['hood_height_above_plate'] = round(P.ROOF_OUT - P.PLATE_TOP, 2)
 for k, v in res.items(): print(k, v)
 json.dump(res, open(ROOT / 'cad/08-printed-lid/checks.json', 'w'), indent=1, default=float)
-
-import zipfile
 with zipfile.ZipFile(ROOT / 'cad/08-Printed-lid.zip', 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
     for f in sorted((ROOT / 'cad/08-printed-lid').iterdir()): z.write(f, f.name)

@@ -1,6 +1,6 @@
 # Cradle drive — revision 2c (fewest parts, no fasteners on the roller)
 
-The molded box measurements ruled out the original drive position at x = 128.57. The ±42 wheel tracks run through the factory front bearing cradles, and the stock wheel lips sit 7 mm into the floor. The respool drive now sits in the factory front-roller position. The spool, raised lid, Smol extruder with its LOAD switch, PREP switch and filament paths keep the archived pose. The BoxTurtle lane LED is removed.
+The molded box measurements ruled out the original drive position at x = 128.57. The ±42 wheel tracks run through the factory front bearing cradles, and the stock wheel lips sit 7 mm into the floor. The respool drive now sits in the factory front-roller position. The spool keeps the archived pose. The lid, Smol, PREP and filament path are covered in [printed-lid.md](printed-lid.md) (rev 2 re-poses the feeder; the spool pays out up its +X side). The BoxTurtle lane LED is removed.
 
 Revision 2c simplifies the build:
 
