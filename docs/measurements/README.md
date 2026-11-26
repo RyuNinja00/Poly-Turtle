@@ -31,7 +31,7 @@ Ryan can print replacement tires. The proposed wheel uses a Ø30 rigid lip and �
 
 For the modeled Ø205 spool, assuming circular flanges tangent to both rollers, unchanged axle positions, and no tread compression, the spool center shifts about 7.4 mm toward the drive and 4.1 mm down relative to the stock-tread trial. At equal shaft RPM the nominal rewind surface speed is 28 / 43.76, about 64% of the original. Wheel retention, tire grip, gear and carrier clearance, wall and lid fit, and loaded rewind still need verification. The archived STEP files show the original trial. No smaller wheel or tire has been fabricated or tested in this study.
 
-## Next six probe readings
+## Next six probe readings (revision 1 only; superseded by the measurement list in [cradle-drive.md](../cradle-drive.md#measurements-that-confirm-or-adjust-this-revision))
 
 ![Probe positions on the actual box and depth reference](probe-locations.png)
 

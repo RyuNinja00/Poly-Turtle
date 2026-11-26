@@ -1,0 +1,57 @@
+{
+ "gearset": "fast",
+ "pitch": 107.0,
+ "rod_z": 22.0,
+ "spool_centre": [
+  48.428,
+  116.852
+ ],
+ "tread_od": 17.959,
+ "roller_gear": "printed 15T m1.0",
+ "pinion": "printed 17T m1",
+ "centre_distance": 16.0,
+ "roller_turns_per_motor_turn": 1.1333,
+ "rewind_surface_speed_vs_V10": 0.93,
+ "n20_axis": [
+  121.133,
+  29.5
+ ],
+ "lateral": {
+  "key": [
+   -44.0,
+   -40.0
+  ],
+  "bearing": [
+   40.0,
+   44.0
+  ],
+  "roller": [
+   -39.5,
+   39.5
+  ],
+  "tread_l": [
+   -39.0,
+   -21.5
+  ],
+  "tread_r": [
+   21.5,
+   39.0
+  ],
+  "motor": [
+   -19.75,
+   5.45
+  ],
+  "pinion": [
+   6.45,
+   12.45
+  ],
+  "gear": [
+   6.45,
+   12.45
+  ],
+  "chamfer": [
+   12.45,
+   14.95
+  ]
+ }
+}

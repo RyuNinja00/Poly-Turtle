@@ -1,0 +1,57 @@
+{
+ "gearset": "v1pinion",
+ "pitch": 107.0,
+ "rod_z": 22.0,
+ "spool_centre": [
+  48.428,
+  116.852
+ ],
+ "tread_od": 17.959,
+ "roller_gear": "printed 30T m0.75",
+ "pinion": "V1.0 15T m0.75 (kept on the N20)",
+ "centre_distance": 17.101,
+ "roller_turns_per_motor_turn": 0.5,
+ "rewind_surface_speed_vs_V10": 0.41,
+ "n20_axis": [
+  121.541,
+  31.0
+ ],
+ "lateral": {
+  "key": [
+   -44.0,
+   -40.0
+  ],
+  "bearing": [
+   40.0,
+   44.0
+  ],
+  "roller": [
+   -39.5,
+   39.5
+  ],
+  "tread_l": [
+   -39.0,
+   -21.5
+  ],
+  "tread_r": [
+   21.5,
+   39.0
+  ],
+  "motor": [
+   -19.75,
+   5.45
+  ],
+  "pinion": [
+   6.45,
+   14.45
+  ],
+  "gear": [
+   6.45,
+   14.45
+  ],
+  "chamfer": [
+   14.45,
+   20.45
+  ]
+ }
+}
