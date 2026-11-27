@@ -23,7 +23,7 @@ Rev 3.1 adds the following. `verify.py` re-checks all of it on the final STLs.
 - **Files:** the lid STL is decimated to 7.9 MB.
 
 Open points:
-- Confirm the Micro-Fit cutout against a real housing.
+- Confirm the Micro-Fit cutout against a real housing. The cutout now follows the Printables 1300761 library shape; its dual-row height is extrapolated.
 - Do the clay gap test.
 
 ## Printed lid rev 3 (2026-11-26)

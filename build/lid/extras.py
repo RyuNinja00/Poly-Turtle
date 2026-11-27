@@ -152,14 +152,29 @@ def gaskets(base_tri):
 
 
 # ------------------------------------------------------------------ Micro-Fit 3.0 2x6 bulkhead plate
-MF = dict(cut_l=19.40, cut_w=10.00,     # panel cutout for 43020-1200 (verify with your housing)
-          plate=(40.0, 22.0, 2.0), r=3.0, screw_dx=16.0, screw_d=3.4,
-          aperture=(25.0, 13.5))         # hole in the lid under the plate (housing + ears pass)
+# Cutout shape after Wireheadarts' "OpenSCAD library for mounting Molex MicroFit 3.0
+# panel-mount plugs" (Printables 1300761), which follows the Molex datasheet:
+#   body C x H  +  ear slot D x E (full ear span)  +  latch notch 3.18 wide.
+# Its C/D tables equal Molex's 43020 table by column count; for 2 x 6: C 19.21, D 22.89.
+# The library is single-row (H 4.21, latch to 5.51); dual row adds one 3.00 mm row pitch.
+MF = dict(cols=6, rows=2,
+          C=19.21, D=22.89, E=3.05, H1=4.21, pitch=3.00, latch_w=3.18, latch_h=1.30,
+          fit=0.05,                       # per side, for a printed panel
+          plate=(40.0, 22.0, 2.0),        # 2.0 mm: inside the 1.57-2.30 panel range
+          r=3.0, screw_dx=16.0, screw_d=3.4,
+          aperture=(25.0, 13.5))          # hole in the lid under the plate (housing + ears pass)
+
+def mf_cutout():
+    f = MF['fit']; C, D, E = MF['C'] / 2 + f, MF['D'] / 2 + f, MF['E'] / 2 + f
+    Hh = (MF['H1'] + (MF['rows'] - 1) * MF['pitch']) / 2 + f
+    lw, lt = MF['latch_w'] / 2 + f, Hh + MF['latch_h']
+    return np.array([(D, -E), (D, E), (C, E), (C, Hh), (lw, Hh), (lw, lt), (-lw, lt), (-lw, Hh), (-C, Hh), (-C, E),
+                     (-D, E), (-D, -E), (-C, -E), (-C, -Hh), (C, -Hh), (C, -E)])
 
 def mf_plate():
     L, Wd, t = MF['plate']
     o = rounded_rect(0, 0, L, Wd, MF['r'])
-    holes = [rounded_rect(0, 0, MF['cut_l'], MF['cut_w'], 0.5, 4), circle(-MF['screw_dx'], 0, MF['screw_d'] / 2, 24), circle(MF['screw_dx'], 0, MF['screw_d'] / 2, 24)]
+    holes = [mf_cutout(), circle(-MF['screw_dx'], 0, MF['screw_d'] / 2, 24), circle(MF['screw_dx'], 0, MF['screw_d'] / 2, 24)]
     return prism(o, holes, 0.0, t)
 
 def mf_gasket():
