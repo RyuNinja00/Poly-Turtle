@@ -12,12 +12,17 @@ The saved model poses are defined in design.py and assemble.py. Surface sampling
 
 ## Printed lid (cad/08)
 
-`build/lid/` turns `cad/05` into the printable rev 2 lid without a CAD kernel. It runs in this order:
-- `cliplid.py` clips jojo's lid exactly at the plate top, caps it, and closes the old outlet hole.
+`build/lid/` builds the one-piece rev 3 lid without a CAD kernel:
+
+- `cliplid.py` and `earcut.py` clip jojo's lid exactly at Z 102 and cap the cut; the old outlet hole is closed.
 - `pose.py` and `search.py` choose the uphill feeder pose.
-- `printed_lid.py` builds the hood and the feeder carrier as signed-distance solids, meshed with marching cubes at 0.4 mm.
-- `occ.py` builds the lid occupancy grid.
-- `checks.py` checks clearances, inlet routing and drop-in, then packs `cad/08-Printed-lid.zip`.
+- `printed_lid.py` builds the canopy from heightmaps:
+  - a 45° vault plus a 45° feeder frustum;
+  - jojo's end caps from exact z-intervals (`columns.py`);
+  - features and the feeder carrier as signed-distance fields;
+  - meshes everything with marching cubes at 0.4 mm.
+- `occ.py` builds the base occupancy grid.
+- `checks.py` checks clearances, drop-in, inlet routing and rim-down overhangs, then packs `cad/08-Printed-lid.zip`.
 - `render.py` draws `docs/printed-lid.png`.
 
 Run `clouds.py` first; it needs the restored cad/01. See [docs/printed-lid.md](../docs/printed-lid.md).

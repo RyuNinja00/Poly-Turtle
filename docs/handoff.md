@@ -13,11 +13,27 @@ The target is the single-spool box supplied with the Polymaker PolyDryer. The ol
 
 The drive moved into the factory front cradles. Details are in [cradle-drive.md](cradle-drive.md). One printed roller with an integrated 15T gear runs on the factory rod. The treads are TPU, the printed 17T pinion goes on the V1.0 N20, and the bracket keys into the left cradle slot and holds the motor with zip ties. The spool pose, lid, feeder, LOAD, PREP and paths are unchanged, and the lane LED is removed. The `--gearset v1pinion` option keeps the V1.0 pinion at 41 % rewind speed. Next: take the five measurements listed in cradle-drive.md, adjust `PITCH` if needed, print, then bench-test payout, mesh and rewind. The section below records the revision 1 plan.
 
-## Printed lid rev 2 (2026-11-26)
+## Printed lid rev 3 (2026-11-26)
 
-Does this need a new lid? Yes. [printed-lid.md](printed-lid.md) covers the details. Jojo's two-port lid (Printables 1441905) is kept exactly up to the plate top, and the old outlet hole is closed. A hood is bonded on. One feeder carrier takes the trayframe's place: the Smol's two downward bolts go into V1 heat-set inserts, and the carrier also holds the PREP block, a curved inlet guide and two towers. Two roof screws drop the whole module out for service.
+[printed-lid.md](printed-lid.md) has the details.
 
-Rev 1 kept the archived feeder pose. That pose had the inlet at the high end of a downward-tilted axis, so filament would have needed about a 110° turn. Rev 2 turns the Smol and PREP end for end and tilts them to 40° uphill toward −X. The inlet is now low at +X, fed up the +X side of the spool: the turn is 8° at the guide mouth on a full spool and 46° on a near-empty spool, followed by a smooth R20 bend. The outlet leaves through a PC4-M10 boss in the hood's −X wall. The hood grows from 35.4 to 45.9 mm above the lid. The spool pose and the cradle drive are unchanged. Load the spool so it pays out up its +X side. Next: check the guide-mouth clearance at the box's +X wall, then bench-feed the module before bonding the hood.
+**One-piece lid.** It prints rim down with no supports:
+- Jojo's two-port lid (Printables 1441905) is kept triangle for triangle below Z 102. Its end caps (latch bars, finger slots) are rebuilt from jojo's own geometry above Z 102.
+- The flat plate is replaced by a 45° chamfered vault with a 37 mm bridge.
+- The feeder sits under a 45° frustum with a 25 mm top bridge.
+
+**Feeder.** It is re-posed to 45° uphill toward −X. The inlet and PREP are low at +X and fed up the spool's +X side through an R20 guide. The outlet is a PC4-M10 square to the canopy's −X face.
+
+**Carrier.** One carrier holds the Smol (V1 heat-set inserts for its two downward bolts), the PREP block and the guide. It is held by 2 × M3 through the −Y wall. Service: remove those two screws and the module lifts out through the rim.
+
+**History.**
+- Rev 1 kept the archived pose, which needed about a 110° inlet turn.
+- Rev 2 (40°, bonded hood) fixed the routing but could not print as one part without supports.
+
+**Next.**
+- Check the guide mouth against the box's +X end wall.
+- Bench-feed the module.
+- Print a test.
 
 ## Next work (revision 1, superseded)
 

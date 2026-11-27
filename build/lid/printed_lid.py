@@ -1,63 +1,76 @@
-"""08 - Printed lid, rev 2 (uphill feeder): jojo's two-port PolyDryer lid + feeder hood.
+"""08 - Printed lid, rev 3: one-piece, support-free, faceted canopy.
 
-Rev 2 re-poses the Smol + PREP (pose.py): the feeder is turned end for end and
-tilted so filament travels UP it at ALPHA = 40 deg toward -X.  The inlet (PREP)
-is the low +X end, just above the lid rim, where filament arrives from the +X
-side of the spool through a curved guide.  The outlet is the high -X end and
-leaves through a PC4-M10 boss in the hood's -X wall.
+Same functional layout as rev 2 (uphill feeder, inlet + PREP low at +X, outlet
+high at -X), retuned so the whole lid prints in ONE piece, rim down, without
+supports:
+
+* Jojo's lid (Printables 1441905) is kept triangle-for-triangle below Z 102:
+  rim, gasket channel, side latches.  Above Z 102 the end caps (latch bars,
+  finger slots) are rebuilt from jojo's own geometry (exact in Z).
+* The flat plate is replaced by a vault: 45-degree chamfers from the walls to a
+  40 mm wide flat (a short bridge).  The feeder sits under a 45-degree
+  frustum.  ALPHA = 45 deg makes the feeder's top and outlet faces parallel to
+  the frustum faces, so the outlet fitting screws in square to its face.
+* Every downward-facing surface is >= 45 deg or a bridge <= 40 mm.
 
 Parts (cad/01 / cad/05 model frame, Z up, mm):
-  08a lid body  - Printables 1441905 (jojo) lid, cad/05 pocket clipped flush with
-                  the plate top, old 4.3 mm outlet hole closed.  Jojo's triangles.
-  08b hood      - roof-down print, bonded onto the 08a opening ring.  Outlet boss,
-                  cable-gland hole, two roof screws.
-  08c carrier   - under the Smol (replaces the BoxTurtle trayframe interface):
-                  V1 heat-set inserts for the Smol's two downward bolts, PREP
-                  block + M2 pilots, curved inlet guide, two towers to the roof.
-08-Printed-lid-one-piece.stl = 08a + 08b as touching shells (slicers union them).
-Run: clouds.py, occ.py, printed_lid.py, checks.py (packs the zip), render.py.
+  08-Printed-lid.stl          one print: jojo base (exact) + canopy (touching shells)
+  08c-feeder-carrier.stl      under the Smol; PREP block, inlet guide, two side pads
+Run: clouds.py, printed_lid.py, occ.py, checks.py (packs the zip), render.py.
 """
 import sys, json, numpy as np
 from pathlib import Path
+from scipy import ndimage as ndi
 HERE = Path(__file__).resolve().parent; ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE.parent / 'cradle-drive' / 'tools'))
 import meshkit as mk
-from cliplid import RING_IN, RING_OUT
+import cliplid, earcut, columns
 from pose import Pose
 
-ALPHA = 40.0
-INLET = (87.0, -5.48, 76.0)          # PREP entry point on the filament axis (u = -50)
+# ------------------------------------------------------------------ pose and layout
+ALPHA = 45.0
+INLET = (86.5, -5.48, 74.0)          # PREP entry on the filament axis (u = -50)
 POSE = Pose(ALPHA, INLET)
 TF, A, V_, W = POSE.TF, POSE.A, POSE.V, POSE.W
 
-PLATE_TOP = 111.588                  # flat top of the jojo plate (print-bed face)
-ROOF_IN, ROOF_OUT = 155.0, 157.5     # Smol top 153.5 + 1.5
-BOLTS = {'A': (-17.53, 25.47), 'B': (30.50, 25.47)}   # (u, w): the Smol's two downward bolts
-BASE_V = 4.90
-PREP_HOLES = [(-44.65, -2.83), (-44.65, 3.67)]         # D2F-type switch, screws along v
-PREP_TOP_V = 9.90
-INSERT_D, INSERT_L, CLEAR_D = 4.2, 5.5, 3.4            # V1 M3 heat-set insert
-RELIEF_D = 3.2                                          # bolt-tail relief below the rail inserts
-H, OFF = 0.4, 0.0137
+ZC = 102.0                           # jojo kept exactly below this plane
+Z_WALL = 105.5                       # inner chamfers start here at the side walls
+VAULT_IN = 128.0                     # inner flat of the vault (~38 mm bridge)
+T_V = 3.54                           # vertical skin thickness (2.5 mm normal on 45-deg faces)
+FRUSTUM = dict(z=157.0, x=(36.1, 61.1), y=(-28.7, 6.3))   # inner top of the feeder canopy
+X_END = 100.5                        # jojo inner end walls
+X_CLIFF = 102.5                      # canopy may rise over the +X end-cap bar up to here
+Z_CAP = 111.588                      # jojo end-cap top
+H = 0.4
 
-# carrier, archived-local (u along travel, w, v = Smol base normal)
-RAIL = dict(u=(-23.5, 36.5), w=(17.4, 32.5), v=(-9.5, BASE_V))
-W_FLAT = 31.0                         # carrier's flat print face (global y plane through w = 31)
-EAR_B = dict(u=(36.0, 48.3), v=(-9.5, 1.0))            # high (-X) end, under the Smol's end features
-ARM = dict(u=(-49.4, -23.0), w=(6.9, 32.5), v=(-9.5, 1.2))   # low (+X) end, beside the inlet
-PREP_BLOCK = dict(u=(-49.4, -36.8), w=(-6.6, 32.5), v=(PREP_TOP_V + 0.2, 16.0))
-PREP_POST = dict(u=(-49.4, -36.8), w=(7.6, 32.5), v=(-9.5, 16.0))
+BOLTS = {'A': (-17.53, 25.47), 'B': (30.50, 25.47)}   # Smol's two downward bolts (u, w)
+BASE_V = 4.90
+PREP_HOLES = [(-44.65, -2.83), (-44.65, 3.67)]
+PREP_TOP_V = 9.90
+INSERT_D, INSERT_L, CLEAR_D, RELIEF_D = 4.2, 5.5, 3.4, 3.2
+
+RAIL = dict(u=(-23.5, 36.5), w=(17.4, 40.0), v=(-9.5, BASE_V))
+Y_FLAT = -39.1                       # carrier's flat print face (lid inner wall is at y -40.6)
+BOSS_Y = -39.35                      # lid standoffs at the two wall screws reach to here
+EAR_B = dict(u=(36.0, 43.0), w=(17.4, 40.0), v=(-9.5, 1.0))
+ARM = dict(u=(-49.4, -23.0), w=(6.9, 40.0), v=(-9.5, 1.2))
+PREP_POST = dict(u=(-49.4, -36.8), w=(7.6, 40.0), v=(-9.5, 16.0))
+PREP_BLOCK = dict(u=(-49.4, -36.8), w=(-6.6, 40.0), v=(PREP_TOP_V + 0.2, 16.0))
 GUIDE = dict(R=20.0, sweep=40.0, r_out=3.2, r_bore=1.2, mouth=2.6)
 WEB = dict(u=(-58.0, -44.0), w=(-3.0, 7.4), v=(-9.5, -2.2))
-TOWER_A_X = (90.0, 96.5)             # +X end, rises from the PREP post
-TOWER_B_X = (5.6, 11.5)              # -X end, rises from ear B
-OUTLET = dict(u_in=52.0, u_out=61.5, r=7.5, hole=9.0)    # PC4-M10 self-threads into Ø9
-GLAND = dict(y=14.0, z=132.0, d=12.4)                   # M12 / PG7 in the +X end wall
+PADS = {'A': 4.0, 'B': 30.0}        # rail screws (u): M3 through the -Y wall into rail inserts
+PAD_V = (-9.5 + BASE_V) / 2
+GLAND = dict(x=-20.0, y=0.0, d=12.4)                       # vertical, through the vault flat
+OUTLET = dict(r=7.5, hole=9.0, out=5.2)                    # boss proud of the -X canopy face
+GROOVE = dict(z=102.8, depth=0.8)                          # V shadow line around the canopy base
 
 
-def loc(g):
-    X, Y, Z = g.X() - TF[0], g.Y() - TF[1], g.Z() - TF[2]
+def loc(X, Y, Z):
+    X, Y, Z = X - TF[0], Y - TF[1], Z - TF[2]
     return [(X * e[0] + Y * e[1] + Z * e[2]).astype(np.float32) for e in (A, W, V_)]
+
+def glob(u, w, v):
+    return TF + u * A + w * W + v * V_
 
 def lbox(L, d):
     lo = (d['u'][0], d['w'][0], d['v'][0]); hi = (d['u'][1], d['w'][1], d['v'][1])
@@ -66,118 +79,203 @@ def lbox(L, d):
     return (o + np.minimum(np.maximum(np.maximum(q[0], q[1]), q[2]), 0)).astype(np.float32)
 
 def lcyl(L, axis, c, r, t0, t1):
-    """cylinder along local axis 0 (u) or 2 (v), centred at the other two coords c."""
     o = [k for k in (0, 1, 2) if k != axis]
     d = np.sqrt((L[o[0]] - c[0]) ** 2 + (L[o[1]] - c[1]) ** 2) - r
     return mk._combine(d, np.maximum(t0 - L[axis], L[axis] - t1))
 
-def glob(u, w, v):
-    return TF + u * A + w * W + v * V_
-
 def arc_dist(L):
-    """distance to the inlet-guide centreline: arc in the u-v plane (w = 0),
-    tangent to the filament axis at u = -50 and curving down toward the spool."""
     R = GUIDE['R']; cu, cv = -50.0, -R
     du, dv = L[0] - cu, L[2] - cv
     phi = np.clip(np.arctan2(du, dv), -np.radians(GUIDE['sweep']), 0.0)
     qu, qv = cu + R * np.sin(phi), cv + R * np.cos(phi)
-    return np.sqrt((L[0] - qu) ** 2 + L[1] ** 2 + (L[2] - qv) ** 2).astype(np.float32), phi
+    return np.sqrt((L[0] - qu) ** 2 + L[1] ** 2 + (L[2] - qv) ** 2).astype(np.float32)
 
 def mouth():
     s = -np.radians(GUIDE['sweep']); R = GUIDE['R']
-    m = np.array([-50 + R * np.sin(s), -R + R * np.cos(s)])      # (u, v)
-    t = np.array([np.cos(s), -np.sin(s)])                          # forward tangent (u, v)
-    return m, t
+    return np.array([-50 + R * np.sin(s), -R + R * np.cos(s)]), np.array([np.cos(s), -np.sin(s)])
+
+def pad_screw(u0):
+    p = glob(u0, 30.0, PAD_V)
+    return float(p[0]), float(p[2])
 
 
+# ------------------------------------------------------------------ 08c carrier
 def carrier(g):
-    L = loc(g)
-    body = mk.union(lbox(L, RAIL), lbox(L, dict(EAR_B, w=RAIL['w'])), lbox(L, ARM),
-                    lbox(L, PREP_POST), lbox(L, PREP_BLOCK), lbox(L, WEB))
-    d, _ = arc_dist(L)
-    arc_side = (L[0] - (-50.0)).astype(np.float32)          # <= 0 on the curved side
+    L = loc(g.X(), g.Y(), g.Z())
+    body = mk.union(lbox(L, RAIL), lbox(L, EAR_B), lbox(L, ARM), lbox(L, PREP_POST), lbox(L, PREP_BLOCK), lbox(L, WEB))
+    d = arc_dist(L); arc_side = (L[0] + 50.0).astype(np.float32)
     body = mk.union(body, mk.intersect(d - GUIDE['r_out'], arc_side), lcyl(L, 0, (0.0, 0.0), GUIDE['r_out'], -50.0, -46.0))
-    y31, y17 = glob(0, W_FLAT + 1.5, 0)[1], glob(0, RAIL['w'][0], 0)[1]
-    ta = mk.box(g, (TOWER_A_X[0], y31, 50), (TOWER_A_X[1], y17, ROOF_IN - 0.3))
-    ta = mk.intersect(ta, (PREP_POST['v'][0] - L[2]).astype(np.float32), (PREP_POST['u'][0] - L[0]).astype(np.float32))
-    tb = mk.box(g, (TOWER_B_X[0], y31, 50), (TOWER_B_X[1], y17, ROOF_IN - 0.3))
-    tb = mk.intersect(tb, (EAR_B['v'][0] - L[2]).astype(np.float32), (L[0] - EAR_B['u'][1]).astype(np.float32))
-    body = mk.union(body, ta, tb)
-    # flat print face / side bounds along w (global y within the rail's w band; guide side open)
-    yflat = glob(0, W_FLAT, 0)[1]
-    body = mk.intersect(body, (yflat - g.Y()).astype(np.float32))
-    cuts = [mk.intersect(d - GUIDE['r_bore'], arc_side - 0.01)]
+    body = mk.intersect(body, (Y_FLAT - g.Y()).astype(np.float32))          # flat print face
+    cuts = [mk.intersect(d - GUIDE['r_bore'], arc_side - 0.01), lcyl(L, 0, (0.0, 0.0), GUIDE['r_bore'], -50.0, -30.0)]
     m, t = mouth()
-    s = (L[0] - m[0]) * t[0] + (L[2] - m[1]) * t[1]              # along the guide at the mouth
+    s = (L[0] - m[0]) * t[0] + (L[2] - m[1]) * t[1]
     rad = np.sqrt((L[0] - (m[0] + s * t[0])) ** 2 + L[1] ** 2 + (L[2] - (m[1] + s * t[1])) ** 2)
-    flare = GUIDE['r_bore'] + (GUIDE['mouth'] - GUIDE['r_bore']) * np.clip(-s / 4.0 + 0, 0, 1)
+    flare = GUIDE['r_bore'] + (GUIDE['mouth'] - GUIDE['r_bore']) * np.clip(-s / 4.0, 0, 1)
     cuts.append(mk._combine(rad - flare, np.maximum(-6 - s, s - 4)))
-    for k, (u, w) in BOLTS.items():
+    for u, w in BOLTS.values():
         cuts.append(lcyl(L, 2, (u, w), INSERT_D / 2, BASE_V - INSERT_L, BASE_V + 1))
         cuts.append(lcyl(L, 2, (u, w), RELIEF_D / 2, -20, BASE_V))
     for u, w in PREP_HOLES:
         cuts.append(lcyl(L, 2, (u, w), 0.85, PREP_TOP_V, PREP_TOP_V + 6.5))
-    # keep the filament path under the PREP lever clear (u -50..-30, r 1.6)
-    cuts.append(lcyl(L, 0, (0.0, 0.0), GUIDE['r_bore'], -50.0, -30.0))
-    for x, y in SCREWS.values():
-        cuts.append(mk.cyl_z(g, x, y, INSERT_D / 2, ROOF_IN - 0.3 - INSERT_L, ROOF_IN + 1))
-        cuts.append(mk.cyl_z(g, x, y, CLEAR_D / 2, ROOF_IN - 16, ROOF_IN + 1))
-    return mk.subtract(body, *cuts)
-
-_yA = glob(0, 24.2, 0)[1]
-SCREWS = {'A': (sum(TOWER_A_X) / 2, _yA), 'B': (sum(TOWER_B_X) / 2, _yA)}
-
-TABS = [((5.7, 10, PLATE_TOP - 3), (6.9, 22, PLATE_TOP + 1)),
-        ((92.6, 10, PLATE_TOP - 3), (93.8, 22, PLATE_TOP + 1)),
-        ((30, 29.1, PLATE_TOP - 3), (50, 30.3, PLATE_TOP + 1)),
-        ((30, -38.3, PLATE_TOP - 3), (50, -37.1, PLATE_TOP + 1))]
-
-def hood(g):
-    L = loc(g)
-    outer = mk.box(g, (RING_OUT[0], RING_OUT[2], PLATE_TOP), (RING_OUT[1], RING_OUT[3], ROOF_OUT))
-    inner = mk.box(g, (RING_IN[0], RING_IN[2], PLATE_TOP - 5), (RING_IN[1], RING_IN[3], ROOF_IN))
-    boss = lcyl(L, 0, (0.0, 0.0), OUTLET['r'], OUTLET['u_in'], OUTLET['u_out'])
-    boss = mk.intersect(boss, (g.Z() - ROOF_OUT).astype(np.float32))
-    body = mk.union(mk.subtract(outer, inner), boss, *[mk.box(g, lo, hi) for lo, hi in TABS])
-    cuts = [mk.cyl_x(g, GLAND['y'], GLAND['z'], GLAND['d'] / 2, RING_IN[1] - 1, RING_OUT[1] + 1),
-            lcyl(L, 0, (0.0, 0.0), OUTLET['hole'] / 2, OUTLET['u_in'] - 1, OUTLET['u_out'] + 1)]
-    for x, y in SCREWS.values():
-        cuts.append(mk.cyl_z(g, x, y, CLEAR_D / 2, ROOF_IN - 1, ROOF_OUT + 1))
-        cuts.append(mk.cyl_z(g, x, y, 3.25, ROOF_OUT - 0.6, ROOF_OUT + 1))
+    for u0 in PADS.values():                                  # inserts along -Y, from the wall side
+        x, z = pad_screw(u0)
+        cuts.append(mk.cyl_y(g, x, z, INSERT_D / 2, Y_FLAT - 1, Y_FLAT + INSERT_L))
+        cuts.append(mk.cyl_y(g, x, z, CLEAR_D / 2, Y_FLAT - 1, Y_FLAT + 12))
     return mk.subtract(body, *cuts)
 
 
-def mesh(fn, lo, hi):
-    """Marching cubes (skimage, Lewiner) on the signed-distance grid: manifold
-    where naive surface nets pinched thin features."""
+# ------------------------------------------------------------------ jojo base
+def jojo_source():
+    tri = mk.read_stl(ROOT / 'cad' / '05-Raised-lid-clearance-shell.stl')
+    V = tri.reshape(-1, 3); T = np.arange(len(V)).reshape(-1, 3)
+    return mk.weld(V, T, 1e-4)
+
+def clip_cap(V, T, z):
+    V, T = cliplid.clip_below(V, T, z); V, T = mk.weld(V, T, 1e-5)
+    T = T[(T[:, 0] != T[:, 1]) & (T[:, 1] != T[:, 2]) & (T[:, 0] != T[:, 2])]
+    T = np.concatenate([T, earcut.cap(V, T, z)])
+    V, T = cliplid.plug_outlet(V, T)
+    used = np.unique(T); r = -np.ones(len(V), int); r[used] = np.arange(len(used))
+    return V[used], r[T]
+
+def base():
+    V, T = jojo_source(); return clip_cap(V, T, ZC)
+
+def endcap_tri():
+    """jojo up to its plate top (the cad/05 pocket clipped off), for the end caps."""
+    V, T = jojo_source(); return clip_cap(V, T, Z_CAP + 0.012)
+
+
+# ------------------------------------------------------------------ canopy (heightmap design)
+def plan(xs, ys, Vb, Tb):
+    """2D masks at the clip plane from the base cap: solid ring, outline, interior I."""
+    from matplotlib.path import Path
+    cap_t = Tb[np.all(np.abs(Vb[Tb][:, :, 2] - ZC) < 1e-6, 1)]
+    X, Y = np.meshgrid(xs, ys, indexing='ij'); pts = np.column_stack([X.ravel(), Y.ravel()])
+    solid = np.zeros(len(pts), bool)
+    for t in cap_t:                                         # rasterise the cap triangles
+        P = Vb[t][:, :2]; lo, hi = P.min(0), P.max(0)
+        m = (pts[:, 0] >= lo[0] - 1e-9) & (pts[:, 0] <= hi[0] + 1e-9) & (pts[:, 1] >= lo[1] - 1e-9) & (pts[:, 1] <= hi[1] + 1e-9)
+        if m.any(): solid[m] |= Path(P).contains_points(pts[m], radius=1e-9) | Path(P[::-1]).contains_points(pts[m], radius=1e-9)
+    solid = solid.reshape(X.shape)
+    outline = ndi.binary_fill_holes(solid)
+    air = outline & ~solid
+    lab, n = ndi.label(air); sizes = ndi.sum(air, lab, range(1, n + 1))
+    I = lab == (1 + int(np.argmax(sizes)))
+    I &= np.abs(X) <= X_END
+    return solid, outline, I, X, Y
+
+def sd2(mask, h):
+    return (ndi.distance_transform_edt(~mask) - ndi.distance_transform_edt(mask)) * h + np.where(mask, h / 2, -h / 2)
+
+def canopy_heights(X, Y, I, outline, h):
+    dI = ndi.distance_transform_edt(I) * h
+    c_v = np.minimum(Z_WALL + dI, VAULT_IN)
+    dx = np.maximum(np.maximum(FRUSTUM['x'][0] - X, X - FRUSTUM['x'][1]), 0)
+    dy = np.maximum(np.maximum(FRUSTUM['y'][0] - Y, Y - FRUSTUM['y'][1]), 0)
+    c_f = FRUSTUM['z'] - np.maximum(dx, dy)
+    c = np.where(I, np.maximum(c_v, c_f), -1e3)
+    # outer skin: 45-degree offset of the ceiling, carried over the walls
+    r = int(np.ceil(10.0 / h)); k = np.arange(-r, r + 1) * h
+    K = -np.sqrt(k[:, None] ** 2 + k[None, :] ** 2)
+    top = ndi.grey_dilation(np.where(I, c + T_V, -1e3), structure=K, mode='nearest')
+    top = np.where(outline, np.maximum(top, ZC + 1.0), ZC)          # every wall pixel gets a top
+    # soften the creases (outer surface only; it faces up when printed rim-down)
+    ts = ndi.gaussian_filter(top, 2.0)
+    top = np.where(outline, np.maximum(ts, np.where(I, c + T_V - 0.6, top - 0.8)), -1e3)
+    return c, top
+
+def canopy(g, Vb, Tb, Vj, Tj):
+    xs, ys, zs = g.xs, g.ys, g.zs
+    solid, outline, I, X, Y = plan(xs, ys, Vb, Tb)
+    c, top = canopy_heights(X, Y, I, outline, H)
+    allowed = outline & (np.abs(X) <= X_CLIFF)
+    end = np.abs(X) > X_END
+    Z = zs[None, None, :]
+    zmin = np.where(end, Z_CAP - 0.6, ZC - 0.6)[:, :, None]
+    f_new = np.maximum(np.maximum(sd2(allowed, H)[:, :, None], zmin - Z), Z - top[:, :, None]).astype(np.float32)
+    f_cav = np.maximum(sd2(I, H)[:, :, None], Z - c[:, :, None]).astype(np.float32)
+    f = np.maximum(f_new, -f_cav)
+    # jojo end caps above the clip, exact in Z, |x| > 99.5 only
+    trij = Vj[Tj]
+    lo, hi = columns.intervals(trij, xs, ys)
+    fj = columns.zfield(lo, hi, zs)
+    fj[np.abs(xs) <= 99.5] = 1e3
+    fj = np.maximum(fj, (ZC - 0.6) - Z)
+    port = mk._combine(np.sqrt((g.X() + 100.0) ** 2 + g.Y() ** 2) - 4.6, np.maximum(ZC - 0.6 - g.Z(), g.Z() - Z_CAP))
+    f = np.minimum(f, np.minimum(fj, port))                 # jojo's old -X port is closed
+    # shadow line: a 45-degree V-groove just above the clip plane hides the base/canopy seam
+    so = sd2(outline, H)[:, :, None]
+    groove = (np.abs(Z - GROOVE['z']) - GROOVE['depth']) - so
+    groove = np.where((np.abs(xs) <= 99.5)[:, None, None], groove, 1e3).astype(np.float32)
+    f = np.maximum(f, -groove)
+    # features
+    L = loc(g.X(), g.Y(), g.Z())
+    uf = outlet_u()
+    boss = lcyl(L, 0, (0.0, 0.0), OUTLET['r'], uf - 1.0, uf + T_V / np.sqrt(2) + OUTLET['out'])
+    f = np.minimum(f, mk.intersect(boss, (zs.max() - 1 - g.Z()).astype(np.float32) * -1))
+    holes = [lcyl(L, 0, (0.0, 0.0), OUTLET['hole'] / 2, uf - 3, uf + 20),
+             mk.cyl_z(g, GLAND['x'], GLAND['y'], GLAND['d'] / 2, 100, 200)]
+    for u0 in PADS.values():
+        x, z = pad_screw(u0)
+        holes.append(mk.cyl_y(g, x, z, CLEAR_D / 2, -60, Y_FLAT + 0.2))
+    for u0 in PADS.values():                                 # standoffs from the -Y wall to the carrier face
+        x, z = pad_screw(u0)
+        f = np.minimum(f, mk.cyl_y(g, x, z, 4.5, -44.0, BOSS_Y))
+    f = mk.subtract(f, *holes)
+    return f, dict(c=c, top=top, I=I, outline=outline, xs=xs, ys=ys)
+
+def outlet_u():
+    """u where the filament axis meets the -X canopy face (inner surface)."""
+    us = np.linspace(20, 80, 6001); P = np.array([glob(u, 0, 0) for u in us])
+    dx = np.maximum(np.maximum(FRUSTUM['x'][0] - P[:, 0], P[:, 0] - FRUSTUM['x'][1]), 0)
+    dy = np.maximum(np.maximum(FRUSTUM['y'][0] - P[:, 1], P[:, 1] - FRUSTUM['y'][1]), 0)
+    cf = FRUSTUM['z'] - np.maximum(dx, dy)
+    return float(us[np.argmax(P[:, 2] > cf)])
+
+
+class Grid:
+    def __init__(self, lo, hi, h):
+        self.lo = np.asarray(lo, float); self.h = np.array([h, h, h])
+        self.xs = np.arange(lo[0], hi[0] + h / 2, h); self.ys = np.arange(lo[1], hi[1] + h / 2, h); self.zs = np.arange(lo[2], hi[2] + h / 2, h)
+    def X(self): return self.xs[:, None, None].astype(np.float32)
+    def Y(self): return self.ys[None, :, None].astype(np.float32)
+    def Z(self): return self.zs[None, None, :].astype(np.float32)
+
+
+def mc(f, g):
     from skimage import measure
-    g = mk.Grid(np.asarray(lo) - OFF, hi, H); s = fn(g)
-    V, T, _, _ = measure.marching_cubes(s, 0.0, spacing=tuple(g.h))
-    V = V + g.lo; T = T.astype(np.int64)
-    r = mk.check_mesh(V, T)
-    if r['volume'] < 0: T = T[:, ::-1]
-    if r['edges_not_2']: raise RuntimeError('non-manifold mesh for ' + fn.__name__)
-    return V, T, s, g
+    f = np.where(f == 0, np.float32(1e-5), f)                 # no exact zeros at grid nodes
+    Vm, Tm, _, _ = measure.marching_cubes(np.ascontiguousarray(f), 0.0, spacing=tuple(g.h))
+    Vm = Vm + g.lo; Tm = Tm.astype(np.int64)
+    r = mk.check_mesh(Vm, Tm)
+    if r['volume'] < 0: Tm = Tm[:, ::-1]
+    if r['edges_not_2']: raise RuntimeError(f"non-manifold: {r['edges_not_2']} edges")
+    return Vm, Tm
 
-HOOD_BOX = ((-9, -44, PLATE_TOP - 4.5), (104, 36, ROOF_OUT + 1))
-CAR_BOX = ((2, -40, 52), (102, 8, ROOF_IN + 1))
+
+OFF = 0.0137
+CANOPY_BOX = ((-118.6 - OFF, -59.0 - OFF, ZC - 1.4 - OFF), (118.6, 59.0, FRUSTUM['z'] + T_V + 12))
+CAR_BOX = ((2 - OFF, -46 - OFF, 52 - OFF), (102, 8, 160))
 
 if __name__ == '__main__':
     out = ROOT / 'cad' / '08-printed-lid'; out.mkdir(exist_ok=True)
-    import cliplid
-    cliplid.ZCUT = PLATE_TOP + 0.012          # 12 um above the plate face (avoids a coplanar cut)
-    Vl, Tl = cliplid.clipped_lid(ROOT / 'cad' / '05-Raised-lid-clearance-shell.stl')
-    Vl, Tl = cliplid.plug_outlet(Vl, Tl)
-    Vh, Th, sh, gh = mesh(hood, *HOOD_BOX)
-    Vc, Tc, sc, gc = mesh(carrier, *CAR_BOX)
+    for f in out.glob('*'): f.unlink()
+    Vb, Tb = base(); Vj, Tj = endcap_tri()
+    g = Grid(*CANOPY_BOX, H)
+    f, hm = canopy(g, Vb, Tb, Vj, Tj)
+    Vt, Tt = mc(f, g)
+    gc = Grid(*CAR_BOX, H)
+    sc = carrier(gc); Vc, Tc = mc(sc, gc)
     rep = {}
-    for n, (V, T) in dict(lid=(Vl, Tl), hood=(Vh, Th), carrier=(Vc, Tc)).items():
+    for n, (V, T) in dict(base=(Vb, Tb), canopy=(Vt, Tt), carrier=(Vc, Tc)).items():
         rep[n] = mk.check_mesh(V, T); rep[n]['bbox'] = [V.min(0).round(2).tolist(), V.max(0).round(2).tolist()]
         print(n, rep[n])
-    for f in out.glob('*.stl'): f.unlink()
-    mk.write_stl(out / '08a-lid-body.stl', Vl, Tl); mk.write_stl(out / '08b-hood.stl', Vh, Th)
+    mk.write_stl(out / '08-Printed-lid.stl', np.concatenate([Vb, Vt]), np.concatenate([Tb, Tt + len(Vb)]))
     mk.write_stl(out / '08c-feeder-carrier.stl', Vc, Tc)
-    mk.write_stl(out / '08-Printed-lid-one-piece.stl', np.concatenate([Vl, Vh]), np.concatenate([Tl, Th + len(Vl)]))
-    np.savez_compressed(HERE / 'sdf.npz', sh=sh, hlo=gh.lo, hh=gh.h, sc=sc, clo=gc.lo, ch=gc.h)
+    mk.write_stl(HERE / 'base.stl', Vb, Tb)              # occ.py input (jojo base only)
+    np.savez_compressed(HERE / 'sdf.npz', sl=f, llo=g.lo, lh=g.h, sc=sc, clo=gc.lo, ch=gc.h,
+                        c=hm['c'], top=hm['top'], I=hm['I'], xs=hm['xs'], ys=hm['ys'])
     rep['pose'] = dict(alpha_deg=ALPHA, inlet=list(INLET), TF=TF.round(4).tolist(), A=A.round(5).tolist(), V=V_.round(5).tolist())
+    rep['outlet_u'] = outlet_u()
     json.dump(rep, open(out / 'mesh-report.json', 'w'), indent=1)

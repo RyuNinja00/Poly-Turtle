@@ -24,7 +24,7 @@ The stock-lid interior reference measures 201.41 × 86.81 × 49.80 mm overall. T
 | Driven gear and trial carrier against printable base | About 1.24 and 1.04 mm sampled penetration |
 | Spool against printable base | About 1.24 mm sampled penetration near the opposite end wall |
 
-The distances involving meshes are signed surface samples. They describe the chosen poses and are not guaranteed manufacturing clearances or a global proof of infeasibility. The two-port lid's perimeter and gasket geometry were retained. A local capped pocket and a 4.3 mm outlet were added. The pocket increases the modeled lid height by 35.4 mm. Retention, sealing, routing and assembly sequence remain untested. The printable successor, [printed-lid.md](printed-lid.md) (cad/08), re-poses the feeder uphill; the feeder pose in this study is superseded there.
+The distances involving meshes are signed surface samples. They describe the chosen poses and are not guaranteed manufacturing clearances or a global proof of infeasibility. The two-port lid's perimeter and gasket geometry were retained. A local capped pocket and a 4.3 mm outlet were added. The pocket increases the modeled lid height by 35.4 mm. Retention, sealing, routing and assembly sequence remain untested. The printable successor, [printed-lid.md](printed-lid.md) (cad/08), re-poses the feeder uphill and replaces this pocket with a one-piece canopy; the feeder pose in this study is superseded there.
 
 ## Physical fit check
 1. Print page 2 of the PDF at actual size and measure its 50 mm bar. Register the crosshair on the rear factory roller. The trial driven axle is 128.57 mm forward and 0.27 mm below that roller.

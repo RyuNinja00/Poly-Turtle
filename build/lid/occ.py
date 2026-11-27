@@ -6,7 +6,7 @@ sys.path.insert(0, str(HERE.parent / 'cradle-drive' / 'tools'))
 import meshkit as mk
 LO = np.array([-2.0, -46.0, 58.0]); H = 0.5; N = (214, 180, 110)
 
-def build(stl=ROOT / 'cad/08-printed-lid/08a-lid-body.stl'):
+def build(stl=HERE / 'base.stl'):
     tri = mk.read_stl(stl)
     xs = LO[0] + H * np.arange(N[0]); ys = LO[1] + H * np.arange(N[1]); zs = LO[2] + H * np.arange(N[2])
     occ = np.zeros(N, bool)

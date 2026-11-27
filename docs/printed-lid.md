@@ -1,81 +1,114 @@
-# 08 Printed lid (rev 2: uphill feeder)
+# 08 Printed lid (rev 3: one piece, no supports)
 
-**The conversion needs a printed lid.** The Smol feeder (with LOAD) and the PREP switch sit above the top of the box, so the stock lid can't close over them. The printed lid is jojo's two-port **Printed Lid for Polydryer Box** ([Printables 1441905](https://www.printables.com/model/1441905), CC BY-NC-SA, based on work by Extrutim and Cipism). The old `cad/05` clearance shell was this lid with a capped box on top. Rev 1 turned that shell into printable parts.
+**The conversion needs a printed lid.** The Smol feeder (with LOAD) and the PREP switch sit above the top of the box, so the stock lid can't close over them. The base of this lid is jojo's two-port **Printed Lid for Polydryer Box** ([Printables 1441905](https://www.printables.com/model/1441905), CC BY-NC-SA, based on work by Extrutim and Cipism).
 
-**Rev 2 re-poses the feeder so filament travels uphill.** In the archived pose, the PREP inlet sat at the high end of a feeder tilted downward. Filament from the spool would have had to turn about 110° within a few millimetres to reach it. Rev 2 turns the Smol and PREP end for end and tilts them so filament climbs the feeder at **40°** toward −X. The inlet is now the low +X end, just above the lid rim. Filament comes up the +X side of the spool into a curved guide, so the turn is gentle. The cost is height: the hood is **45.9 mm** above the lid top instead of 35.4.
+**Revisions:**
+- **Rev 1** turned the cad/05 clearance shell into separate printable parts.
+- **Rev 2** turned the feeder so filament travels uphill.
+- **Rev 3** keeps that layout and makes the lid **one print with no supports**. It also gives the lid a single design language: 45° facets everywhere. Rev 2's flat plate and box hood could only be printed as two bonded parts, or as one part with a lot of support.
 
 ![08 printed lid overview](printed-lid.png)
 
-Files: [`cad/08-Printed-lid.zip`](../cad/08-Printed-lid.zip) contains the STLs, `checks.json` and `mesh-report.json`. Everything is in the cad/01 and cad/05 model frame (Z up, mm).
+## How it prints in one piece
 
-| File | Part | Print |
-|---|---|---|
-| `08a-lid-body.stl` | jojo's lid with the cad/05 pocket clipped flush with the flat top, leaving a 95 × 71 mm opening. The old 4.3 mm outlet hole in the +X end wall is closed. Rim, gasket channel, latches and ports are jojo's original triangles. | Top face down, as jojo intended |
-| `08b-hood.stl` | Hood. Holds the PC4-M10 outlet boss in the −X wall (Ø9, the fitting cuts its own thread), the M12 / PG7 gland hole in the +X wall, two roof screw holes and four locating tabs. | Roof down; the outlet boss may want a small support |
-| `08c-feeder-carrier.stl` | One piece under the Smol, replacing the BoxTurtle trayframe interface. Rail with two V1 heat-set inserts for the Smol's downward bolts, the PREP block (2 × M2 pilots, Ø1.7), the curved inlet guide (R20, 40°, Ø2.4 bore, flared mouth), and towers A and B up to the roof. | On its flat −Y face, no supports |
-| `08-Printed-lid-one-piece.stl` | 08a + 08b as touching shells that the slicer merges. Use it instead of 08a + 08b to avoid bonding, at the cost of supports under the lid plate. | Roof down with tree supports |
+Print it **rim down** on the bed. In that orientation every downward-facing surface is one of three things:
+- a 45° facet;
+- one of two short bridges: the 37 mm vault top and the 25 mm canopy top;
+- one of jojo's own small bridges, for example the 6 mm gasket channel.
 
-ASA is recommended for dryer temperatures.
+| Region | What it is |
+|---|---|
+| Below Z 102 | jojo's lid, **triangle for triangle**: rim, gasket channel, side latches. The old 4.3 mm outlet hole is closed. |
+| End caps above Z 102 | Rebuilt from jojo's own geometry, exact in Z: the latch bars and finger slots. Jojo's −X port is filled. |
+| Vault (between the end caps) | The flat plate is replaced by 45° chamfers rising from the walls at Z 105.5 to a 37 mm wide flat at Z 128 (inside). There is 1.75 mm of headroom over a full Ø205 spool (jojo's plate gave 1.36). |
+| Feeder canopy | A 45° frustum over the feeder, inner top Z 157. The feeder is re-posed to **45°**, so its top face and outlet face are parallel to the canopy faces. |
+| Shadow line | A small V-groove runs around the canopy just above Z 102. It turns the base/canopy join into a deliberate detail. |
+
+The lid is 100.3 mm tall overall. Print it in ASA with a brim. The bed contact is jojo's rim and gasket-channel walls. A few jojo ledges sit 0.2–1.5 mm above the bed; they are under 1.1 mm wide and print as short overhangs.
+
+## Files
+
+[`cad/08-Printed-lid.zip`](../cad/08-Printed-lid.zip) contains these files. All are in the cad/01 / cad/05 model frame (Z up, mm).
+
+| File | Part |
+|---|---|
+| `08-Printed-lid.stl` | The lid. It is two touching shells in one file: jojo's exact base and the canopy. Every slicer merges them into one solid. |
+| `08c-feeder-carrier.stl` | Sits under the Smol and replaces the BoxTurtle trayframe interface. It carries the two V1 heat-set inserts for the Smol's downward bolts, the PREP block (2 × M2 pilots, Ø1.7), the curved inlet guide (R20, 40°, Ø2.4 bore, flared mouth), and two wall inserts (−Y). Print it on its flat −Y face, no supports. |
+| `checks.json`, `mesh-report.json` | Check and mesh results. |
+
+## Lid features
+
+- **Outlet:** a PC4-M10 fitting screws into a Ø9 boss on the canopy's −X face. The fitting cuts its own thread over 8.7 mm. The face is square to the filament axis, so the PTFE leaves the Smol in a straight line.
+- **Wiring:** one M12 / PG7 gland, vertical, through the vault top at X −20. LOAD, PREP and the N20 leads all leave here. Fit plugs inside so the lid can come off.
+- **Feeder mounting:** 2 × M3 through the −Y wall at (X 47.4, Z 111.3) and (X 29.1, Z 129.7). Each passes through a printed standoff and threads into an insert in the carrier rail. Use a washer and a dab of sealant under each head.
 
 ## Assembly
 
-1. **Bond 08b to 08a.** The hood's 2.5 mm wall sits on the matching ring around the opening, and the tabs locate it. Use an ASA acetone weld, or epoxy for other materials. This joint is permanent and is part of the seal.
-2. **Inserts.** Press V1 M3 heat-set inserts into the rail at A and B and into the tops of towers A and B (Ø4.2 × 5.5 holes).
-3. **Build the feeder module on the bench.**
-   - Thread the Smol's two downward M3 bolts (the ones that went into the trayframe) into the rail inserts. A Ø3.2 relief under each insert takes the existing bolt tails.
-   - Screw the D2F PREP switch to the block with 2 × M2 self-tapping screws from below, lever toward the filament.
-   - Push a test length of filament through the guide, under the PREP lever and into the Smol inlet. It should run without catching.
-4. **Install.** With the lid upside down, lower the module straight through the opening. The module spans x 6.0–97.4 and y −36.5–28.8; the opening is 4.5–99.5 × −39.5–31.5. Fasten it with 2 × M3 × 10 through the roof into the tower inserts, with a washer and a dab of sealant under each head.
-5. **Outlet.** Screw a PC4-M10 fitting into the −X boss and run PTFE to the hub. Its axis is the filament axis, so the PTFE runs straight out of the Smol.
-6. **Wiring.** LOAD, PREP and the N20 leads leave through the M12 / PG7 gland in the +X wall. Fit a 2-pin plug inside for the N20 so the lid can come off.
-7. **Spool.** Load it so filament pays out **up the +X side** (toward the guide). The cradle drive is unchanged and rewinds in the opposite direction.
+1. **Inserts.** Press V1 M3 heat-set inserts into the carrier: two in the rail top (A, B) and two in its −Y face.
+2. **Bench-build the module.**
+   - Thread the Smol's two downward M3 bolts (the old trayframe bolts) into the rail inserts. A Ø3.2 relief under each insert takes the existing bolt tails.
+   - Screw the D2F PREP switch to its block with 2 × M2 self-tapping screws from below.
+   - Push filament through the guide, under the lever and into the Smol. It should run without catching.
+3. **Install.** Turn the lid upside down and lower the module straight in through the rim. The checks confirm the whole move is clear (minimum 0.25 mm). Screw the two −Y wall screws in.
+4. **Outlet and wiring.** Fit the PC4-M10 and the PTFE to the hub. Route the leads to the gland.
+5. **Spool.** Load it so filament pays out **up the +X side**, toward the guide. The cradle drive is unchanged and rewinds in the opposite direction.
 
-**Service:** remove two roof screws and the whole feeder module, PREP included, drops out.
+**Service:** remove the two wall screws and the whole feeder module, PREP included, lifts out through the rim.
 
 ## Checks (`build/lid/checks.py`, values from `checks.json`)
 
-Clearances are sampled from vertices and small circles of the cad/01 reference parts, moved into the rev 2 pose. They are not exact solids.
+Clearances are sampled from vertices and small circles of the cad/01 reference parts, moved into the rev 3 pose. They are not exact solids.
 
 | Check | Result |
 |---|---|
-| Meshes 08a / 08b / 08c | Closed; every edge shared by exactly 2 faces |
-| Smol + PREP to spool envelope (Ø205 × 78) | 3.95 mm |
-| Hood / carrier to spool | 3.40 / 3.73 mm |
-| Hood to Smol | 1.46 mm (under the roof) |
+| Meshes | Base, canopy and carrier are each closed; every edge is shared by exactly 2 faces |
+| Lid to Smol | 1.47 mm |
+| Lid to carrier | 0.25 mm (the carrier face against the wall standoffs) |
 | Carrier to Smol, excluding the replaced trayframe interface | 0.46 mm, at the rail top where the Smol's base sits |
 | Carrier to PREP | 0.20 mm (the switch face sits on the block) |
-| Carrier to hood | 0.30 mm (tower tops under the roof) |
-| Any part inside jojo's lid solid | 0 points |
-| Module drops through the opening | yes; lowest point Z 61.5, 1.3 mm above the lid rim plane |
+| Lid to spool (Ø205 × 78) | 1.75 mm |
+| Feeder module to spool | 3.67 mm |
+| Drop-in: module lowered straight down past the rim in 2 mm steps | 0 points inside the lid; minimum 0.25 mm |
+| Outlet axis vs. its face normal | 0.0° |
 
-**Inlet routing.** The table shows the free filament run from the spool to the guide mouth at each spool radius. In every case the path stays inside the lid and 37.7 mm from the Smol.
+**Downward-facing area, rim down** (canopy / jojo base):
 
-| Spool radius | Leaves the spool at (X, Z) | Turn at the guide mouth | Path to carrier |
-|---|---|---|---|
-| 102.5 (full) | 96.3, 7.9 | 7.6° | 1.59 mm |
-| 80 | 71.0, −18.1 | 25.6° | 2.01 mm |
-| 60 | 47.0, −24.6 | 37.9° | 2.69 mm |
-| 45 (near empty) | 30.3, −23.1 | 46.1° | 2.99 mm |
+| Overhang | Canopy | Jojo base |
+|---|---|---|
+| 45–50° | 16,753 mm² | 1,885 mm² |
+| 50–80° | 225 mm² | 163 mm² |
+| Horizontal | 4,367 mm² | 7,388 mm² |
 
-After the mouth, the guide adds a smooth 40° turn at R20. Compare the archived pose, which needed about 110° in a few millimetres.
+The horizontal canopy ceilings are the 37 mm vault flat, the 25 mm canopy top, and jojo's 10 mm end-slot ceilings.
+
+**Inlet routing.** Free filament runs from the +X side of the spool into the guide mouth:
+
+| Spool radius | Turn at the guide mouth |
+|---|---|
+| 102.5 (full) | 1.5° |
+| 80 | 20.0° |
+| 60 | 32.7° |
+| 45 (near empty) | 41.2° |
+
+After the mouth, the guide adds a smooth 40° turn at R20. The path stays at least 1.6 mm from the carrier at every spool size.
 
 ## Verify on the box
 
-- **Guide mouth.** It sits at box X ≈ 148 (model X 93.8), and the guide's lowest point is 1.3 mm above the lid-rim plane. Check that the inside of the box's +X end wall and the seating lip leave at least 2 mm there, with the lid closed.
-- **Payout side.** A full spool pays out close to the +X wall (X 96.3 at the spool's equator). Make sure nothing in the box (plugs, desiccant) sits in that strip.
-- **Bench test.** Feed and retract through the module before bonding the hood. Watch for drag at the guide on a near-empty spool.
+- **Guide mouth.** The guide hangs to Z 59 (model frame), 1.2 mm below the lid's rim plane and just inside the box's +X end wall, at X 92. With the lid closed, check that the box's +X end wall and its seating lip leave at least 2 mm at that point.
+- **Payout strip.** A full spool pays out close to the +X wall (X 96 at the spool's equator). Keep that strip free of desiccant or plugs.
+- **Bench test.** Bench-feed the module before the first full run, and watch for drag on a near-empty spool.
 
-## Parameters
+## Parameters and rebuild
 
-The pose lives in `build/lid/pose.py`. `ALPHA` and `INLET` are set in `printed_lid.py`, and every carrier and hood feature is defined in the Smol's own frame, so they follow any new pose. `occ.py` and `search.py` reproduce the pose search: minimum hood height subject to ≥ 3.5 mm spool clearance, no lid intersection, and a straight drop through the opening. Steeper angles (37.5–47.5°) give about the same hood height. 40° was chosen for the margin in X.
-
-## Rebuild
+- **Pose:** `build/lid/pose.py`, with `ALPHA = 45` and `INLET` set in `printed_lid.py`. `search.py` reproduces the pose search.
+- **Shape:** `ZC`, `Z_WALL`, `VAULT_IN` and `FRUSTUM` set the shape. `FRUSTUM` is the smallest 45° frustum that clears the module by 1.5 mm.
+- **Features:** carrier and outlet features are defined in the feeder's own frame, so they follow the pose.
 
 ```
 cd build/lid
 python3 clouds.py        # Smol / PREP reference clouds (needs cad/01: python transport/restore.py)
-python3 printed_lid.py   # lid body, hood, carrier, one-piece STL (marching cubes, 0.4 mm)
-python3 occ.py           # lid occupancy grid from 08a
+python3 printed_lid.py   # lid (jojo base + canopy, marching cubes 0.4 mm) and carrier
+python3 occ.py           # base occupancy grid for the checks
 python3 checks.py        # checks.json and cad/08-Printed-lid.zip
 python3 render.py        # docs/printed-lid.png
 ```

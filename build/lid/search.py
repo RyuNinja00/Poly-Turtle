@@ -1,3 +1,4 @@
+"""Pose search (rev 3 uses ALPHA 45: minimise x + z of the inlet, i.e. the 45-degree roof line, subject to spool clearance, no lid intersection and a vertical drop through the opening)."""
 import numpy as np, pickle
 from pose import Pose
 import occ as O
