@@ -78,8 +78,8 @@ res['guide'] = dict(radius=P.GUIDE['R'], sweep_deg=P.GUIDE['sweep'], bore=2 * P.
 # outlet: axis normal to the -X canopy face (A = face normal at ALPHA 45)
 nface = np.array([-1, 0, 1]) / np.sqrt(2)
 res['outlet'] = dict(axis_vs_face_normal_deg=round(float(np.degrees(np.arccos(abs(P.A @ nface)))), 2),
-                     inner_face_xyz=P.glob(P.outlet_u(), 0, 0).round(2).tolist(), hole=P.OUTLET['hole'],
-                     thread_length_mm=round(P.T_V / np.sqrt(2) + P.OUTLET['out'] + 1.0, 1))
+                     inner_face_xyz=P.glob(P.outlet_u(), 0, 0).round(2).tolist(), fitting_face_xyz=P.glob(P.outlet_face(), 0, 0).round(2).tolist(),
+                     thread='M10x1 printed (extras.THREAD)', thread_length_mm=round(P.outlet_face() - (P.outlet_u() - 0.6) - P.E.GROOVE['depth'], 2))
 res['wall_screws_xz'] = {k: [round(c, 2) for c in P.pad_screw(u)] for k, u in P.PADS.items()}
 res['bolt_insert_axes'] = {k: P.glob(u, w, P.BASE_V).round(2).tolist() for k, (u, w) in P.BOLTS.items()}
 
@@ -97,12 +97,16 @@ res['overhang_area_rim_down'] = bands
 hz = up & (nz < -0.985) & (C[:, 2] >= P.ZC)
 spans = []
 if hz.any():
-    q = C[hz]; zr = np.round(q[:, 2] / 0.5)
+    from matplotlib.path import Path as MP
+    from scipy.ndimage import binary_closing
+    tq = tri[hz]; zr = np.round(tq[:, :, 2].mean(1) / 0.5)
+    gx = np.arange(-120, 120, 0.4); gy = np.arange(-60, 60, 0.4); GX, GY = np.meshgrid(gx, gy, indexing='ij'); G2 = np.column_stack([GX.ravel(), GY.ravel()])
     for z in np.unique(zr):
-        pts = q[zr == z]
-        grid = np.zeros((600, 300), bool); ij = np.clip(((pts[:, :2] + [120, 60]) / 0.4).astype(int), 0, [599, 299])
-        grid[ij[:, 0], ij[:, 1]] = True
-        from scipy.ndimage import binary_closing
+        grid = np.zeros(GX.shape, bool)
+        for t in tq[zr == z]:                                # fill each triangle (decimated meshes have large ones)
+            lo_, hi_ = t[:, :2].min(0), t[:, :2].max(0)
+            m = (G2[:, 0] >= lo_[0] - 0.2) & (G2[:, 0] <= hi_[0] + 0.2) & (G2[:, 1] >= lo_[1] - 0.2) & (G2[:, 1] <= hi_[1] + 0.2)
+            if m.any(): grid.ravel()[np.where(m)[0][MP(t[:, :2]).contains_points(G2[m], radius=0.3)]] = True
         lab, nl = label(binary_closing(grid, iterations=2))
         for k in range(1, nl + 1):
             w = np.argwhere(lab == k) * 0.4

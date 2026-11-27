@@ -150,17 +150,32 @@ res['outlet'] = dict(bore_axis_blocked=int(LID.inside(Q).sum()), bore_r4_4_block
                      smol_max_u_within_r6=round(float(su[sr < 6].max()), 2), inner_face_u=round(uf, 2),
                      boss_axis_solid_length_mm=round(float(0.1 * LID.inside(np.array([P.glob(u, 5.5, 0) for u in us])).sum()), 1))
 # gland: hole open and nut space (r 10, 9 deep under the ceiling) free of module and spool
-gx, gy = P.GLAND['x'], P.GLAND['y']; col = merged(LID.column(gx, gy)); col_r = merged(LID.column(gx + 6.5, gy))
-ceil = [a for a, b in col_r if a > 110][0] if any(a > 110 for a, b in col_r) else None
-res['gland'] = dict(hole_column=col, wall_beside_hole=col_r,
-                    nut_zone_vs_module=round(float(np.min(np.hypot(allm[:, 0] - gx, allm[:, 1] - gy)[allm[:, 2] > (ceil or 0) - 9])), 1) if ceil else None,
-                    nut_zone_bottom_vs_spool_top=round(float((ceil - 9) - (SC[1] + np.sqrt(102.5 ** 2 - (gx - SC[0]) ** 2))), 1) if ceil else None)
+mx, my = P.MF_AT['x'], P.MF_AT['y']; ax_, ay_ = P.E.MF['aperture']
+pts = np.array([[mx + dx, my + dy, z] for dx in np.linspace(-ax_ / 2 + 0.4, ax_ / 2 - 0.4, 9) for dy in np.linspace(-ay_ / 2 + 0.4, ay_ / 2 - 0.4, 5) for z in np.arange(120, 140, 0.5)])
+col_r = merged(LID.column(mx, my + ay_ / 2 + 2.0))
+roof = [(a, b) for a, b in col_r if a > 110]
+screws = [int(LID.inside(np.array([[mx + sx * P.E.MF['screw_dx'] + 1.4 * np.cos(t), my + 1.4 * np.sin(t), z] for t in np.linspace(0, 6.28, 8) for z in np.arange(120, 140, 0.5)])).sum()) for sx in (-1, 1)]
+plate_l = P.E.MF['plate'][0]; flat = []
+for dx in np.linspace(-plate_l / 2, plate_l / 2, 9):
+    for dy in (-11.0, 0.0, 11.0):
+        c = merged(LID.column(mx + dx, my + dy)); flat.append(max(b for a, b in c) if c else None)
+ceil = roof[0][0] if roof else None
+res['microfit_plate'] = dict(aperture_blocked=int(LID.inside(pts).sum()), screw_holes_blocked=screws, roof=roof,
+                             plate_seat_top_z=[min(f for f in flat if f), max(f for f in flat if f)],
+                             space_under_roof_to_spool_mm=round(float(ceil - (SC[1] + np.sqrt(102.5 ** 2 - (mx - SC[0]) ** 2))), 1) if ceil else None,
+                             module_within_20mm=int((np.hypot(allm[:, 0] - mx, allm[:, 1] - my) < 20).sum()))
+# outlet thread present: crest/root hits on the bushing at r 4.8 (between minor 4.55 and major 5.15)
+uq = np.arange(uf - 0.5, P.outlet_face() - P.E.GROOVE['depth'] - 0.2, 0.05)
+probe = np.array([P.glob(u, 4.85, 0.0) for u in uq])
+hit = LID.inside(probe)
+res['outlet_thread'] = dict(solid_fraction_at_r4_85=round(float(hit.mean()), 2), transitions=int(np.abs(np.diff(hit.astype(int))).sum()))
 # filament path: guide bore + axis under PREP, clear of carrier (r 0.9)
 R = P.GUIDE['R']; ph = np.linspace(-np.radians(P.GUIDE['sweep']), 0, 80)
 path = [P.glob(-50 + R * np.sin(p), 0, -R + R * np.cos(p)) for p in ph] + [P.glob(u, 0, 0) for u in np.arange(-50, uf + 8, 0.25)]
 path = np.array(path)
 tube = np.array([p + 0.9 * (np.cos(a) * P.W + np.sin(a) * P.V_) for p in path for a in np.linspace(0, 2 * np.pi, 8, endpoint=False)])
-res['filament_path'] = dict(carrier_blocks=int(CAR.inside(tube).sum()), lid_blocks=int(LID.inside(tube).sum()),
+liner = np.array([P.glob(-50 + R * np.sin(p), 0, -R + R * np.cos(p)) + 2.0 * (np.cos(a) * P.W + np.sin(a) * (np.sin(p) * P.A + np.cos(p) * P.V_) ) for p in ph[:-2] for a in np.linspace(0, 2 * np.pi, 12, endpoint=False)])
+res['filament_path'] = dict(liner_od4_blocks=int(CAR.inside(liner).sum()), carrier_blocks=int(CAR.inside(tube).sum()), lid_blocks=int(LID.inside(tube).sum()),
                             smol_points_within_0p9=int((cKDTree(path).query(smol)[0] < 0.9).sum()))
 # Smol bolts: tails of A and B pass the carrier inserts/relief
 bolts = {}

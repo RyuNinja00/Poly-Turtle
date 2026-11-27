@@ -25,6 +25,8 @@ HERE = Path(__file__).resolve().parent; ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE.parent / 'cradle-drive' / 'tools'))
 import meshkit as mk
 import cliplid, earcut, columns
+import extras as E
+from decimate import decimate
 from pose import Pose
 
 # ------------------------------------------------------------------ pose and layout
@@ -56,12 +58,13 @@ EAR_B = dict(u=(36.0, 43.0), w=(17.4, 40.0), v=(-9.5, 1.0))
 ARM = dict(u=(-49.4, -23.0), w=(6.9, 40.0), v=(-9.5, 1.2))
 PREP_POST = dict(u=(-49.4, -36.8), w=(7.6, 40.0), v=(-9.5, 16.0))
 PREP_BLOCK = dict(u=(-49.4, -36.8), w=(-6.6, 40.0), v=(PREP_TOP_V + 0.2, 16.0))
-GUIDE = dict(R=20.0, sweep=40.0, r_out=3.2, r_bore=1.2, mouth=2.6)
+GUIDE = dict(R=20.0, sweep=40.0, r_out=3.8, r_bore=2.15, mouth=3.0)   # Ø4.3 bore takes a 4/2 mm PTFE liner
+STRAIGHT = dict(r_out=3.2, r_bore=1.2)                                 # past the liner stop (u -50): bare filament under PREP
 WEB = dict(u=(-58.0, -44.0), w=(-3.0, 7.4), v=(-9.5, -2.2))
 PADS = {'A': 4.0, 'B': 30.0}        # rail screws (u): M3 through the -Y wall into rail inserts
 PAD_V = (-9.5 + BASE_V) / 2
-GLAND = dict(x=-20.0, y=0.0, d=12.4)                       # vertical, through the vault flat
-OUTLET = dict(r=7.5, hole=9.0, out=5.2)                    # boss proud of the -X canopy face
+MF_AT = dict(x=-20.0, y=0.0)                               # Micro-Fit 3.0 2x6 bulkhead plate on the vault flat (extras.MF)
+OUTLET = dict(r=7.5, hole=11.2, out=5.2)                   # boss proud of the -X canopy face; threaded bushing (extras) fills the hole
 GROOVE = dict(z=102.8, depth=0.8)                          # V shadow line around the canopy base
 
 
@@ -104,9 +107,9 @@ def carrier(g):
     L = loc(g.X(), g.Y(), g.Z())
     body = mk.union(lbox(L, RAIL), lbox(L, EAR_B), lbox(L, ARM), lbox(L, PREP_POST), lbox(L, PREP_BLOCK), lbox(L, WEB))
     d = arc_dist(L); arc_side = (L[0] + 50.0).astype(np.float32)
-    body = mk.union(body, mk.intersect(d - GUIDE['r_out'], arc_side), lcyl(L, 0, (0.0, 0.0), GUIDE['r_out'], -50.0, -46.0))
+    body = mk.union(body, mk.intersect(d - GUIDE['r_out'], arc_side), lcyl(L, 0, (0.0, 0.0), STRAIGHT['r_out'], -50.0, -46.0))
     body = mk.intersect(body, (Y_FLAT - g.Y()).astype(np.float32))          # flat print face
-    cuts = [mk.intersect(d - GUIDE['r_bore'], arc_side - 0.01), lcyl(L, 0, (0.0, 0.0), GUIDE['r_bore'], -50.0, -30.0)]
+    cuts = [mk.intersect(d - GUIDE['r_bore'], arc_side - 0.01), lcyl(L, 0, (0.0, 0.0), STRAIGHT['r_bore'], -50.0, -30.0)]
     m, t = mouth()
     s = (L[0] - m[0]) * t[0] + (L[2] - m[1]) * t[1]
     rad = np.sqrt((L[0] - (m[0] + s * t[0])) ** 2 + L[1] ** 2 + (L[2] - (m[1] + s * t[1])) ** 2)
@@ -212,10 +215,12 @@ def canopy(g, Vb, Tb, Vj, Tj):
     # features
     L = loc(g.X(), g.Y(), g.Z())
     uf = outlet_u()
-    boss = lcyl(L, 0, (0.0, 0.0), OUTLET['r'], uf - 1.0, uf + T_V / np.sqrt(2) + OUTLET['out'])
+    boss = lcyl(L, 0, (0.0, 0.0), OUTLET['r'], uf - 1.0, outlet_face() - 0.3)
     f = np.minimum(f, mk.intersect(boss, (zs.max() - 1 - g.Z()).astype(np.float32) * -1))
     holes = [lcyl(L, 0, (0.0, 0.0), OUTLET['hole'] / 2, uf - 3, uf + 20),
-             mk.cyl_z(g, GLAND['x'], GLAND['y'], GLAND['d'] / 2, 100, 200)]
+             mk.box(g, (MF_AT['x'] - E.MF['aperture'][0] / 2, MF_AT['y'] - E.MF['aperture'][1] / 2, 100), (MF_AT['x'] + E.MF['aperture'][0] / 2, MF_AT['y'] + E.MF['aperture'][1] / 2, 200))]
+    for sx in (-1, 1):
+        holes.append(mk.cyl_z(g, MF_AT['x'] + sx * E.MF['screw_dx'], MF_AT['y'], E.MF['screw_d'] / 2, 100, 200))
     for u0 in PADS.values():
         x, z = pad_screw(u0)
         holes.append(mk.cyl_y(g, x, z, CLEAR_D / 2, -60, Y_FLAT + 0.2))
@@ -224,6 +229,10 @@ def canopy(g, Vb, Tb, Vj, Tj):
         f = np.minimum(f, mk.cyl_y(g, x, z, 4.5, -44.0, BOSS_Y))
     f = mk.subtract(f, *holes)
     return f, dict(c=c, top=top, I=I, outline=outline, xs=xs, ys=ys)
+
+def outlet_face():
+    """u of the fitting face (outer end of the boss / threaded bushing)"""
+    return outlet_u() + T_V / np.sqrt(2) + OUTLET['out']
 
 def outlet_u():
     """u where the filament axis meets the -X canopy face (inner surface)."""
@@ -273,13 +282,22 @@ if __name__ == '__main__':
     Vt, Tt = mc(f, g)
     gc = Grid(*CAR_BOX, H)
     sc = carrier(gc); Vc, Tc = mc(sc, gc)
+    Vt, Tt = decimate(Vt, Tt, passes=30); Vc, Tc = decimate(Vc, Tc, passes=30)
+    uf = outlet_u()
+    Vs, Ts = E.outlet_bushing(TF, A, uf - 0.6, outlet_face())
     rep = {}
-    for n, (V, T) in dict(base=(Vb, Tb), canopy=(Vt, Tt), carrier=(Vc, Tc)).items():
+    for n, (V, T) in dict(base=(Vb, Tb), canopy=(Vt, Tt), bushing=(Vs, Ts), carrier=(Vc, Tc)).items():
         rep[n] = mk.check_mesh(V, T); rep[n]['bbox'] = [V.min(0).round(2).tolist(), V.max(0).round(2).tolist()]
         print(n, rep[n])
-    mk.write_stl(out / '08-Printed-lid.stl', np.concatenate([Vb, Vt]), np.concatenate([Tb, Tt + len(Vb)]))
+    mk.write_stl(out / '08-Printed-lid.stl', *E.merge((Vb, Tb), (Vt, Tt), (Vs, Ts)))
     mk.write_stl(out / '08c-feeder-carrier.stl', Vc, Tc)
     mk.write_stl(HERE / 'base.stl', Vb, Tb)              # occ.py input (jojo base only)
+    gk, ginfo = E.gaskets(Vb[Tb])
+    for hgt, (V, T) in gk.items():
+        mk.write_stl(out / f'08g-TPU-lid-gasket-{hgt:.1f}mm.stl', V, T); rep[f'gasket_{hgt}'] = mk.check_mesh(V, T)
+    for name, (V, T) in {'08h-TPU-outlet-washer.stl': E.tpu_washer(), '08m-microfit-2x6-plate.stl': E.mf_plate(),
+                         '08n-TPU-microfit-plate-gasket.stl': E.mf_gasket()}.items():
+        mk.write_stl(out / name, V, T); rep[name] = mk.check_mesh(V, T)
     np.savez_compressed(HERE / 'sdf.npz', sl=f, llo=g.lo, lh=g.h, sc=sc, clo=gc.lo, ch=gc.h,
                         c=hm['c'], top=hm['top'], I=hm['I'], xs=hm['xs'], ys=hm['ys'])
     rep['pose'] = dict(alpha_deg=ALPHA, inlet=list(INLET), TF=TF.round(4).tolist(), A=A.round(5).tolist(), V=V_.round(5).tolist())

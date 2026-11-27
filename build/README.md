@@ -21,8 +21,11 @@ The saved model poses are defined in design.py and assemble.py. Surface sampling
   - jojo's end caps from exact z-intervals (`columns.py`);
   - features and the feeder carrier as signed-distance fields;
   - meshes everything with marching cubes at 0.4 mm.
+- `extras.py` builds exact small parts: the threaded outlet bushing, the TPU rim gaskets (from jojo's channel), the Micro-Fit plate and gaskets.
+- `decimate.py` collapses flat regions within 0.01 mm.
 - `occ.py` builds the base occupancy grid.
 - `checks.py` checks clearances, drop-in, inlet routing and rim-down overhangs, then packs `cad/08-Printed-lid.zip`.
+- `verify.py` and `verify_endcaps.py` re-measure the final STLs.
 - `render.py` draws `docs/printed-lid.png`.
 
 Run `clouds.py` first; it needs the restored cad/01. See [docs/printed-lid.md](../docs/printed-lid.md).

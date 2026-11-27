@@ -13,6 +13,19 @@ The target is the single-spool box supplied with the Polymaker PolyDryer. The ol
 
 The drive moved into the factory front cradles. Details are in [cradle-drive.md](cradle-drive.md). One printed roller with an integrated 15T gear runs on the factory rod. The treads are TPU, the printed 17T pinion goes on the V1.0 N20, and the bracket keys into the left cradle slot and holds the motor with zip ties. The spool pose, lid, feeder, LOAD, PREP and paths are unchanged, and the lane LED is removed. The `--gearset v1pinion` option keeps the V1.0 pinion at 41 % rewind speed. Next: take the five measurements listed in cradle-drive.md, adjust `PITCH` if needed, print, then bench-test payout, mesh and rewind. The section below records the revision 1 plan.
 
+## Printed lid rev 3.1 (2026-11-27)
+
+Rev 3.1 adds the following. `verify.py` re-checks all of it on the final STLs.
+- **Outlet:** a printed M10×1 thread for the PC4-M10, with an O-ring / TPU-washer groove.
+- **Inlet guide:** a Ø4.3 bore for a PTFE liner.
+- **Wiring:** a Micro-Fit 3.0 2×6 bulkhead plate (43020-1200) instead of the gland.
+- **Seal:** TPU rim gaskets in three heights, chosen with a clay test.
+- **Files:** the lid STL is decimated to 7.9 MB.
+
+Open points:
+- Confirm the Micro-Fit cutout against a real housing.
+- Do the clay gap test.
+
 ## Printed lid rev 3 (2026-11-26)
 
 [printed-lid.md](printed-lid.md) has the details.
