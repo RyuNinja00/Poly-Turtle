@@ -43,7 +43,7 @@ The lid is 101.8 mm tall overall. Print it in ASA with a brim. The bed contact i
 | `08c-feeder-carrier.stl` | Sits under the Smol and replaces the BoxTurtle trayframe interface. It carries the two V1 heat-set inserts for the Smol's downward bolts, the PREP block (2 × M2 pilots, Ø1.7), the curved inlet guide (R20, 40°, Ø4.3 bore for a 4 × 2 mm PTFE liner, flared mouth), and two wall inserts (−Y). Print it on its flat −Y face, no supports. |
 | `08g-TPU-lid-gasket-2.5mm.stl` / `-3.5mm` / `-4.5mm` | Lid-to-box seal. A hollow TPU ring (0.8 mm walls) that snaps into jojo's rim channel. Choose the height as described under *Lid-to-box seal*. Print flat, in TPU 85A–95A. |
 | `08h-TPU-outlet-washer.stl` | Optional printed seal under the PC4-M10 hex, in place of a 10 × 1 mm O-ring. Print in TPU. |
-| `08m-microfit-2x6-plate.stl` | 2 mm bulkhead plate for a Molex Micro-Fit 3.0 12-circuit panel-mount plug housing (43020-1200). Cutout after Wireheadarts' Micro-Fit library (Printables 1300761). Print in ASA. |
+| `08m-microfit-2x6-plate.stl` | 2 mm bulkhead plate for a Micro-Fit 3.0 2 × 6 housing with panel-mount ears (Molex 43020-1200, or the seller's "5557-3.0-2*R"). Cutout after Wireheadarts' Micro-Fit library (Printables 1300761). Print in ASA. |
 | `08n-TPU-microfit-plate-gasket.stl` | 1 mm TPU gasket under the plate. |
 | `checks.json`, `verify.json`, `verify-endcaps.txt`, `mesh-report.json` | Check, final-mesh verification and mesh results. |
 
@@ -55,17 +55,26 @@ The lid is 101.8 mm tall overall. Print it in ASA with a brim. The bed contact i
   - The thread axis is the filament axis, square to the 45° face.
   - Printed at 45° the thread comes out a little rough. Screw the fitting in by hand, or chase it once with an M10 × 1 tap.
 - **Wiring:** a Molex **Micro-Fit 3.0 2 × 6** bulkhead on the vault top at X −20, which replaces the gland.
-  - The 12-circuit panel-mount plug housing (43020-1200, the version with panel-mount ears) snaps into the cutout in the 2 mm plate.
-  - The mating receptacle (43025-1200) goes on the cable to the controller.
+  - **Which half goes where.** Sellers' names for the two halves are reversed from what you might expect:
+    - The **lid** takes the 2 × 6 housing with the barbed ears and **male pins**: the seller's "5557-3.0-2*R (母壳, female shell)", the same as Molex 43020-1200 (pins 43031).
+    - The **cable** gets the 2 × 6 housing with the **female 43030 terminals**: the seller's "5557-3.0-2*P (公壳, male shell)", the same as Molex 43025-1200.
   - The plate sits on a 1 mm TPU gasket over a 25 × 13.5 opening and is held by 2 × M3 × 10 with nuts inside.
   - With 12 circuits there is room for the N20 (2), LOAD (2–3), PREP (2) and spares.
-  - **The cutout shape** follows Wireheadarts' *OpenSCAD library for mounting Molex MicroFit 3.0 panel-mount plugs* (Printables 1300761), which works from the Molex datasheet. It has three parts:
-    - a body opening C × H;
-    - a full-length slot D × 3.05 so the snap ears can pass and spring back;
+  - **The cutout shape** follows Wireheadarts' *OpenSCAD library for mounting Molex MicroFit 3.0 panel-mount plugs* (Printables 1300761). It has three parts:
+    - a body opening;
+    - a full-length slot so the snap ears can pass and spring back;
     - a 3.18 mm notch for the latch.
-  - That library's C/D table matches Molex's 43020 table by column count, so a 2 × 6 gets C 19.21 and D 22.89. The library itself is single-row (H 4.21, latch to 5.51). For dual row I add one 3.00 mm row pitch (H 7.21, latch to 8.51). Every edge has 0.05 mm of print clearance, so the outline is 22.99 × 8.61 mm.
+
+| Size | Seller's drawing, 2 × 6 R housing | Plate cutout |
+|---|---|---|
+| Body length B | 19.00 ± 0.25 | 19.45 (0.1 per side over the 19.25 maximum) |
+| Body across both rows | 7.00 | 7.31 |
+| Across rows, latch included | 8.50 | 8.61 |
+| Ear span | not given; Molex is 22.89 | slot 22.99 × 3.15 |
+
+  - The library's single-row figures (4.21 / 5.51) plus one 3.00 mm row pitch give 7.21 / 8.51. The seller's 2 × 6 drawing (7.00 / 8.50) confirms that extrapolation.
   - The plate is 2.0 mm thick, inside the 1.57–2.30 mm panel range the library is designed for.
-  - **Check:** the dual-row height is extrapolated, not taken from a Molex drawing. Print the plate on its own first (a few minutes) and press a housing in. Both ears should click and it shouldn't wobble. If it's off, change `MF` in `extras.py`; only the plate needs reprinting.
+  - The seller doesn't give the ear span, so print the plate first (a few minutes) and press a housing in. Both ears should click and it shouldn't wobble. If it's off, change `MF` in `extras.py`; only the plate needs reprinting.
 - **Feeder mounting:** 2 × **M3 × 12** through the −Y wall at (X 47.4, Z 111.3) and (X 29.1, Z 129.7). Each passes through a printed standoff and threads into an insert in the carrier rail, with 4.5 mm of thread engaged. The standoffs stop 0.6 mm short of the carrier so it slides in freely; tightening the screws closes that gap. Use a washer and a dab of sealant under each head. The screw tips stay at least 2.8 mm from the Smol.
 
 ## Assembly

@@ -158,14 +158,15 @@ def gaskets(base_tri):
 # Its C/D tables equal Molex's 43020 table by column count; for 2 x 6: C 19.21, D 22.89.
 # The library is single-row (H 4.21, latch to 5.51); dual row adds one 3.00 mm row pitch.
 MF = dict(cols=6, rows=2,
-          C=19.21, D=22.89, E=3.05, H1=4.21, pitch=3.00, latch_w=3.18, latch_h=1.30,
+          C=19.25, D=22.89,   # C: seller's 2x6 body 19.00 +/-0.25 (max 19.25; Molex cutout 19.21)
+          E=3.05, H1=4.21, pitch=3.00, latch_w=3.18, latch_h=1.30,
           fit=0.05,                       # per side, for a printed panel
           plate=(40.0, 22.0, 2.0),        # 2.0 mm: inside the 1.57-2.30 panel range
           r=3.0, screw_dx=16.0, screw_d=3.4,
           aperture=(25.0, 13.5))          # hole in the lid under the plate (housing + ears pass)
 
 def mf_cutout():
-    f = MF['fit']; C, D, E = MF['C'] / 2 + f, MF['D'] / 2 + f, MF['E'] / 2 + f
+    f = MF['fit']; C, D, E = MF['C'] / 2 + 0.10, MF['D'] / 2 + f, MF['E'] / 2 + f
     Hh = (MF['H1'] + (MF['rows'] - 1) * MF['pitch']) / 2 + f
     lw, lt = MF['latch_w'] / 2 + f, Hh + MF['latch_h']
     return np.array([(D, -E), (D, E), (C, E), (C, Hh), (lw, Hh), (lw, lt), (-lw, lt), (-lw, Hh), (-C, Hh), (-C, E),
