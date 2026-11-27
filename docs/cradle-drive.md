@@ -19,7 +19,7 @@ Revision 2c simplifies the build:
 | Roller with 15T m1 gear (`07a-Roller-with-gear.stl`) | 1 | Print in ASA, upright, with the bearing-side end (+Y) on the bed. A 45° chamfer supports the teeth, so no supports are needed. |
 | Treads, OD 17.96 / ID 11.6 / 17.5 long (`07b-Tread-sleeve-TPU-L/R.stl`; L = key side, R = bearing side) | 2 | Print in TPU 95A, upright, 100 % infill. Press them onto the roller. |
 | Pinion 17T m1, N20 D bore (`07c-Pinion-17T-N20.stl`) | 1 | Print in ASA, flat. |
-| Motor bracket with cradle key (`07d-Motor-bracket-cradle-key.stl`) | 1 | Print in ASA, upside down: the shared top face at Z 36 goes on the bed, and no supports are needed. |
+| Motor bracket with cradle key (`07d-Motor-bracket-cradle-key.stl`) | 1 | Print in ASA **on its side**, with the flat +X end face (745 mm²) on the bed. Add one small support under the key tab's +X edge (3 × 13 mm); everything else prints unsupported. Don't print it upside down: the motor floor would be a 12 mm one-sided overhang. |
 | N20 motor | 1 | V1.0 |
 | Ø8 rod and the bearing-side bearing | 1 | The factory front roller. Only the key-side bearing comes off. |
 | Small zip ties | 2 | — |
@@ -88,5 +88,5 @@ Bench-test free payout, roller spin on the rod, and loaded rewind before running
 |---|---|
 | `cad/07-cradle-drive/*.stl`, `checks.json`, `layout.json` | Printable parts in box coordinates (X forward from the rear factory axle, Z up from the floor, mm), with their checks |
 | `cad/07-cradle-drive/v1-pinion-variant/` | The same files for the V1.0-pinion option |
-| `cad/07-Cradle-drive-layout.step.zip` | Assembly STEP: spool, rear roller, Smol with LOAD, PREP, paths, V1.0 N20 and the bearing. In Fusion, use *Insert Mesh* without moving the STLs to place them on it. |
+| `cad/07-Cradle-drive-layout.step.zip` | Assembly STEP: spool, rear roller, Smol with LOAD, PREP, paths, V1.0 N20 and the bearing. The Smol, PREP and paths are in the rev 3 printed-lid pose (45°, uphill), so the STEP lines up with cad/08. In Fusion, use *Insert Mesh* without moving the STLs to place them on it. |
 | `build/cradle-drive/` | Scripts that regenerate everything (numpy, scipy and matplotlib only) |

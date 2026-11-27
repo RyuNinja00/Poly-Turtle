@@ -166,7 +166,20 @@ def volume(V, T):
     a, b, c = V[T[:, 0]], V[T[:, 1]], V[T[:, 2]]
     return float(np.einsum('ij,ij->i', a, np.cross(b, c)).sum() / 6)
 
+def _float32_clean(V, T):
+    """Weld exactly as a slicer reads a binary STL (float32) and drop triangles that
+    collapse there; keep the result only if it stays 2-manifold."""
+    V32 = np.asarray(V, np.float32); u, inv = np.unique(V32, axis=0, return_inverse=True)
+    T2 = inv.reshape(-1)[np.asarray(T)]
+    keep = (T2[:, 0] != T2[:, 1]) & (T2[:, 1] != T2[:, 2]) & (T2[:, 0] != T2[:, 2])
+    if keep.all(): return V, T
+    e = np.sort(np.concatenate([T2[keep][:, [0, 1]], T2[keep][:, [1, 2]], T2[keep][:, [2, 0]]]), 1)
+    _, c = np.unique(e, axis=0, return_counts=True)
+    if (c != 2).any(): return V, T
+    return u.astype(float), T2[keep]
+
 def write_stl(path, V, T, name=b'poly-turtle'):
+    V, T = _float32_clean(V, T)
     a, b, c = V[T[:, 0]], V[T[:, 1]], V[T[:, 2]]
     n = np.cross(b - a, c - a); n /= np.maximum(np.linalg.norm(n, axis=1), 1e-12)[:, None]
     dt = np.dtype([('n', '<f4', 3), ('v', '<f4', (3, 3)), ('a', '<u2')])

@@ -13,10 +13,14 @@ The target is the single-spool box supplied with the Polymaker PolyDryer. The ol
 
 The drive moved into the factory front cradles. Details are in [cradle-drive.md](cradle-drive.md). One printed roller with an integrated 15T gear runs on the factory rod. The treads are TPU, the printed 17T pinion goes on the V1.0 N20, and the bracket keys into the left cradle slot and holds the motor with zip ties. The spool pose, lid, feeder, LOAD, PREP and paths are unchanged, and the lane LED is removed. The `--gearset v1pinion` option keeps the V1.0 pinion at 41 % rewind speed. Next: take the five measurements listed in cradle-drive.md, adjust `PITCH` if needed, print, then bench-test payout, mesh and rewind. The section below records the revision 1 plan.
 
+## Whole-assembly audit, printed lid rev 3.2 (2026-11-27)
+
+Every part was checked against every other in one frame, plus thin walls and print overhangs (`build/audit/`, results in [printed-lid.md](printed-lid.md#whole-assembly-audit-rev-32)). Fixed: the thin +X canopy end wall, the outlet groove that cut the thread crests (now a counterbore), the thin guide mouth lip (collar), the carrier guide and web that started in mid-air (print fin, web foot), the +X canopy strip that started flat over open space (45° underside), collapsed triangles in the roller and pinion STLs, and the stale feeder pose in the 07 STEP. The motor bracket's print orientation changed to its +X end face. The N20 needs a 2-pin inline connector inside the box so the lid lifts off freely. No real collisions were found; the only overlaps are with the box proxy, which is a different box.
+
 ## Printed lid rev 3.1 (2026-11-27)
 
 Rev 3.1 adds the following. `verify.py` re-checks all of it on the final STLs.
-- **Outlet:** a printed M10×1 thread for the PC4-M10, with an O-ring / TPU-washer groove.
+- **Outlet:** a printed M10×1 thread for the PC4-M10, with an O-ring / TPU-washer seat (a counterbore since rev 3.2).
 - **Inlet guide:** a Ø4.3 bore for a PTFE liner.
 - **Wiring:** a Micro-Fit 3.0 2×6 bulkhead plate (43020-1200) instead of the gland.
 - **Seal:** TPU rim gaskets in three heights, chosen with a clay test.

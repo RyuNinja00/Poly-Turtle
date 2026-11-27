@@ -72,7 +72,7 @@ def circle(cx, cy, r, n=40):
 # ------------------------------------------------------------------ outlet bushing (M10 x 1)
 THREAD = dict(pitch=1.0, major=10.30, minor=9.10)     # PC4-M10 male: M10x1; +0.3/+0.2 print clearance
 BUSH_R = 7.2
-GROOVE = dict(r_in=5.10, r_out=6.20, depth=0.75)       # 10 x 1 O-ring (ID 10, CS 1) or the TPU washer
+GROOVE = dict(r_out=6.30, depth=0.80)                  # counterbore at the mouth: 10 x 1 O-ring round the fitting thread, or the TPU washer
 
 def _thread_r(theta, s):
     """internal-thread surface radius: 60-deg profile, P/8 flat at the major, P/4 at the minor"""
@@ -87,13 +87,13 @@ def outlet_bushing(origin, axis, s0, s1, n_theta=96, ds=0.05):
     axis = np.asarray(axis, float) / np.linalg.norm(axis)
     e1 = np.cross(axis, [0, 1.0, 0]); e1 /= np.linalg.norm(e1); e2 = np.cross(axis, e1)
     th = np.linspace(0, 2 * np.pi, n_theta, endpoint=False)
-    s_bore = np.arange(s0, s1 - GROOVE['depth'] * 0 + 1e-9, ds); s_bore[-1] = s1
+    s_top = s1 - GROOVE['depth']
+    s_bore = np.arange(s0, s_top + 1e-9, ds); s_bore[-1] = s_top
     prof = []   # per theta: list of (r, s), closed loop
     for t in th:
         rb = _thread_r(t, s_bore)
         loop = [(r, s) for r, s in zip(rb, s_bore)]                       # bore s0 -> s1
-        loop += [(GROOVE['r_in'], s1), (GROOVE['r_in'], s1 - GROOVE['depth']), (GROOVE['r_out'], s1 - GROOVE['depth']),
-                 (GROOVE['r_out'], s1), (BUSH_R, s1), (BUSH_R, s0)]       # face with groove, outer wall
+        loop += [(GROOVE['r_out'], s1 - GROOVE['depth']), (GROOVE['r_out'], s1), (BUSH_R, s1), (BUSH_R, s0)]   # counterbore, face, outer wall
         prof.append(loop)
     m = len(prof[0]); V = []
     for t, loop in zip(th, prof):
@@ -110,8 +110,8 @@ def outlet_bushing(origin, axis, s0, s1, n_theta=96, ds=0.05):
     return V, T
 
 def tpu_washer():
-    o = circle(0, 0, GROOVE['r_out'] - 0.1, 64); i = circle(0, 0, GROOVE['r_in'] + 0.1, 64)
-    return prism(o, [i], 0.0, 1.2)
+    o = circle(0, 0, GROOVE['r_out'] - 0.15, 64); i = circle(0, 0, 5.15, 64)   # ID 10.3 slips over the M10 thread
+    return prism(o, [i], 0.0, 1.2)                                             # 0.4 proud of the 0.8 counterbore
 
 
 # ------------------------------------------------------------------ lid-to-box gasket

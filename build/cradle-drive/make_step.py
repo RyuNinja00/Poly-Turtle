@@ -12,7 +12,7 @@ from steplib import load, refs, closure, components, axis2, point
 import cradle_drive as cd
 
 SRC = cd.STEP01
-DST = Path(sys.argv[1]) if len(sys.argv) > 1 else cd.OUT / '07-Cradle-drive-layout.step'
+DST = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[2] / 'cad' / '07-Cradle-drive-layout.step'
 GEARSET = sys.argv[2] if len(sys.argv) > 2 else 'fast'
 L = cd.Layout(GEARSET)
 REMOVE = ['Wheel-0', 'Wheel-1', 'Bearing-1', 'Shaft-0', 'Trial_carrier', 'Driven-gear-0', 'Spacer-0'] + (['Pinion-0'] if GEARSET == 'fast' else [])
@@ -95,6 +95,14 @@ for n, d in top_children.items():
     set_axis(refs(ents[idt])[1], cd.MODEL_TO_BOX, np.eye(3))
 poses = [('N20-0', cd.R_N20, L.T_N20 - cd.MODEL_TO_BOX), ('Bearing-0', np.eye(3), cd.T_BEARING - cd.MODEL_TO_BOX)]
 if GEARSET != 'fast': poses.append(('Pinion-0', cd.R_N20, L.T_N20 - cd.MODEL_TO_BOX))
+# feeder parts follow the printed lid (rev 3: re-posed 45 deg uphill, build/lid/printed_lid.py)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'lid'))
+from pose import Pose
+import json as _json
+_rep = _json.load(open(Path(__file__).resolve().parents[2] / 'cad/08-printed-lid/mesh-report.json'))['pose']
+FEED = Pose(_rep['alpha_deg'], _rep['inlet'])
+for n in ('Smol_feeder_with_LOAD', 'PREP_position', 'Inlet_path', 'Outlet_path'):
+    poses.append((n, FEED.R.as_matrix(), FEED.t + (cd.MODEL_TO_BOX if comps[n]['parent'] == 5 else 0)))
 for n, R, T in poses:
     cdsr, rr, pds = cdsr_by_nauo[comps[n]['nauo']]
     idt = [r for r in refs(ents[rr]) if ents[r].startswith('ITEM_DEFINED_TRANSFORMATION')][0]

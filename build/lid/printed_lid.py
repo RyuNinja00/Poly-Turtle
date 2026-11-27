@@ -42,6 +42,7 @@ T_V = 3.54                           # vertical skin thickness (2.5 mm normal on
 FRUSTUM = dict(z=158.5, x=(36.1, 61.1), y=(-28.7, 6.3))   # inner top of the feeder canopy (>= 2 mm normal to the Smol)
 X_END = 100.5                        # jojo inner end walls
 X_CLIFF = 102.5                      # canopy may rise over the +X end-cap bar up to here
+I_XMAX = 97.4                        # canopy cavity stops here at +X: >= 2.9 mm end wall (module is below Z 101 there)
 Z_CAP = 111.588                      # jojo end-cap top
 H = 0.4
 
@@ -58,9 +59,10 @@ EAR_B = dict(u=(36.0, 43.0), w=(17.4, 40.0), v=(-9.5, 1.0))
 ARM = dict(u=(-49.4, -23.0), w=(6.9, 40.0), v=(-9.5, 1.2))
 PREP_POST = dict(u=(-49.4, -36.8), w=(7.6, 40.0), v=(-9.5, 16.0))
 PREP_BLOCK = dict(u=(-49.4, -36.8), w=(-6.6, 40.0), v=(PREP_TOP_V + 0.2, 16.0))
-GUIDE = dict(R=20.0, sweep=40.0, r_out=3.8, r_bore=2.15, mouth=3.0)   # Ø4.3 bore takes a 4/2 mm PTFE liner
+GUIDE = dict(R=20.0, sweep=40.0, r_out=3.8, r_bore=2.15, mouth=3.0, collar=4.6, fin=4.0)   # Ø4.3 bore takes a 4/2 mm PTFE liner
 STRAIGHT = dict(r_out=3.2, r_bore=1.2)                                 # past the liner stop (u -50): bare filament under PREP
 WEB = dict(u=(-58.0, -44.0), w=(-3.0, 7.4), v=(-9.5, -2.2))
+WEB_FOOT = dict(u=(-58.0, -49.4), w=(7.4, 40.0), v=(-9.5, -2.2))   # carries the web down to the -Y print face
 PADS = {'A': 4.0, 'B': 30.0}        # rail screws (u): M3 through the -Y wall into rail inserts
 PAD_V = (-9.5 + BASE_V) / 2
 MF_AT = dict(x=-20.0, y=0.0)                               # Micro-Fit 3.0 2x6 bulkhead plate on the vault flat (extras.MF)
@@ -108,6 +110,15 @@ def carrier(g):
     body = mk.union(lbox(L, RAIL), lbox(L, EAR_B), lbox(L, ARM), lbox(L, PREP_POST), lbox(L, PREP_BLOCK), lbox(L, WEB))
     d = arc_dist(L); arc_side = (L[0] + 50.0).astype(np.float32)
     body = mk.union(body, mk.intersect(d - GUIDE['r_out'], arc_side), lcyl(L, 0, (0.0, 0.0), STRAIGHT['r_out'], -50.0, -46.0))
+    m, t = mouth()
+    s_ = (L[0] - m[0]) * t[0] + (L[2] - m[1]) * t[1]
+    rad_ = np.sqrt((L[0] - (m[0] + s_ * t[0])) ** 2 + L[1] ** 2 + (L[2] - (m[1] + s_ * t[1])) ** 2)
+    body = mk.union(body, mk._combine(rad_ - GUIDE['collar'], np.maximum(-4.0 - s_, s_ - 3.0)))   # mouth collar
+    # print supports built in (carrier prints on its -Y face, +w is down): a 4 mm fin under the guide from the bed to the tube,
+    # ending 1 mm outside the mouth, and the web carried down to the bed
+    d_uv = arc_dist(np.stack([L[0], np.zeros_like(L[1]), L[2]]))
+    fin = np.maximum.reduce([d_uv - GUIDE['fin'] / 2, -1.0 - s_, GUIDE['r_out'] - 0.5 - L[1], L[1] - 40.0]).astype(np.float32)
+    body = mk.union(body, fin, lbox(L, WEB_FOOT))
     body = mk.intersect(body, (Y_FLAT - g.Y()).astype(np.float32))          # flat print face
     cuts = [mk.intersect(d - GUIDE['r_bore'], arc_side - 0.01), lcyl(L, 0, (0.0, 0.0), STRAIGHT['r_bore'], -50.0, -30.0)]
     m, t = mouth()
@@ -165,7 +176,7 @@ def plan(xs, ys, Vb, Tb):
     air = outline & ~solid
     lab, n = ndi.label(air); sizes = ndi.sum(air, lab, range(1, n + 1))
     I = lab == (1 + int(np.argmax(sizes)))
-    I &= np.abs(X) <= X_END
+    I &= (np.abs(X) <= X_END) & (X <= I_XMAX)
     return solid, outline, I, X, Y
 
 def sd2(mask, h):
@@ -192,10 +203,12 @@ def canopy(g, Vb, Tb, Vj, Tj):
     xs, ys, zs = g.xs, g.ys, g.zs
     solid, outline, I, X, Y = plan(xs, ys, Vb, Tb)
     c, top = canopy_heights(X, Y, I, outline, H)
-    allowed = outline & (np.abs(X) <= X_CLIFF)
+    allowed = (outline & (np.abs(X) <= X_CLIFF)) | ((X > X_END - 0.5) & (X <= X_CLIFF) & (np.abs(Y) <= 44.5))   # cliff wall sits on the +X bar
     end = np.abs(X) > X_END
     Z = zs[None, None, :]
-    zmin = np.where(end, Z_CAP - 0.6, ZC - 0.6)[:, :, None]
+    # canopy solid that does not stand on the base (the +X strip between the vault and the bar) starts on a 45-degree underside
+    d_base = ndi.distance_transform_edt(~solid) * H
+    zmin = np.where(end, Z_CAP - 0.6, np.where(I, ZC - 0.6, ZC - 0.6 + d_base))[:, :, None]
     f_new = np.maximum(np.maximum(sd2(allowed, H)[:, :, None], zmin - Z), Z - top[:, :, None]).astype(np.float32)
     f_cav = np.maximum(sd2(I, H)[:, :, None], Z - c[:, :, None]).astype(np.float32)
     f = np.maximum(f_new, -f_cav)

@@ -1,4 +1,4 @@
-# 08 Printed lid (rev 3.1: one piece, no supports)
+# 08 Printed lid (rev 3.2: one piece, no supports)
 
 **The conversion needs a printed lid.** The Smol feeder (with LOAD) and the PREP switch sit above the top of the box, so the stock lid can't close over them. The base of this lid is jojo's two-port **Printed Lid for Polydryer Box** ([Printables 1441905](https://www.printables.com/model/1441905), CC BY-NC-SA, based on work by Extrutim and Cipism).
 
@@ -12,7 +12,8 @@
   - a Micro-Fit 3.0 2×6 bulkhead in place of the cable gland;
   - a printable TPU lid-to-box gasket.
 
-  It also cuts the lid STL from 56 MB to 7.9 MB.
+  It also cuts the lid STL from 56 MB to under 8 MB.
+- **Rev 3.2** is the whole-assembly audit (see *Whole-assembly audit* below): a thicker +X end wall, an outlet counterbore that leaves the thread whole, a collar and a print fin on the inlet guide, and a 45° underside on the +X canopy strip.
 
 ![08 printed lid overview](printed-lid.png)
 
@@ -39,8 +40,8 @@ The lid is 101.8 mm tall overall. Print it in ASA with a brim. The bed contact i
 
 | File | Part |
 |---|---|
-| `08-Printed-lid.stl` | The lid. It is three touching shells in one file: jojo's exact base, the canopy, and the threaded outlet bushing. Every slicer merges them into one solid. Size: 7.9 MB, 159k triangles. Flat areas were decimated within 0.01 mm. |
-| `08c-feeder-carrier.stl` | Sits under the Smol and replaces the BoxTurtle trayframe interface. It carries the two V1 heat-set inserts for the Smol's downward bolts, the PREP block (2 × M2 pilots, Ø1.7), the curved inlet guide (R20, 40°, Ø4.3 bore for a 4 × 2 mm PTFE liner, flared mouth), and two wall inserts (−Y). Print it on its flat −Y face, no supports. |
+| `08-Printed-lid.stl` | The lid. It is three touching shells in one file: jojo's exact base, the canopy, and the threaded outlet bushing. Every slicer merges them into one solid. Size: 7.7 MB, 154k triangles. Flat areas were decimated within 0.01 mm. |
+| `08c-feeder-carrier.stl` | Sits under the Smol and replaces the BoxTurtle trayframe interface. It carries the two V1 heat-set inserts for the Smol's downward bolts, the PREP block (2 × M2 pilots, Ø1.7), the curved inlet guide (R20, 40°, Ø4.3 bore for a 4 × 2 mm PTFE liner, flared mouth with a Ø9.2 collar), and two wall inserts (−Y). Print it on its flat −Y face, no supports: a fin under the guide holds it up while printing. |
 | `08g-TPU-lid-gasket-2.5mm.stl` / `-3.5mm` / `-4.5mm` | Lid-to-box seal. A hollow TPU ring (0.8 mm walls) that snaps into jojo's rim channel. Choose the height as described under *Lid-to-box seal*. Print flat, in TPU 85A–95A. |
 | `08h-TPU-outlet-washer.stl` | Optional printed seal under the PC4-M10 hex, in place of a 10 × 1 mm O-ring. Print in TPU. |
 | `08m-microfit-2x6-plate.stl` | 2 mm bulkhead plate for a Micro-Fit 3.0 2 × 6 housing with panel-mount ears (Molex 43020-1200, or the seller's "5557-3.0-2*R"). Cutout after Wireheadarts' Micro-Fit library (Printables 1300761). Print in ASA. |
@@ -50,8 +51,8 @@ The lid is 101.8 mm tall overall. Print it in ASA with a brim. The bed contact i
 ## Lid features
 
 - **Outlet:** a printed **M10 × 1** internal thread (PC4-M10 is M10 × 1) in a bushing on the canopy's −X face.
-  - It has 7.6 mm of thread, sized major Ø10.3 / minor Ø9.1 for printing.
-  - The face carries a groove (Ø10.2–12.4, 0.75 deep) for a **10 × 1 mm O-ring** or the printed TPU washer, which stands 0.45 proud.
+  - It has 7.5 mm of thread, sized major Ø10.3 / minor Ø9.1 for printing.
+  - The face has a Ø12.6 × 0.8 mm counterbore round the thread for a **10 × 1 mm O-ring** (about 0.2 mm squeeze) or the printed TPU washer (ID 10.3, OD 12.3, 1.2 thick, so it stands 0.4 proud). A 0.9 mm lip is left round the counterbore, backed by the boss.
   - The thread axis is the filament axis, square to the 45° face.
   - Printed at 45° the thread comes out a little rough. Screw the fitting in by hand, or chase it once with an M10 × 1 tap.
 - **Wiring:** a Molex **Micro-Fit 3.0 2 × 6** bulkhead on the vault top at X −20, which replaces the gland.
@@ -60,6 +61,7 @@ The lid is 101.8 mm tall overall. Print it in ASA with a brim. The bed contact i
     - The **cable** gets the 2 × 6 housing with the **female 43030 terminals**: the seller's "5557-3.0-2*P (公壳, male shell)", the same as Molex 43025-1200.
   - The plate sits on a 1 mm TPU gasket over a 25 × 13.5 opening and is held by 2 × M3 × 10 with nuts inside.
   - With 12 circuits there is room for the N20 (2), LOAD (2–3), PREP (2) and spares.
+  - The N20 lives in the box, not on the lid. Put a small 2-pin inline connector (Micro-Fit 2-pin, JST-PH or similar) in its leads inside the box, so the lid can be lifted off without a cable tying it to the box.
   - **The cutout shape** follows Wireheadarts' *OpenSCAD library for mounting Molex MicroFit 3.0 panel-mount plugs* (Printables 1300761). It has three parts:
     - a body opening;
     - a full-length slot so the snap ears can pass and spring back;
@@ -87,18 +89,18 @@ The lid is 101.8 mm tall overall. Print it in ASA with a brim. The bed contact i
    - Push filament through the guide, under the lever and into the Smol. It should run without catching.
 3. **Install.** Turn the lid upside down and lower the module straight in through the rim. The whole move is clear by at least 0.63 mm. Screw the two −Y wall screws in.
 4. **Outlet and wiring.**
-   - Drop a 10 × 1 O-ring (or the TPU washer) into the outlet groove and screw in the PC4-M10. Run the PTFE to the hub.
-   - Crimp the lane leads into the 43020-1200 housing and snap it into the plate.
+   - Drop a 10 × 1 O-ring (or the TPU washer) into the outlet counterbore and screw in the PC4-M10. Run the PTFE to the hub.
+   - Crimp the lane leads into the 43020-1200 housing and snap it into the plate. Join the N20 leads through their inline 2-pin connector.
    - Fit the plate with its gasket: 2 × M3 × 10 with nuts inside.
 5. **Seal.** Press the chosen TPU gasket into the rim channel (see below).
 6. **Spool.** Load it so filament pays out **up the +X side**, toward the guide. The cradle drive is unchanged and rewinds in the opposite direction.
 
-**Service:** remove the two wall screws and the whole feeder module, PREP included, lifts out through the rim.
+**Service:** unplug the N20's inline connector, remove the two wall screws and the whole feeder module, PREP included, lifts out through the rim.
 
 ## Lid-to-box seal
 
 Jojo's lid seals on the box rim through a channel round the rim. The channel is about 5.6 mm wide at the mouth, 6.0 mm wide under its ceiling at Z 65.2, and 5 mm deep. The `08g` gaskets are a **hollow TPU box section** shaped to that channel:
-- 5.7 mm wide, so it squeezes past the mouth and stays put;
+- 5.76 mm wide. The channel walls have about 4° of draft, so the gasket clears them by 0.1 mm at the ceiling and is a 0.1 mm-per-side press fit at the mouth, which holds it in;
 - 0.8 mm walls;
 - an enclosed void, so it compresses without needing very soft TPU.
 
@@ -126,17 +128,17 @@ The table gives the final-mesh values (`verify.json`). Smol and PREP are sampled
 | Lid to carrier | 0.66 mm (wall standoffs, 0.6 mm by design) |
 | Carrier to Smol, excluding the replaced trayframe interface | 0.51 mm, at the rail top where the Smol's base sits |
 | Carrier to PREP | 0.20 mm (the switch face sits on its block) |
-| Lid to Ø205 × 78 spool | 1.63 mm (jojo's own side wall beside the flange is about the same) |
+| Lid to Ø205 × 78 spool | 1.62 mm (jojo's own side wall beside the flange is about the same) |
 | Feeder module to spool | 3.67 mm |
-| Module, PREP, guide to box proxy (lid closed) | ≥ 15.7 mm; nothing inside the box walls |
+| Module, PREP, guide to box proxy (lid closed) | ≥ 8.0 mm (the guide's print fin, at the −Y side); nothing inside the box walls |
 | Drop-in: module lowered straight down past the rim in 1 mm steps | 0 points inside the lid; minimum 0.63 mm |
-| Filament path: guide bore, PREP lever zone, Smol, outlet bore | Clear of the carrier and the lid. A Ø4.0 liner fits the Ø4.3 guide bore. |
-| Smol bolt tails A, B | Pass the carrier inserts and reliefs |
-| Outlet | Bore clear past Ø8.8. The M10 × 1 thread is present over 7.6 mm (15 crest/root crossings on a probe line). The Smol's outlet end is 6.4 mm short of the fitting tip. |
+| Filament path: guide bore, PREP lever zone, Smol, outlet bore | Clear of the carrier and the lid. The guide bore measures Ø4.24 at its narrowest on the final mesh, so a Ø4.0 liner fits with 0.12 mm all round. |
+| Smol bolt tails A, B | Pass the carrier inserts and reliefs (Ø3.2 relief measures Ø3.14 on the mesh, Ø4.2 insert holes Ø4.16) |
+| Outlet | Bore clear past Ø8.8. The M10 × 1 thread is present over 7.5 mm (15 crest/root crossings on a probe line). The Smol's outlet end is 6.4 mm short of the fitting tip. |
 | Micro-Fit plate | 25 × 13.5 opening and both screw holes clear. The seat is flat (Z 132.54 under the whole plate) on a 3.5 mm roof. There are 24 mm from the underside of the roof to the spool for the housing and wires, and the module is more than 20 mm away. |
 | Wall screws | Holes clear; standoffs and insert walls solid all round; M3 × 12 tips ≥ 2.8 mm from the Smol |
 | End caps vs jojo (Z 102–111.6) | Every difference is within 2 samples (0.5 mm) of jojo's surface, except the two intended changes: the filled −X port and the canopy wall over the +X bar. Both finger slots stay as jojo made them. |
-| Base/canopy seam | All 174 sampled wall columns continue through Z 102 |
+| Base/canopy seam | All 174 sampled wall columns continue through Z 102. At the two +X corner columns the shadow line cuts in to 0.6 mm from the column, as drawn. |
 
 **Fixes made during this double-check:**
 - **STL welding:** the lid STL had 32,586 triangles that collapsed when welded as float32. Marching cubes put vertices on grid nodes; the build now keeps the field off the nodes and welds in float32.
@@ -150,8 +152,8 @@ Six zero-area slivers remain: one is in jojo's original mesh, four come from the
 
 | Overhang | Canopy | Jojo base |
 |---|---|---|
-| 45–50° | 16,444 mm² | 1,885 mm² |
-| 50–80° | 319 mm² (includes the thread flanks) | 163 mm² |
+| 45–50° | 16,528 mm² | 1,942 mm² |
+| 50–80° | 315 mm² (includes the thread flanks) | 163 mm² |
 | Horizontal | 4,102 mm² | 7,388 mm² |
 
 The horizontal canopy ceilings are the 36 mm vault flat, the 25 mm canopy top, and jojo's 10 mm end-slot ceilings.
@@ -165,11 +167,41 @@ The horizontal canopy ceilings are the 36 mm vault flat, the 25 mm canopy top, a
 | 60 | 32.7° |
 | 45 (near empty) | 41.2° |
 
-After the mouth, the guide adds a smooth 40° turn at R20. The path stays at least 1.4 mm from the carrier at every spool size.
+After the mouth, the guide adds a smooth 40° turn at R20. The straight-line path stays at least 1.0 mm from the carrier at every spool size (0.97 mm at 45 mm radius, where it enters past the collar's flared lip).
+
+## Whole-assembly audit (rev 3.2)
+
+A last pass checked every part against every other: `build/audit/assembly.py` (interference between all lid, carrier, drive, gasket, plate, connector and fitting parts in one frame), `build/audit/thin.py` (walls thinner than the nozzle can print), `build/audit/supports.py` (anything that starts in mid-air or overhangs past 45° in the print orientation) and a mesh scan of every STL. Results are in `build/audit/assembly.json` and `thin.json`.
+
+**Found and fixed:**
+- **+X canopy end wall** came out 0.7–0.9 mm thick over the latch bar. The canopy now stops at X 97.4 inside and drops as a full wall over the bar.
+- **Outlet face groove** cut into the thread crests (groove ID Ø10.2 under the Ø10.3 thread major). It is now a Ø12.6 × 0.8 counterbore outside the thread, and the washer was resized to match.
+- **Guide mouth lip** was 0.8 mm thick at the flare. A Ø9.2 collar now surrounds the mouth.
+- **Carrier print supports.** On its −Y print face the guide and the web started in mid-air, 26–36 mm above the bed (about 90 mm² unsupported). A 4 mm fin now runs under the guide from the print face to the tube, ending 1 mm outside the mouth, and the web is carried down to the print face. What is left is hole ceilings and a 3 mm overhang under the mouth collar.
+- **+X canopy strip.** The new wall between the vault and the +X bar started flat at Z 101.4 over open space (3 mm wide, 112 mm²). Its underside is now a 45° chamfer up from the bar.
+- **Motor bracket orientation.** Printed upside down as the guide said, its motor floor is a 12 mm one-sided overhang. The cradle-drive guide now says to print it on its flat +X end face, with one small support under the key tab.
+- **Collapsed triangles** in the roller and pinion STLs (float32 rounding). `meshkit.write_stl` now welds as float32 and drops them, keeping the mesh closed.
+- **Assembly STEP** still had the Smol, PREP and filament paths in the old pose. They now come from the rev 3 lid pose, so the STEP matches the lid.
+
+**Checked, no change needed:**
+
+| Pair | Result |
+|---|---|
+| Drive parts (roller, treads, pinion, bracket) vs lid and carrier | ≥ 133 mm apart |
+| Treads vs spool flange | Touching (they drive it). Roller body 0.48 mm, pinion 1.65 mm from the flange circle |
+| Bracket key tab vs box proxy | Overlaps the proxy's cradle post by up to 1.5 mm. The proxy is a different (printable) box; the tab was sized to the molded box's slot (S = 13.9–14.4) and the cradle-drive checks against that slot are all positive. Measure S before printing, as the cradle-drive guide says. |
+| Lid rim vs box proxy | Overlaps at the rim only (the proxy rim is taller than the real one); this is why the gasket height is picked by the clay test |
+| Installed gasket vs channel | Press fit of 0.1 mm per side at the drafted channel mouth, 0.1 mm clear at the ceiling |
+| Micro-Fit plate, plate gasket | Seat flat on the Z 132.54 vault top |
+| 2 × 6 housing (with ears) through the opening | 2.5 mm clear of the opening edges; 4.8 mm above a full spool with 10 mm of wire bend |
+| PC4-M10 hex (14 AF) and body | Seat on the bushing face; nothing else within reach |
+| Lid, rim down: overhangs left | Only the intended bridges (6 mm gasket channel, 36 mm vault flat, 25 mm canopy top, jojo's end-slot ceilings), jojo's own small ledges, the 9.2 mm plug over jojo's old −X port, and the tops of the horizontal screw holes |
+| Thin features left | Thread crests, the 0.9 mm lip round the outlet counterbore (backed by the boss), the carrier's 2 mm webs, the 0.8 mm gasket walls and the 0.6 mm tread end lips, all by design |
+| Meshes | Every STL is closed and manifold. The 07d bracket is 194k triangles (not decimated), which slicers handle fine |
 
 ## Verify on the box
 
-- **Guide mouth.** The guide hangs to Z 59 (model frame), 1.2 mm below the lid's rim plane and just inside the box's +X end wall, at X 92. With the lid closed, check that the box's +X end wall and its seating lip leave at least 2 mm at that point.
+- **Guide mouth.** The guide's mouth collar hangs to Z 57.2 (model frame), 3.0 mm below the lid's rim plane, and reaches X 97.2. The box wall enters jojo's channel at X 102.9, so there are about 5.7 mm in the model. With the lid closed, check that the box's +X end wall and any seating lip leave at least 2 mm at that point.
 - **Payout strip.** A full spool pays out close to the +X wall (X 96 at the spool's equator). Keep that strip free of desiccant or plugs.
 - **Bench test.** Bench-feed the module before the first full run, and watch for drag on a near-empty spool.
 

@@ -21,7 +21,7 @@ LID, CAN, CAR, SM, PR, FIL = '#c9cdd3', '#e3a33b', '#3c8dbc', '#2a9d8f', '#d1495
 base, can, car = (Vb, Tb), (Vt, Tt), (Vc, Tc)
 
 fig = plt.figure(figsize=(18, 13.5)); fig.patch.set_facecolor('white')
-fig.suptitle('08 Printed lid, rev 3.1: one piece, no supports (jojo\'s lid base, Printables 1441905)', fontsize=15, weight='bold', y=0.995)
+fig.suptitle('08 Printed lid, rev 3.2: one piece, no supports (jojo\'s lid base, Printables 1441905)', fontsize=15, weight='bold', y=0.995)
 
 ax = fig.add_axes([0.0, 0.52, 0.5, 0.42]); v = s3.View(az=-62, el=24)
 s3.draw(ax, v, [(base, LID), (can, CAN), (bush, CAN)], max_edge=30, lw=0.7); s3.frame(ax, v, (-117, -59, 60), (117, 59, 161), 0.03)

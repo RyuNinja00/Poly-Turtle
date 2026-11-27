@@ -29,3 +29,14 @@ The saved model poses are defined in design.py and assemble.py. Surface sampling
 - `render.py` draws `docs/printed-lid.png`.
 
 Run `clouds.py` first; it needs the restored cad/01. See [docs/printed-lid.md](../docs/printed-lid.md).
+
+## Cradle-drive STEP (cad/07)
+
+`python3 build/cradle-drive/make_step.py [out.step]` writes the assembly STEP (default `cad/07-Cradle-drive-layout.step`; zip it to publish). It poses the Smol, LOAD, PREP and the filament paths from `cad/08-printed-lid/mesh-report.json`, so rebuild the lid first. `verify_step.py <file.step>` checks it.
+
+## Whole-assembly audit
+
+`build/audit/` re-checks the published STLs together, in the model frame:
+- `assembly.py`: interference and gaps between every pair (lid, carrier, drive parts, gaskets, Micro-Fit plate and housing, PC4-M10 envelope, spool) → `assembly.json`;
+- `thin.py`: walls thinner than about two nozzle widths → `thin.json`;
+- `supports.py STL up-axis [voxel]`: regions that start in mid-air or overhang past 45° in a print orientation, e.g. `supports.py ../../cad/08-printed-lid/08c-feeder-carrier.stl +y`.

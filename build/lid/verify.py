@@ -175,7 +175,19 @@ path = [P.glob(-50 + R * np.sin(p), 0, -R + R * np.cos(p)) for p in ph] + [P.glo
 path = np.array(path)
 tube = np.array([p + 0.9 * (np.cos(a) * P.W + np.sin(a) * P.V_) for p in path for a in np.linspace(0, 2 * np.pi, 8, endpoint=False)])
 liner = np.array([P.glob(-50 + R * np.sin(p), 0, -R + R * np.cos(p)) + 2.0 * (np.cos(a) * P.W + np.sin(a) * (np.sin(p) * P.A + np.cos(p) * P.V_) ) for p in ph[:-2] for a in np.linspace(0, 2 * np.pi, 12, endpoint=False)])
-res['filament_path'] = dict(liner_od4_blocks=int(CAR.inside(liner).sum()), carrier_blocks=int(CAR.inside(tube).sum()), lid_blocks=int(LID.inside(tube).sum()),
+def surf_pts(t, a2=0.003):
+    a, b, c = t[:, 0], t[:, 1], t[:, 2]; rng = np.random.default_rng(1); out = [t.reshape(-1, 3)]
+    n = np.clip((np.linalg.norm(np.cross(b - a, c - a), axis=1) / 2 / a2).astype(int), 0, 400)
+    for k in np.unique(n[n > 0]):
+        m = n == k; q = rng.random((m.sum(), k, 2)); f = q.sum(2) > 1; q[f] = 1 - q[f]
+        out.append((a[m][:, None] + q[..., :1] * (b - a)[m][:, None] + q[..., 1:] * (c - a)[m][:, None]).reshape(-1, 3))
+    return np.concatenate(out)
+# exact bore radius: nearest carrier surface to the guide arc axis (the r 2.0 point probe above is limited by the 0.25 grid)
+Qc = surf_pts(mk.read_stl(OUT / '08c-feeder-carrier.stl')) - P.TF; Lc = np.column_stack([Qc @ P.A, Qc @ P.W, Qc @ P.V_])
+phi_c = np.degrees(np.arctan2(Lc[:, 0] + 50, Lc[:, 2] + R)); r_c = np.hypot(np.hypot(Lc[:, 0] + 50, Lc[:, 2] + R) - R, Lc[:, 1])
+m_c = (phi_c > -P.GUIDE['sweep'] + 0.5) & (phi_c < -2.0) & (r_c < 3)   # stop 0.7 mm short of the liner shoulder (rounded by the 0.4 mm grid)
+res['guide_bore_min_radius_mm'] = round(float(r_c[m_c].min()), 3)
+res['filament_path'] = dict(liner_od4_point_probe_hits=int(CAR.inside(liner).sum()), carrier_blocks=int(CAR.inside(tube).sum()), lid_blocks=int(LID.inside(tube).sum()),
                             smol_points_within_0p9=int((cKDTree(path).query(smol)[0] < 0.9).sum()))
 # Smol bolts: tails of A and B pass the carrier inserts/relief
 bolts = {}

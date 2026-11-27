@@ -1,0 +1,285 @@
+{
+ "drive 07a-Roller-with-gear vs box proxy": {
+  "points": 74010,
+  "inside": 0,
+  "min_gap_mm": 2.24,
+  "at": [
+   49.8,
+   -38.9,
+   -86.1
+  ],
+  "note": "proxy is a printable look-alike; the molded box is the authority"
+ },
+ "drive 07a-Roller-with-gear vs lid": {
+  "points": 74010,
+  "inside": 0,
+  "min_gap_mm": 147.92,
+  "at": [
+   51.6,
+   -38.9,
+   -85.6
+  ]
+ },
+ "drive 07a-Roller-with-gear vs carrier": {
+  "points": 74010,
+  "inside": 0,
+  "min_gap_mm": 144.93,
+  "at": [
+   54.9,
+   6.4,
+   -83.3
+  ]
+ },
+ "drive 07b-Tread-sleeve-TPU-L vs box proxy": {
+  "points": 8640,
+  "inside": 0,
+  "min_gap_mm": 2.03,
+  "at": [
+   59.3,
+   -39.0,
+   -85.7
+  ],
+  "note": "proxy is a printable look-alike; the molded box is the authority"
+ },
+ "drive 07b-Tread-sleeve-TPU-L vs lid": {
+  "points": 8640,
+  "inside": 0,
+  "min_gap_mm": 144.95,
+  "at": [
+   51.1,
+   -39.0,
+   -82.6
+  ]
+ },
+ "drive 07b-Tread-sleeve-TPU-L vs carrier": {
+  "points": 8640,
+  "inside": 0,
+  "min_gap_mm": 144.83,
+  "at": [
+   54.6,
+   -21.5,
+   -82.8
+  ]
+ },
+ "drive 07b-Tread-sleeve-TPU-R vs box proxy": {
+  "points": 8640,
+  "inside": 0,
+  "min_gap_mm": 2.01,
+  "at": [
+   48.5,
+   39.0,
+   -84.7
+  ],
+  "note": "proxy is a printable look-alike; the molded box is the authority"
+ },
+ "drive 07b-Tread-sleeve-TPU-R vs lid": {
+  "points": 8640,
+  "inside": 0,
+  "min_gap_mm": 144.95,
+  "at": [
+   51.1,
+   39.0,
+   -82.6
+  ]
+ },
+ "drive 07b-Tread-sleeve-TPU-R vs carrier": {
+  "points": 8640,
+  "inside": 0,
+  "min_gap_mm": 146.31,
+  "at": [
+   54.6,
+   21.5,
+   -82.8
+  ]
+ },
+ "drive 07c-Pinion-17T-N20 vs box proxy": {
+  "points": 16608,
+  "inside": 0,
+  "min_gap_mm": 9.95,
+  "at": [
+   73.5,
+   12.4,
+   -90.6
+  ],
+  "note": "proxy is a printable look-alike; the molded box is the authority"
+ },
+ "drive 07c-Pinion-17T-N20 vs lid": {
+  "points": 16608,
+  "inside": 0,
+  "min_gap_mm": 141.53,
+  "at": [
+   67.8,
+   12.4,
+   -74.6
+  ]
+ },
+ "drive 07c-Pinion-17T-N20 vs carrier": {
+  "points": 16608,
+  "inside": 0,
+  "min_gap_mm": 133.86,
+  "at": [
+   67.8,
+   6.4,
+   -74.6
+  ]
+ },
+ "drive 07d-Motor-bracket-cradle-key vs box proxy": {
+  "points": 582384,
+  "inside": 14736,
+  "min_gap_mm": 0.06,
+  "inside_bbox": [
+   [
+    45.5,
+    -44.0,
+    -97.7
+   ],
+   [
+    66.6,
+    -41.2,
+    -84.6
+   ]
+  ],
+  "note": "proxy is a printable look-alike; the molded box is the authority"
+ },
+ "drive 07d-Motor-bracket-cradle-key vs lid": {
+  "points": 582384,
+  "inside": 0,
+  "min_gap_mm": 138.81,
+  "at": [
+   45.6,
+   -43.9,
+   -77.5
+  ]
+ },
+ "drive 07d-Motor-bracket-cradle-key vs carrier": {
+  "points": 582384,
+  "inside": 0,
+  "min_gap_mm": 135.17,
+  "at": [
+   77.6,
+   -5.2,
+   -77.5
+  ]
+ },
+ "lid vs box proxy": {
+  "points": 667675,
+  "inside": 6777,
+  "min_gap_mm": 0.12,
+  "inside_bbox": [
+   [
+    -115.8,
+    -58.3,
+    60.2
+   ],
+   [
+    115.9,
+    58.4,
+    65.2
+   ]
+  ],
+  "note": "expected only at the rim: the proxy rim reaches Z 66.5, 1.3 mm past jojo's channel ceiling"
+ },
+ "carrier vs box proxy": {
+  "points": 133798,
+  "inside": 0,
+  "min_gap_mm": 8.03,
+  "at": [
+   94.8,
+   -39.1,
+   62.0
+  ]
+ },
+ "TPU gasket 3.5 (installed) vs lid": {
+  "points": 23188,
+  "inside": 3012,
+  "min_gap_mm": 0.13,
+  "inside_bbox": [
+   [
+    -108.7,
+    -51.2,
+    61.7
+   ],
+   [
+    108.7,
+    51.2,
+    65.0
+   ]
+  ],
+  "note": "gasket top face touches the channel ceiling by design"
+ },
+ "plate gasket vs lid": {
+  "points": 3796,
+  "inside": 176,
+  "min_gap_mm": 0.03,
+  "inside_bbox": [
+   [
+    -5.6,
+    -6.0,
+    132.5
+   ],
+   [
+    0.0,
+    11.0,
+    132.5
+   ]
+  ],
+  "note": "sits on the vault top by design"
+ },
+ "Micro-Fit plate vs lid": {
+  "points": 4430,
+  "inside": 0,
+  "min_gap_mm": 1.0,
+  "at": [
+   -9.4,
+   8.2,
+   133.5
+  ]
+ },
+ "2x6 housing envelope vs lid": {
+  "points": 636,
+  "inside": 0,
+  "min_gap_mm": 2.5,
+  "at": [
+   -14.7,
+   -4.2,
+   129.4
+  ],
+  "note": "passes the 25 x 13.5 opening"
+ },
+ "2x6 housing + wire bend vs carrier": {
+  "points": 1272,
+  "inside": 0,
+  "min_gap_mm": 31.63,
+  "at": [
+   -10.5,
+   -4.2,
+   135.5
+  ]
+ },
+ "PC4-M10 envelope vs lid": {
+  "points": 4288,
+  "inside": 26,
+  "min_gap_mm": 0.06,
+  "inside_bbox": [
+   [
+    8.5,
+    -12.6,
+    141.8
+   ],
+   [
+    18.2,
+    1.6,
+    151.6
+   ]
+  ],
+  "note": "hex seats on the bushing face"
+ },
+ "spool gaps": {
+  "07a-Roller-with-gear": 0.48,
+  "07b-Tread-sleeve-TPU-L": -0.0,
+  "07b-Tread-sleeve-TPU-R": -0.0,
+  "07c-Pinion-17T-N20": 1.65,
+  "07d-Motor-bracket-cradle-key": 11.65,
+  "housing+wires": 4.78
+ }
+}
