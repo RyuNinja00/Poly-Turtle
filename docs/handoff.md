@@ -19,7 +19,7 @@ The drive moved into the factory front cradles. Details are in [cradle-drive.md]
 
 **One-piece lid.** It prints rim down with no supports:
 - Jojo's two-port lid (Printables 1441905) is kept triangle for triangle below Z 102. Its end caps (latch bars, finger slots) are rebuilt from jojo's own geometry above Z 102.
-- The flat plate is replaced by a 45° chamfered vault with a 37 mm bridge.
+- The flat plate is replaced by a 45° chamfered vault with a 36 mm bridge.
 - The feeder sits under a 45° frustum with a 25 mm top bridge.
 
 **Feeder.** It is re-posed to 45° uphill toward −X. The inlet and PREP are low at +X and fed up the spool's +X side through an R20 guide. The outlet is a PC4-M10 square to the canopy's −X face.

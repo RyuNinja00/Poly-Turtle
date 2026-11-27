@@ -13,18 +13,18 @@
 
 Print it **rim down** on the bed. In that orientation every downward-facing surface is one of three things:
 - a 45° facet;
-- one of two short bridges: the 37 mm vault top and the 25 mm canopy top;
+- one of two short bridges: the 36 mm vault top and the 25 mm canopy top;
 - one of jojo's own small bridges, for example the 6 mm gasket channel.
 
 | Region | What it is |
 |---|---|
 | Below Z 102 | jojo's lid, **triangle for triangle**: rim, gasket channel, side latches. The old 4.3 mm outlet hole is closed. |
 | End caps above Z 102 | Rebuilt from jojo's own geometry, exact in Z: the latch bars and finger slots. Jojo's −X port is filled. |
-| Vault (between the end caps) | The flat plate is replaced by 45° chamfers rising from the walls at Z 105.5 to a 37 mm wide flat at Z 128 (inside). There is 1.75 mm of headroom over a full Ø205 spool (jojo's plate gave 1.36). |
-| Feeder canopy | A 45° frustum over the feeder, inner top Z 157. The feeder is re-posed to **45°**, so its top face and outlet face are parallel to the canopy faces. |
+| Vault (between the end caps) | The flat plate is replaced by 45° chamfers rising from the walls at Z 106.5 to a 36 mm wide flat at Z 129 (inside). There is 1.6 mm of headroom over a full Ø205 spool, measured on the final mesh (jojo's plate gave 1.36). |
+| Feeder canopy | A 45° frustum over the feeder, inner top Z 158.5, at least 2.1 mm from the Smol. The feeder is re-posed to **45°**, so its top face and outlet face are parallel to the canopy faces. |
 | Shadow line | A small V-groove runs around the canopy just above Z 102. It turns the base/canopy join into a deliberate detail. |
 
-The lid is 100.3 mm tall overall. Print it in ASA with a brim. The bed contact is jojo's rim and gasket-channel walls. A few jojo ledges sit 0.2–1.5 mm above the bed; they are under 1.1 mm wide and print as short overhangs.
+The lid is 101.8 mm tall overall. Print it in ASA with a brim. The bed contact is jojo's rim and gasket-channel walls. A few jojo ledges sit 0.2–1.5 mm above the bed; they are under 1.1 mm wide and print as short overhangs.
 
 ## Files
 
@@ -40,7 +40,7 @@ The lid is 100.3 mm tall overall. Print it in ASA with a brim. The bed contact i
 
 - **Outlet:** a PC4-M10 fitting screws into a Ø9 boss on the canopy's −X face. The fitting cuts its own thread over 8.7 mm. The face is square to the filament axis, so the PTFE leaves the Smol in a straight line.
 - **Wiring:** one M12 / PG7 gland, vertical, through the vault top at X −20. LOAD, PREP and the N20 leads all leave here. Fit plugs inside so the lid can come off.
-- **Feeder mounting:** 2 × M3 through the −Y wall at (X 47.4, Z 111.3) and (X 29.1, Z 129.7). Each passes through a printed standoff and threads into an insert in the carrier rail. Use a washer and a dab of sealant under each head.
+- **Feeder mounting:** 2 × **M3 × 12** through the −Y wall at (X 47.4, Z 111.3) and (X 29.1, Z 129.7). Each passes through a printed standoff and threads into an insert in the carrier rail, with 4.5 mm of thread engaged. The standoffs stop 0.6 mm short of the carrier so it slides in freely; tightening the screws closes that gap. Use a washer and a dab of sealant under each head. The screw tips stay at least 2.8 mm from the Smol.
 
 ## Assembly
 
@@ -49,27 +49,46 @@ The lid is 100.3 mm tall overall. Print it in ASA with a brim. The bed contact i
    - Thread the Smol's two downward M3 bolts (the old trayframe bolts) into the rail inserts. A Ø3.2 relief under each insert takes the existing bolt tails.
    - Screw the D2F PREP switch to its block with 2 × M2 self-tapping screws from below.
    - Push filament through the guide, under the lever and into the Smol. It should run without catching.
-3. **Install.** Turn the lid upside down and lower the module straight in through the rim. The checks confirm the whole move is clear (minimum 0.25 mm). Screw the two −Y wall screws in.
+3. **Install.** Turn the lid upside down and lower the module straight in through the rim. The whole move is clear by at least 0.63 mm. Screw the two −Y wall screws in.
 4. **Outlet and wiring.** Fit the PC4-M10 and the PTFE to the hub. Route the leads to the gland.
 5. **Spool.** Load it so filament pays out **up the +X side**, toward the guide. The cradle drive is unchanged and rewinds in the opposite direction.
 
 **Service:** remove the two wall screws and the whole feeder module, PREP included, lifts out through the rim.
 
-## Checks (`build/lid/checks.py`, values from `checks.json`)
+## Checks
 
-Clearances are sampled from vertices and small circles of the cad/01 reference parts, moved into the rev 3 pose. They are not exact solids.
+Two independent passes:
+- `checks.py` checks against the design fields during the build.
+- `verify.py` and `verify_endcaps.py` re-measure the **final STLs**. They use exact Z-intervals along 0.25 mm columns and nearest-vertex distances, and also test against the printable box proxy (cad/04) with the lid closed.
 
-| Check | Result |
+The table gives the final-mesh values (`verify.json`). Smol and PREP are sampled from the cad/01 reference parts, so treat ~0.5 mm as the reading error.
+
+| Check | Final mesh |
 |---|---|
-| Meshes | Base, canopy and carrier are each closed; every edge is shared by exactly 2 faces |
-| Lid to Smol | 1.47 mm |
-| Lid to carrier | 0.25 mm (the carrier face against the wall standoffs) |
-| Carrier to Smol, excluding the replaced trayframe interface | 0.46 mm, at the rail top where the Smol's base sits |
-| Carrier to PREP | 0.20 mm (the switch face sits on the block) |
-| Lid to spool (Ø205 × 78) | 1.75 mm |
+| Shells | Base, canopy and carrier are each closed. Welded exactly as float32 (as a slicer reads the STL), every edge is shared by exactly 2 faces with no collapsed triangles. |
+| Lid to Smol | 2.10 mm |
+| Lid to carrier | 0.66 mm (wall standoffs, 0.6 mm by design) |
+| Carrier to Smol, excluding the replaced trayframe interface | 0.51 mm, at the rail top where the Smol's base sits |
+| Carrier to PREP | 0.20 mm (the switch face sits on its block) |
+| Lid to Ø205 × 78 spool | 1.60 mm (jojo's own side wall beside the flange is about the same) |
 | Feeder module to spool | 3.67 mm |
-| Drop-in: module lowered straight down past the rim in 2 mm steps | 0 points inside the lid; minimum 0.25 mm |
-| Outlet axis vs. its face normal | 0.0° |
+| Module, PREP, guide to box proxy (lid closed) | ≥ 15.7 mm; nothing inside the box walls |
+| Drop-in: module lowered straight down past the rim in 1 mm steps | 0 points inside the lid; minimum 0.63 mm |
+| Filament path: guide bore, PREP lever zone, Smol, outlet bore | Clear of the carrier and the lid |
+| Smol bolt tails A, B | Pass the carrier inserts and reliefs |
+| Outlet | Bore clear on axis; boss carries 8.7 mm of thread; the Smol's outlet end is 6.4 mm short of the fitting face. The Ø9 prints about 0.1 mm undersize in places; the fitting cuts through it, or run a 9 mm drill through first |
+| Gland | Hole clear through a 3.4 mm roof; nut zone 15 mm above the spool and 40 mm from the module |
+| Wall screws | Holes clear; standoffs and insert walls solid all round; M3 × 12 tips ≥ 2.8 mm from the Smol |
+| End caps vs jojo (Z 102–111.6) | Every difference is within 2 samples (0.5 mm) of jojo's surface, except the two intended changes: the filled −X port and the canopy wall over the +X bar. Both finger slots stay as jojo made them. |
+| Base/canopy seam | All 174 sampled wall columns continue through Z 102 |
+
+**Fixes made during this double-check:**
+- **STL welding:** the lid STL had 32,586 triangles that collapsed when welded as float32. Marching cubes put vertices on grid nodes; the build now keeps the field off the nodes and welds in float32.
+- **Canopy clearance:** the canopy was raised 1.5 mm. It was 1.05 mm from the Smol on the final mesh.
+- **Vault clearance:** the vault chamfers start 1 mm higher. The spool headroom was 1.41 mm.
+- **Drop-in gap:** the standoff gap was opened from 0.25 to 0.6 mm, so the module doesn't scrape as it goes in.
+
+Six zero-area slivers remain: one is in jojo's original mesh, four come from the cap triangulation and one is in the canopy. They are valid topology, and slicers drop them.
 
 **Downward-facing area, rim down** (canopy / jojo base):
 
@@ -79,7 +98,7 @@ Clearances are sampled from vertices and small circles of the cad/01 reference p
 | 50–80° | 225 mm² | 163 mm² |
 | Horizontal | 4,367 mm² | 7,388 mm² |
 
-The horizontal canopy ceilings are the 37 mm vault flat, the 25 mm canopy top, and jojo's 10 mm end-slot ceilings.
+The horizontal canopy ceilings are the 36 mm vault flat, the 25 mm canopy top, and jojo's 10 mm end-slot ceilings.
 
 **Inlet routing.** Free filament runs from the +X side of the spool into the guide mouth:
 
@@ -109,7 +128,9 @@ cd build/lid
 python3 clouds.py        # Smol / PREP reference clouds (needs cad/01: python transport/restore.py)
 python3 printed_lid.py   # lid (jojo base + canopy, marching cubes 0.4 mm) and carrier
 python3 occ.py           # base occupancy grid for the checks
-python3 checks.py        # checks.json and cad/08-Printed-lid.zip
+python3 checks.py        # design-field checks, checks.json and cad/08-Printed-lid.zip
+python3 verify.py        # final-mesh re-measure -> verify.json (about 15 min)
+python3 verify_endcaps.py
 python3 render.py        # docs/printed-lid.png
 ```
 

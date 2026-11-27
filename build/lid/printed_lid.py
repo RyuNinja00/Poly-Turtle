@@ -34,10 +34,10 @@ POSE = Pose(ALPHA, INLET)
 TF, A, V_, W = POSE.TF, POSE.A, POSE.V, POSE.W
 
 ZC = 102.0                           # jojo kept exactly below this plane
-Z_WALL = 105.5                       # inner chamfers start here at the side walls
-VAULT_IN = 128.0                     # inner flat of the vault (~38 mm bridge)
+Z_WALL = 106.5                       # inner chamfers start here at the side walls
+VAULT_IN = 129.0                     # inner flat of the vault (~36 mm bridge)
 T_V = 3.54                           # vertical skin thickness (2.5 mm normal on 45-deg faces)
-FRUSTUM = dict(z=157.0, x=(36.1, 61.1), y=(-28.7, 6.3))   # inner top of the feeder canopy
+FRUSTUM = dict(z=158.5, x=(36.1, 61.1), y=(-28.7, 6.3))   # inner top of the feeder canopy (>= 2 mm normal to the Smol)
 X_END = 100.5                        # jojo inner end walls
 X_CLIFF = 102.5                      # canopy may rise over the +X end-cap bar up to here
 Z_CAP = 111.588                      # jojo end-cap top
@@ -51,7 +51,7 @@ INSERT_D, INSERT_L, CLEAR_D, RELIEF_D = 4.2, 5.5, 3.4, 3.2
 
 RAIL = dict(u=(-23.5, 36.5), w=(17.4, 40.0), v=(-9.5, BASE_V))
 Y_FLAT = -39.1                       # carrier's flat print face (lid inner wall is at y -40.6)
-BOSS_Y = -39.35                      # lid standoffs at the two wall screws reach to here
+BOSS_Y = -39.7                       # lid standoffs at the two wall screws: 0.6 mm drop-in gap to the carrier
 EAR_B = dict(u=(36.0, 43.0), w=(17.4, 40.0), v=(-9.5, 1.0))
 ARM = dict(u=(-49.4, -23.0), w=(6.9, 40.0), v=(-9.5, 1.2))
 PREP_POST = dict(u=(-49.4, -36.8), w=(7.6, 40.0), v=(-9.5, 16.0))
@@ -244,10 +244,16 @@ class Grid:
 
 
 def mc(f, g):
+    """Marching cubes, then weld exactly as a slicer will see the STL (float32)."""
     from skimage import measure
-    f = np.where(f == 0, np.float32(1e-5), f)                 # no exact zeros at grid nodes
+    # keep grid nodes >= 0.01 away from the zero level so no MC vertex sits on a node:
+    # otherwise neighbouring vertices collapse in float32 and leave degenerate triangles
+    f = np.where(f >= 0, np.maximum(f, 0.01), np.minimum(f, -0.01)).astype(np.float32)
     Vm, Tm, _, _ = measure.marching_cubes(np.ascontiguousarray(f), 0.0, spacing=tuple(g.h))
-    Vm = Vm + g.lo; Tm = Tm.astype(np.int64)
+    Vm = (Vm + g.lo).astype(np.float32)
+    Vu, inv = np.unique(Vm, axis=0, return_inverse=True); Tm = inv.reshape(-1)[Tm].astype(np.int64)
+    Tm = Tm[(Tm[:, 0] != Tm[:, 1]) & (Tm[:, 1] != Tm[:, 2]) & (Tm[:, 0] != Tm[:, 2])]
+    Vm = Vu.astype(np.float64)
     r = mk.check_mesh(Vm, Tm)
     if r['volume'] < 0: Tm = Tm[:, ::-1]
     if r['edges_not_2']: raise RuntimeError(f"non-manifold: {r['edges_not_2']} edges")

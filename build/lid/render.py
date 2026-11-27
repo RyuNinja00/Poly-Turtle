@@ -24,7 +24,7 @@ fig.suptitle('08 Printed lid, rev 3: one piece, no supports (jojo\'s lid base, P
 ax = fig.add_axes([0.0, 0.52, 0.5, 0.42]); v = s3.View(az=-62, el=24)
 s3.draw(ax, v, [(base, LID), (can, CAN)], max_edge=30, lw=0.7); s3.frame(ax, v, (-117, -59, 60), (117, 59, 161), 0.03)
 s3.callout(ax, v, (48, -20, 160.5), 'feeder canopy\n(45° faces)', CAN, (-40, 45))
-s3.callout(ax, v, (-60, 0, 131.5), 'vault: 45° chamfers,\n37 mm flat', CAN, (-80, 40))
+s3.callout(ax, v, (-60, 0, 131.5), 'vault: 45° chamfers,\n36 mm flat', CAN, (-80, 40))
 s3.callout(ax, v, (-60, -58, 70), 'jojo base kept exactly:\nrim, gasket, latches', '#555', (-30, -60))
 s3.callout(ax, v, (P.GLAND['x'], 0, 131.5), 'M12 / PG7 gland', '#333', (-20, 70))
 for k, (x, z) in chk['wall_screws_xz'].items(): s3.callout(ax, v, (x, -46.5, z), f'M3 wall screw {k}', CAR, (45 if k == 'A' else 0, -55 if k == 'A' else -75))
@@ -55,7 +55,7 @@ G = np.array([P.glob(-50 + 20 * np.sin(p), 0, -20 + 20 * np.cos(p)) for p in ph]
 E = np.array([P.glob(u, 0, 0) for u in (-50, P.outlet_u() + 12)]); ax.plot(E[:, 0], E[:, 2], c=FIL, lw=1.6)
 ax.annotate('filament climbs at 45°', P.glob(15, 0, 0)[[0, 2]], (55, 178), color=FIL, weight='bold', fontsize=9.5, arrowprops=dict(arrowstyle='-|>', color=FIL))
 ax.annotate('inlet guide R20 + PREP\n(low, +X end)', chk['guide']['mouth_xyz'][::2], (112, 35), color=PR, weight='bold', fontsize=9.5, arrowprops=dict(arrowstyle='-|>', color=PR))
-ax.annotate('every ceiling is 45° or a\nshort bridge (37 / 25 mm)', (60, 158), (-35, 172), fontsize=9.5, color=CAN, weight='bold', arrowprops=dict(arrowstyle='-|>', color=CAN))
+ax.annotate('every ceiling is 45° or a\nshort bridge (36 / 25 mm)', (60, 158), (-35, 172), fontsize=9.5, color=CAN, weight='bold', arrowprops=dict(arrowstyle='-|>', color=CAN))
 ax.set_xlim(-40, 140); ax.set_ylim(-5, 188); ax.grid(alpha=0.25); ax.set_xlabel('X (mm)'); ax.set_ylabel('Z (mm)')
 ax.set_title('Section at the filament plane (Y = −5.5)', fontsize=12, weight='bold')
 
@@ -67,7 +67,7 @@ ax.set_title('From below: carrier in place (Smol not shown)', fontsize=11, weigh
 
 ax = fig.add_axes([0.6, 0.0, 0.39, 0.24]); ax.axis('off')
 ob = chk['overhang_area_rim_down']; fl = chk['canopy_flat_ceilings']
-txt = [('Print', 'One piece, rim down on the bed, ASA, brim. No supports: 45° faces + bridges of 37 and 25 mm.'),
+txt = [('Print', 'One piece, rim down on the bed, ASA, brim. No supports: 45° faces + bridges of 36 and 25 mm.'),
        ('Feeder', 'Bench-build the carrier + Smol + PREP; lift it in through the rim; 2× M3 through the −Y wall.'),
        ('Outlet', 'PC4-M10 into the Ø9 boss (8.7 mm of thread), axis = filament axis.'),
        ('Checks', f"spool ↔ lid {chk['lid_vs_spool']['min_mm']} mm, Smol ↔ lid {chk['lid_vs_smol']['min_mm']} mm, drop-in clear ({chk['drop_in']['min_clearance_mm']} mm)")]
