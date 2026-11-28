@@ -85,5 +85,48 @@
  },
  "drive to box part min mm": 126.4,
  "filament path to box part min mm": 4.13,
- "bumper free reach |y|": 51.8
+ "bumper free reach |y|": 51.8,
+ "TAPE: block (carrier lifted 0.0 mm) vs lid +0.0 mm": {
+  "points": 182977,
+  "inside": 0,
+  "min_gap_mm": 0.62,
+  "at": [
+   89.5,
+   10.7,
+   59.6
+  ]
+ },
+ "TAPE: block (carrier lifted 1.6 mm) vs lid +1.6 mm": {
+  "points": 182977,
+  "inside": 0,
+  "min_gap_mm": 0.62,
+  "at": [
+   89.5,
+   10.7,
+   61.2
+  ]
+ },
+ "TAPE: block vs feeder carrier": {
+  "points": 182977,
+  "inside": 0,
+  "min_gap_mm": 5.84,
+  "at": [
+   92.8,
+   4.7,
+   58.0
+  ]
+ },
+ "TAPE: block vs box proxy": {
+  "points": 91242,
+  "inside": 0,
+  "min_gap_mm": 2.01,
+  "at": [
+   103.3,
+   40.9,
+   58.6
+  ],
+  "note": "gap = foam-tape thickness on the proxy"
+ },
+ "TAPE: spool gap": 2.4,
+ "TAPE: filament path min mm": 4.13
 }

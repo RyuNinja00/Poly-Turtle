@@ -48,6 +48,7 @@ The lid is 101.8 mm tall overall. Print it in ASA with a brim. The bed contact i
 | `08n-TPU-microfit-plate-gasket.stl` | 1 mm TPU gasket under the plate. |
 | `08p-pogo-box-bar-print-in-place.stl` | The box half of the N20 disconnect, **one print-in-place part**: a cross bar with a frame and a captive floating carrier for the female pogo connector. Print upright as it lies, ASA or PETG, no supports; break the carrier free with a gentle wiggle. |
 | `08q-TPU-pogo-bar-bumper-x2.stl` | TPU ring bumper; print two. They slide onto the bar ends and grip the box's side walls. |
+| `08r-pogo-box-block-tape-print-in-place.stl` | **Taped option** for the box half, in place of 08p + 08q: the same frame and captive carrier on a block with a flat face for foam tape on the box's +X end wall. Print upright as it lies, no supports. |
 | `checks.json`, `verify.json`, `verify-endcaps.txt`, `mesh-report.json` | Check, final-mesh verification and mesh results. |
 
 ## Lid features
@@ -128,6 +129,11 @@ It takes **one extra print and two small TPU bumpers**. There is no tape, no scr
 4. Let the female snap onto the male, so the bar hangs from the lid. Lower the lid onto the box: the bumpers squeeze in, and the male pushes the bar down until the carrier sits on its floor. Latch the lid.
 5. That sets the bar's position; nothing to measure. Lift the lid and the pair lets go. If the gasket settles and the lid sits lower later, the male simply pushes the bar down a little further.
 
+**Taped option (08r instead of 08p + 08q).** Same lid pocket, same clip-in female and the same floating carrier, but the frame sits on a small block taped to the box's +X end wall instead of a bar across the box. Use it if the bumpers don't grip well in your box, or you'd rather not have a bar across the end.
+- The tape face is 37 × 5.5 mm, 103.4 mm from the box centre. Measure the box's inside length 5–10 mm below the rim: the tape thickness is half that length minus 103.4 mm (the proxy box gives about 2 mm, two layers of 1.1 mm VHB).
+- Fit it the same way: snap the female onto the male, peel the tape liner, then lower and latch the lid. The lid carries the block into place and the tape lands on the wall. Make the tape about 0.5 mm thicker than the gap, so the foam is squeezed and grabs as the lid goes down; if it didn't touch, add a layer and repeat.
+- The carrier's float (±1 mm sideways, 2 mm up) covers the rest.
+
 **Checks** (`build/audit/pogo_check.py`, results in `build/audit/pogo.json`):
 
 | Pair | Result |
@@ -138,6 +144,7 @@ It takes **one extra print and two small TPU bumpers**. There is no tape, no scr
 | Box part vs a full Ø205 spool | 2.4 mm |
 | Closest filament path, any spool size, any point across it | 4.1 mm |
 | Frame vs box proxy walls | 2.8 mm; only the TPU bumpers touch the walls |
+| Taped option (08r) | 0.62 mm to the lid (as installed and lid up to 1.6 mm higher), 5.8 mm to the feeder carrier, 2.4 mm to the spool, 4.1 mm to the filament, 2.0 mm tape gap to the proxy's end wall |
 | Print | Lid pocket: no supports (two short roof bridges, 9.8 and 5.8 mm). Box part: no supports; its only overhangs are the 2.6 mm flat lip and carrier flange (over 1.6 mm and 0.5 mm gaps) and the two 24 mm clip bridges |
 
 ## Lid-to-box seal

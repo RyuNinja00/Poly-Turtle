@@ -36,5 +36,19 @@ for row in ck['inlet_routing']:
 res['filament path to box part min mm'] = round(float(worst), 2)
 # bumper reach vs proxy side walls at the bar height
 res['bumper free reach |y|'] = pogo.report()['bumper']['free_reach_y']
+
+# taped option: same carrier, frame with a flat wall face instead of the bar
+tframe = tri(pogo.frame('tape'))
+for up in (0.0, 1.6):
+    pair(f'TAPE: block (carrier lifted {up} mm) vs lid {up:+.1f} mm', np.concatenate([tframe, moving + [0, 0, up]]), Occ(lid + [0, 0, up]), res)
+pair('TAPE: block vs feeder carrier', np.concatenate([tframe, moving]), CAR, res)
+pair('TAPE: block vs box proxy', tframe, BOX, res, 'gap = foam-tape thickness on the proxy')
+res['TAPE: spool gap'] = spool_gap(tframe)
+kd = cKDTree(sample(np.concatenate([tframe, moving]), 0.3)); worst = 99
+for row in ck['inlet_routing']:
+    tx, tz = row['leaves_spool_at']
+    for y0 in np.linspace(-39, 39, 27):
+        worst = min(worst, kd.query(np.linspace([tx, y0, tz], M, 400))[0].min())
+res['TAPE: filament path min mm'] = round(float(worst), 2)
 print(json.dumps(res, indent=1, default=float))
 json.dump(res, open(HERE / 'pogo.json', 'w'), indent=1, default=float)

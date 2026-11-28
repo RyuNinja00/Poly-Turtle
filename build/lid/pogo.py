@@ -40,6 +40,7 @@ FR['lip_z'] = FR['floor'] + (CAR['flange'][1] - CAR['flange'][0]) + FLOAT['up'] 
 FR['top'] = Z_BED + FR['lip_z'] + FR['lip_t']
 BAR = dict(x=(98.6, 102.7), end=42.0, top_dz=3.55)      # bar kept low and off the inlet guide's collar
 BUMP = dict(od=9.0, wall=1.6, sock=2.5, sock_wall=0.8)
+TAPE = dict(x=103.4, top=58.6)                      # taped option: wall face 103.4 mm from the box centre
 
 # ---------------------------------------------------------------- SDF helpers
 def rrect(X, Y, cx, cy, hx, hy, r):
@@ -98,20 +99,27 @@ def carrier(z_bot=None):
     f = D(U(body, flange, posts, beam), pocket)
     return _mesh(f, g)
 
-def frame():
-    """floor ring under the carrier flange, wall, lip over it; cross bar to both side walls"""
+def frame(mount='bar'):
+    """floor ring under the carrier flange, wall, lip over it; mount='bar': cross bar to both side walls (TPU bumpers),
+    mount='tape': a flat face for foam tape on the box's +X end wall instead"""
     zb = Z_BED; top = FR['top']
     hx, hy = CAR['bx'] + FR['inner'] + FR['wall'], CAR['by'] + FR['inner'] + FR['wall']
     yb0, yb1 = YC - hy, YC + hy
-    g, X, Y, Z = _grid((XC - hx - 0.4, -BAR['end'] - 0.4, zb - 0.3), (BAR['x'][1] + 0.4, BAR['end'] + 0.4, top + 0.3))
+    if mount == 'bar':
+        g, X, Y, Z = _grid((XC - hx - 0.4, -BAR['end'] - 0.4, zb - 0.3), (BAR['x'][1] + 0.4, BAR['end'] + 0.4, top + 0.3))
+    else:
+        g, X, Y, Z = _grid((XC - hx - 0.4, yb0 - 0.4, zb - 0.3), (TAPE['x'] + 0.4, yb1 + 0.4, TAPE['top'] + 0.3))
     x, y, z = X - XC, Y - YC, Z - zb
     db = _d_body(x, y)
     outer = I(rrect(x, y, 0, 0, hx, hy, 2.0), slab(z, 0, top - zb))
     hole_floor = I(db - FR['open'], slab(z, -1, FR['floor']))
     cavity = I(db - FR['inner'], slab(z, FR['floor'] - 0.01, FR['lip_z']))
     hole_lip = I(db - FR['open'], slab(z, FR['lip_z'] - 0.01, top - zb + 1))
-    bt = zb + BAR['top_dz']
-    bar = U(box3(X, Y, Z, *BAR['x'], -BAR['end'], yb0 + 1.0, zb, bt), box3(X, Y, Z, *BAR['x'], yb1 - 1.0, BAR['end'], zb, bt))
+    if mount == 'bar':
+        bt = zb + BAR['top_dz']
+        bar = U(box3(X, Y, Z, *BAR['x'], -BAR['end'], yb0 + 1.0, zb, bt), box3(X, Y, Z, *BAR['x'], yb1 - 1.0, BAR['end'], zb, bt))
+    else:                                                                   # tape face, as tall as the lid allows
+        bar = box3(X, Y, Z, XC + hx - 1.0, TAPE['x'], yb0, yb1, zb, TAPE['top'])
     f = D(U(outer, bar), hole_floor, cavity, hole_lip)
     # spool side (-X) and filament side (-Y end) lower edges chamfered 45 deg
     xa = XC - hx
