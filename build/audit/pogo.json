@@ -1,120 +1,89 @@
 {
- "male + puck, lid off (resting on the lip) vs lid": {
-  "points": 10322,
-  "inside": 0,
-  "min_gap_mm": 0.65,
-  "at": [
-   92.0,
-   9.1,
-   61.2
-  ]
- },
- "male + puck, top of float vs lid": {
-  "points": 10322,
-  "inside": 0,
-  "min_gap_mm": 0.07,
-  "at": [
-   91.7,
-   29.3,
-   66.0
-  ],
-  "note": "puck touches the holder roof at the top of its float"
- },
- "male + puck vs lip plate": {
-  "points": 10322,
-  "inside": 713,
-  "min_gap_mm": 0.08,
+ "male vs lid (clipped in)": {
+  "points": 5446,
+  "inside": 1,
+  "min_gap_mm": 0.02,
   "inside_bbox": [
    [
-    85.4,
-    9.1,
-    61.2
+    91.2,
+    12.9,
+    62.6
    ],
    [
-    98.6,
-    36.9,
-    61.2
+    91.2,
+    12.9,
+    62.6
    ]
   ],
-  "note": "puck rests on the plate"
+  "note": "flange rests on the pocket beams by design"
  },
- "male + puck vs carrier": {
-  "points": 10322,
+ "male vs lid-side carrier (feeder)": {
+  "points": 5446,
   "inside": 0,
-  "min_gap_mm": 10.05,
+  "min_gap_mm": 12.02,
   "at": [
-   92.0,
-   9.1,
-   64.0
+   93.2,
+   11.0,
+   62.2
   ]
  },
- "female + box block vs lid, plate and screw heads, lid +0 mm": {
-  "points": 10916,
+ "box part (carrier lifted 0.0 mm) vs lid +0.0 mm": {
+  "points": 207402,
   "inside": 0,
-  "min_gap_mm": 1.43,
+  "min_gap_mm": 0.62,
   "at": [
-   92.4,
-   36.5,
-   58.5
+   89.5,
+   10.7,
+   59.6
   ]
  },
- "female + box block vs lid, plate and screw heads, lid -1 mm": {
-  "points": 10916,
+ "box part (carrier lifted 1.0 mm) vs lid +1.0 mm": {
+  "points": 207402,
   "inside": 0,
-  "min_gap_mm": 0.6,
+  "min_gap_mm": 0.62,
   "at": [
-   90.5,
-   35.4,
-   58.6
+   89.5,
+   10.7,
+   60.6
   ]
  },
- "female + box block vs lid, plate and screw heads, lid +1 mm": {
-  "points": 10916,
+ "box part (carrier lifted 1.6 mm) vs lid +1.6 mm": {
+  "points": 207402,
   "inside": 0,
-  "min_gap_mm": 2.04,
+  "min_gap_mm": 0.62,
   "at": [
-   92.0,
-   34.0,
-   60.0
-  ]
- },
- "female + box block vs carrier": {
-  "points": 10916,
-  "inside": 0,
-  "min_gap_mm": 10.58,
-  "at": [
-   92.6,
-   9.5,
-   58.3
-  ]
- },
- "box block vs box proxy": {
-  "points": 5470,
-  "inside": 0,
-  "min_gap_mm": 4.32,
-  "at": [
-   102.4,
-   36.4,
-   58.6
-  ],
-  "note": "positive = gap to the proxy wall, filled with VHB"
- },
- "male (lid off) vs box proxy": {
-  "points": 10322,
-  "inside": 0,
-  "min_gap_mm": 8.83,
-  "at": [
-   97.4,
-   34.2,
+   89.5,
+   10.7,
    61.2
   ]
  },
- "spool gap": {
-  "block": 2.53,
-  "male_lid_off": 5.69,
-  "holder": 2.83,
-  "plate_and_heads": 3.64
+ "box part + bumpers vs feeder carrier": {
+  "points": 260974,
+  "inside": 0,
+  "min_gap_mm": 2.16,
+  "at": [
+   98.6,
+   -5.2,
+   56.6
+  ]
  },
- "drive to block min mm": 126.1,
- "filament path to pogo parts min mm": 5.44
+ "frame vs box proxy": {
+  "points": 115667,
+  "inside": 0,
+  "min_gap_mm": 2.8,
+  "at": [
+   102.6,
+   39.8,
+   58.1
+  ],
+  "note": "bar ends stop 4+ mm short of the walls; the TPU bumpers take the gap"
+ },
+ "spool gap": {
+  "frame": 2.4,
+  "carrier_and_female": 2.48,
+  "lid_pocket": 5.74
+ },
+ "drive to box part min mm": 126.4,
+ "filament path to box part min mm": 4.13,
+ "bumper free reach |y|": 51.8
 }

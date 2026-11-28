@@ -303,11 +303,11 @@ if __name__ == '__main__':
         rep[n] = mk.check_mesh(V, T); rep[n]['bbox'] = [V.min(0).round(2).tolist(), V.max(0).round(2).tolist()]
         print(n, rep[n])
     import pogo
-    Vp, Tp = pogo.lid_holder()
-    rep['pogo_holder'] = mk.check_mesh(Vp, Tp)
+    Vp, Tp = pogo.lid_pocket()
+    rep['pogo_pocket'] = mk.check_mesh(Vp, Tp)
     mk.write_stl(out / '08-Printed-lid.stl', *E.merge((Vb, Tb), (Vt, Tt), (Vs, Ts), (Vp, Tp)))
-    for name, (V, T) in {'08p-pogo-male-puck.stl': pogo.puck(), '08q-pogo-lip-plate.stl': pogo.lip_plate(),
-                         '08r-pogo-box-block.stl': pogo.box_block(placed=False)}.items():
+    for name, (V, T) in {'08p-pogo-box-bar-print-in-place.stl': E.merge(pogo.frame(), pogo.carrier()),
+                         '08q-TPU-pogo-bar-bumper-x2.stl': pogo.bumper()}.items():
         mk.write_stl(out / name, V, T); rep[name] = mk.check_mesh(V, T)
     rep['pogo'] = pogo.report()
     mk.write_stl(out / '08c-feeder-carrier.stl', Vc, Tc)

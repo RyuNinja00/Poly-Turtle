@@ -53,10 +53,9 @@ if __name__ == '__main__':
             ('cad/07-cradle-drive/07a-Roller-with-gear.stl', 0.15, None),
             ('cad/07-cradle-drive/07c-Pinion-17T-N20.stl', 0.1, None),
             ('cad/08-printed-lid/08-Printed-lid.stl', 0.3, (np.array([-118, -60, 100.0]), np.array([118, 60, 164.0]))),
-            ('cad/08-printed-lid/08-Printed-lid.stl', 0.1, (np.array([80.0, 2, 59.5]), np.array([102.0, 44, 69.0]))),   # pogo holder
-            ('cad/08-printed-lid/08p-pogo-male-puck.stl', 0.1, None),
-            ('cad/08-printed-lid/08q-pogo-lip-plate.stl', 0.1, None),
-            ('cad/08-printed-lid/08r-pogo-box-block.stl', 0.1, None)]
+            ('cad/08-printed-lid/08-Printed-lid.stl', 0.1, (np.array([80.0, 2, 59.5]), np.array([102.0, 44, 69.0]))),   # pogo pocket
+            ('cad/08-printed-lid/08p-pogo-box-bar-print-in-place.stl', 0.1, (np.array([82.0, 0, 52.0]), np.array([104.0, 44, 61.0]))),
+            ('cad/08-printed-lid/08q-TPU-pogo-bar-bumper-x2.stl', 0.1, None)]
     for p, h, box in jobs:
         r = scan(ROOT / p, h=h, r=0.45, box=box); res.append(r)
         print(r['file'], 'solid', r['solid_mm3'], 'thin', r['thin_mm3'])

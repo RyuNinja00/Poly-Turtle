@@ -1159,8 +1159,8 @@
  },
  {
   "file": "cad/08-printed-lid/08-Printed-lid.stl",
-  "solid_mm3": 1346,
-  "thin_mm3": 180.08,
+  "solid_mm3": 2464,
+  "thin_mm3": 122.99,
   "min_feature_mm": 0.9,
   "clusters": [
    {
@@ -1179,311 +1179,318 @@
     ]
    },
    {
-    "max_half_thickness_mm": 1.08,
-    "voxels": 52294,
-    "volume_mm3": 52.29,
+    "max_half_thickness_mm": 0.8,
+    "voxels": 33231,
+    "volume_mm3": 33.23,
     "center": [
-     89.4,
+     93.0,
      23.0,
-     66.8
+     60.8
     ],
     "extent": [
-     18.0,
-     38.2,
-     1.5
-    ]
-   },
-   {
-    "max_half_thickness_mm": 0.95,
-    "voxels": 36490,
-    "volume_mm3": 36.49,
-    "center": [
-     90.0,
-     23.0,
-     60.7
-    ],
-    "extent": [
-     18.5,
-     38.2,
+     10.1,
+     25.6,
      0.9
     ]
    },
    {
     "max_half_thickness_mm": 0.71,
-    "voxels": 3084,
-    "volume_mm3": 3.08,
+    "voxels": 1863,
+    "volume_mm3": 1.86,
     "center": [
-     92.0,
+     90.2,
      23.0,
-     66.2
+     60.3
     ],
     "extent": [
-     15.6,
-     29.0,
+     15.1,
+     28.2,
      0.3
     ]
    },
    {
     "max_half_thickness_mm": 0.71,
-    "voxels": 3084,
-    "volume_mm3": 3.08,
+    "voxels": 1840,
+    "volume_mm3": 1.84,
     "center": [
-     92.0,
+     93.2,
      23.0,
-     67.5
+     62.7
     ],
     "extent": [
-     15.6,
-     29.0,
+     6.1,
+     22.6,
      0.3
     ]
    },
    {
-    "max_half_thickness_mm": 0.71,
-    "voxels": 1020,
-    "volume_mm3": 1.02,
+    "max_half_thickness_mm": 1.11,
+    "voxels": 1547,
+    "volume_mm3": 1.55,
     "center": [
-     92.0,
-     23.0,
-     66.1
+     90.4,
+     22.5,
+     66.9
     ],
     "extent": [
-     3.3,
+     14.6,
+     28.2,
+     0.4
+    ]
+   },
+   {
+    "max_half_thickness_mm": 0.71,
+    "voxels": 1028,
+    "volume_mm3": 1.03,
+    "center": [
+     93.2,
+     23.0,
+     65.5
+    ],
+    "extent": [
+     3.4,
      12.8,
      0.3
     ]
    },
    {
-    "max_half_thickness_mm": 0.71,
-    "voxels": 1020,
+    "max_half_thickness_mm": 0.8,
+    "voxels": 1023,
     "volume_mm3": 1.02,
     "center": [
-     92.0,
+     93.2,
+     23.2,
+     66.9
+    ],
+    "extent": [
+     3.4,
+     13.7,
+     0.4
+    ]
+   }
+  ]
+ },
+ {
+  "file": "cad/08-printed-lid/08p-pogo-box-bar-print-in-place.stl",
+  "solid_mm3": 1814,
+  "thin_mm3": 230.64,
+  "min_feature_mm": 0.9,
+  "clusters": [
+   {
+    "max_half_thickness_mm": 0.8,
+    "voxels": 168701,
+    "volume_mm3": 168.7,
+    "center": [
+     93.2,
      23.0,
-     67.6
+     57.7
     ],
     "extent": [
-     3.3,
-     12.8,
-     0.3
+     17.2,
+     34.6,
+     0.8
     ]
    },
    {
-    "max_half_thickness_mm": 0.78,
-    "voxels": 504,
-    "volume_mm3": 0.5,
+    "max_half_thickness_mm": 0.8,
+    "voxels": 21384,
+    "volume_mm3": 21.38,
     "center": [
-     92.0,
-     6.6,
-     66.8
+     92.9,
+     22.8,
+     59.5
     ],
     "extent": [
-     1.4,
-     1.5,
-     1.5
+     9.5,
+     27.1,
+     2.3
     ]
    },
    {
-    "max_half_thickness_mm": 0.78,
-    "voxels": 504,
-    "volume_mm3": 0.5,
+    "max_half_thickness_mm": 0.86,
+    "voxels": 19990,
+    "volume_mm3": 19.99,
     "center": [
-     92.0,
-     39.4,
-     66.8
+     90.6,
+     15.5,
+     54.8
     ],
     "extent": [
-     1.4,
-     1.5,
-     1.5
+     15.1,
+     35.2,
+     4.0
     ]
-   }
-  ]
- },
- {
-  "file": "cad/08-printed-lid/08p-pogo-male-puck.stl",
-  "solid_mm3": 172,
-  "thin_mm3": 9.98,
-  "min_feature_mm": 0.9,
-  "clusters": [
+   },
    {
-    "max_half_thickness_mm": 0.6,
-    "voxels": 2792,
-    "volume_mm3": 2.79,
+    "max_half_thickness_mm": 1.3,
+    "voxels": 9145,
+    "volume_mm3": 9.15,
     "center": [
-     0.0,
-     0.0,
-     0.2
+     93.7,
+     21.7,
+     56.5
     ],
     "extent": [
-     13.2,
-     27.7,
-     0.3
+     18.8,
+     41.9,
+     4.9
     ]
    },
    {
     "max_half_thickness_mm": 0.6,
-    "voxels": 2792,
-    "volume_mm3": 2.79,
+    "voxels": 3015,
+    "volume_mm3": 3.02,
     "center": [
-     0.0,
-     0.0,
-     1.1
+     93.2,
+     23.0,
+     55.7
     ],
     "extent": [
-     13.2,
-     27.7,
+     14.7,
+     32.2,
      0.3
     ]
    },
    {
     "max_half_thickness_mm": 0.6,
-    "voxels": 2200,
-    "volume_mm3": 2.2,
+    "voxels": 2510,
+    "volume_mm3": 2.51,
     "center": [
-     -0.0,
-     0.0,
-     0.2
+     92.8,
+     22.0,
+     54.7
     ],
     "extent": [
-     8.5,
-     25.1,
-     0.3
+     14.7,
+     32.2,
+     0.4
     ]
    },
    {
-    "max_half_thickness_mm": 0.6,
-    "voxels": 2200,
-    "volume_mm3": 2.2,
+    "max_half_thickness_mm": 0.71,
+    "voxels": 1833,
+    "volume_mm3": 1.83,
     "center": [
-     -0.0,
-     0.0,
-     1.1
-    ],
-    "extent": [
-     8.5,
-     25.1,
-     0.3
-    ]
-   }
-  ]
- },
- {
-  "file": "cad/08-printed-lid/08q-pogo-lip-plate.stl",
-  "solid_mm3": 356,
-  "thin_mm3": 14.25,
-  "min_feature_mm": 0.9,
-  "clusters": [
-   {
-    "max_half_thickness_mm": 0.5,
-    "voxels": 9472,
-    "volume_mm3": 9.47,
-    "center": [
-     0.0,
-     -0.1,
-     0.6
-    ],
-    "extent": [
-     16.7,
-     36.4,
-     0.9
-    ]
-   },
-   {
-    "max_half_thickness_mm": 0.5,
-    "voxels": 2388,
-    "volume_mm3": 2.39,
-    "center": [
-     0.0,
-     0.0,
-     0.2
-    ],
-    "extent": [
-     10.1,
-     25.7,
-     0.3
-    ]
-   },
-   {
-    "max_half_thickness_mm": 0.5,
-    "voxels": 2388,
-    "volume_mm3": 2.39,
-    "center": [
-     0.0,
-     0.0,
-     0.9
-    ],
-    "extent": [
-     10.1,
-     25.7,
-     0.3
-    ]
-   }
-  ]
- },
- {
-  "file": "cad/08-printed-lid/08r-pogo-box-block.stl",
-  "solid_mm3": 289,
-  "thin_mm3": 7.95,
-  "min_feature_mm": 0.9,
-  "clusters": [
-   {
-    "max_half_thickness_mm": 0.54,
-    "voxels": 2126,
-    "volume_mm3": 2.13,
-    "center": [
-     -0.0,
-     -0.0,
-     1.0
-    ],
-    "extent": [
-     7.7,
-     24.3,
-     0.3
-    ]
-   },
-   {
-    "max_half_thickness_mm": 0.54,
-    "voxels": 2126,
-    "volume_mm3": 2.13,
-    "center": [
-     -0.0,
-     -0.0,
-     6.0
-    ],
-    "extent": [
-     7.7,
-     24.3,
-     0.3
-    ]
-   },
-   {
-    "max_half_thickness_mm": 0.54,
-    "voxels": 1848,
-    "volume_mm3": 1.85,
-    "center": [
-     -0.0,
-     0.0,
-     0.9
+     93.2,
+     23.0,
+     58.2
     ],
     "extent": [
      6.1,
-     22.7,
+     22.6,
      0.3
     ]
    },
    {
-    "max_half_thickness_mm": 0.54,
-    "voxels": 1848,
-    "volume_mm3": 1.85,
+    "max_half_thickness_mm": 0.85,
+    "voxels": 1790,
+    "volume_mm3": 1.79,
     "center": [
-     -0.0,
-     0.0,
-     6.1
+     93.1,
+     23.1,
+     53.2
     ],
     "extent": [
+     9.5,
+     27.1,
+     0.7
+    ]
+   },
+   {
+    "max_half_thickness_mm": 1.11,
+    "voxels": 1177,
+    "volume_mm3": 1.18,
+    "center": [
+     93.6,
+     22.6,
+     53.2
+    ],
+    "extent": [
+     6.2,
+     23.8,
+     0.4
+    ]
+   },
+   {
+    "max_half_thickness_mm": 0.72,
+    "voxels": 56,
+    "volume_mm3": 0.06,
+    "center": [
+     84.9,
+     5.0,
+     56.5
+    ],
+    "extent": [
+     1.1,
+     0.5,
+     1.1
+    ]
+   }
+  ]
+ },
+ {
+  "file": "cad/08-printed-lid/08q-TPU-pogo-bar-bumper-x2.stl",
+  "solid_mm3": 164,
+  "thin_mm3": 25.6,
+  "min_feature_mm": 0.9,
+  "clusters": [
+   {
+    "max_half_thickness_mm": 0.82,
+    "voxels": 22808,
+    "volume_mm3": 22.81,
+    "center": [
+     -0.0,
+     -0.3,
+     1.8
+    ],
+    "extent": [
+     8.8,
+     12.2,
+     3.5
+    ]
+   },
+   {
+    "max_half_thickness_mm": 0.71,
+    "voxels": 1179,
+    "volume_mm3": 1.18,
+    "center": [
+     -0.2,
+     5.2,
+     0.1
+    ],
+    "extent": [
+     8.8,
+     9.0,
+     0.3
+    ]
+   },
+   {
+    "max_half_thickness_mm": 0.71,
+    "voxels": 840,
+    "volume_mm3": 0.84,
+    "center": [
+     0.0,
+     5.2,
+     3.4
+    ],
+    "extent": [
+     6.0,
      6.1,
-     22.7,
+     0.3
+    ]
+   },
+   {
+    "max_half_thickness_mm": 0.73,
+    "voxels": 770,
+    "volume_mm3": 0.77,
+    "center": [
+     0.1,
+     5.3,
+     0.1
+    ],
+    "extent": [
+     6.0,
+     6.1,
      0.3
     ]
    }
