@@ -162,9 +162,9 @@
   ]
  },
  "lid vs box proxy": {
-  "points": 755347,
-  "inside": 6773,
-  "min_gap_mm": 0.1,
+  "points": 755540,
+  "inside": 6832,
+  "min_gap_mm": 0.2,
   "inside_bbox": [
    [
     -115.8,

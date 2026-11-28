@@ -37,18 +37,22 @@ res['filament path to box part min mm'] = round(float(worst), 2)
 # bumper reach vs proxy side walls at the bar height
 res['bumper free reach |y|'] = pogo.report()['bumper']['free_reach_y']
 
-# taped option: same carrier, frame with a flat wall face instead of the bar
-tframe = tri(pogo.frame('tape'))
-for up in (0.0, 1.6):
-    pair(f'TAPE: block (carrier lifted {up} mm) vs lid {up:+.1f} mm', np.concatenate([tframe, moving + [0, 0, up]]), Occ(lid + [0, 0, up]), res)
+# taped option: same carrier, frame with a flat wall face; fitted (with the gauge) 1 mm lower, so the carrier floats mid-travel
+drop = pogo.TAPE['drop']
+tframe = tri(pogo.frame('tape')) - [0, 0, drop]
+for up in (-1.0, 0.0, 1.0):
+    pair(f'TAPE: block (carrier {up:+.0f} mm) vs lid {up:+.0f} mm', np.concatenate([tframe, moving + [0, 0, up]]), Occ(lid + [0, 0, up]), res)
 pair('TAPE: block vs feeder carrier', np.concatenate([tframe, moving]), CAR, res)
 pair('TAPE: block vs box proxy', tframe, BOX, res, 'gap = foam-tape thickness on the proxy')
-res['TAPE: spool gap'] = spool_gap(tframe)
-kd = cKDTree(sample(np.concatenate([tframe, moving]), 0.3)); worst = 99
+res['TAPE: spool gap'] = dict(block=spool_gap(tframe), carrier_lid_off=spool_gap(moving - [0, 0, drop]))
+kd = cKDTree(sample(np.concatenate([tframe, moving, moving - [0, 0, drop]]), 0.3)); worst = 99
 for row in ck['inlet_routing']:
     tx, tz = row['leaves_spool_at']
     for y0 in np.linspace(-39, 39, 27):
         worst = min(worst, kd.query(np.linspace([tx, y0, tz], M, 400))[0].min())
 res['TAPE: filament path min mm'] = round(float(worst), 2)
+gauge = tri(pogo.tape_gauge(3.5))
+pair('TAPE gauge (3.5 mm gasket) vs carrier + female, lid off', gauge, Occ(moving - [0, 0, drop]), res)
+pair('TAPE gauge vs block', gauge, Occ(tframe), res, 'its arm touches the top of the tape face by design')
 print(json.dumps(res, indent=1, default=float))
 json.dump(res, open(HERE / 'pogo.json', 'w'), indent=1, default=float)

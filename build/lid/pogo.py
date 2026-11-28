@@ -29,18 +29,21 @@ SKIRT_X = 101.6
 
 # ---------------------------------------------------------------- box part
 F_FEM = F_MALE                                      # mated
-CAR = dict(bx=4.8, by=13.6, h=5.2, flange=(1.5, 2.7), flange_out=2.6, post_y=12.2, beam=(3.0, 3.8), beam_h=0.75)
+CAR = dict(bx=4.8, by=13.6, h=5.2, flange=(1.8, 3.0), flange_out=2.6, post_y=12.2, beam=(3.0, 3.8), beam_h=0.8, slot=1.3)   # slot: 1.0 flange + room for bridge sag
 FLOAT = dict(side=1.0, up=2.0)
-FR = dict(floor=1.0, wall=1.0, lip_t=0.8, chamfer_x=4.5, chamfer_y=3.0)
+FR = dict(floor=1.0, bump=0.3, wall=1.0, lip_t=0.8, chamfer_x=4.5, chamfer_y=3.0)   # 4 x 0.3 mm bumps: point contacts, so the carrier slides
 FR['open'] = FLOAT['side'] + 0.1                    # floor opening and lip opening: body + 1.1
 FR['inner'] = CAR['flange_out'] + FLOAT['side'] + 0.1
 CAR_TOP_REST = F_FEM - CON['face'] - CON['flange']  # female flange bottom = carrier top, carrier sitting on the floor (as installed)
-Z_BED = CAR_TOP_REST + (CAR['flange'][0] - FR['floor']) - CAR['h']      # printed 0.5 above the floor (flat 2.6 mm overhang won't droop onto it)
-FR['lip_z'] = FR['floor'] + (CAR['flange'][1] - CAR['flange'][0]) + FLOAT['up']   # lip underside, from the bed
+SEAT = FR['floor'] + FR['bump']                     # carrier flange rests on the bumps
+Z_BED = CAR_TOP_REST + (CAR['flange'][0] - SEAT) - CAR['h']      # printed 0.5 above the bumps, 0.8 above the floor
+FR['lip_z'] = SEAT + (CAR['flange'][1] - CAR['flange'][0]) + FLOAT['up']   # lip underside, from the bed
 FR['top'] = Z_BED + FR['lip_z'] + FR['lip_t']
 BAR = dict(x=(98.6, 102.7), end=42.0, top_dz=3.55)      # bar kept low and off the inlet guide's collar
 BUMP = dict(od=9.0, wall=1.6, sock=2.5, sock_wall=0.8)
-TAPE = dict(x=103.4, top=58.6)                      # taped option: wall face 103.4 mm from the box centre
+TAPE = dict(x=103.4, top=58.6, drop=1.0)            # taped option: wall face 103.4 mm from the box centre; fitted 1 mm lower
+                                                    # (carrier mid-float) with the gauge, since tape can't slide into place
+TIE = dict(y=6.0, slot=(1.6, 3.2))                  # zip-tie tab off the frame's -Y end, on the bar line
 
 # ---------------------------------------------------------------- SDF helpers
 def rrect(X, Y, cx, cy, hx, hy, r):
@@ -53,6 +56,11 @@ def box3(X, Y, Z, x0, x1, y0, y1, z0, z1):
 def U(*a): return np.minimum.reduce(np.broadcast_arrays(*a))
 def I(*a): return np.maximum.reduce(np.broadcast_arrays(*a))
 def D(a, *b): return np.maximum(a, -U(*b))
+
+def _tri2d(x, y, w, L):
+    """isosceles triangle pointing +y, base w at y=-L/2, tip at y=+L/2 (approximate SDF: max of half-planes)"""
+    n = np.hypot(L, w / 2)
+    return I(-(y + L / 2), (L * x + (w / 2) * y - (w / 2) * (L / 2)) / n, (-L * x + (w / 2) * y - (w / 2) * (L / 2)) / n).astype(np.float32)
 
 def _mesh(f, g):
     import printed_lid as P
@@ -76,7 +84,8 @@ def lid_pocket():
     ax = np.abs(x)
     beam = I(np.maximum(b0 - ax, ax - b1), np.abs(y) - (LP['cav_hy'] + 0.4), slab(z, 0, LP['beam_z']),
              ((b0 + LP['chamfer'] - z) - ax) / np.sqrt(2))                      # 45 deg lead-in on the bottom inner edge
-    f = U(D(outer, cav, rear, slot), beam)
+    arrow = I(_tri2d(x - (LP['out_x0'] + 1.15), y, 1.6, 4.0), slab(z, -1, 0.4))           # +Y arrow engraved in the bed face
+    f = D(U(D(outer, cav, rear, slot), beam), arrow)
     return _mesh(f, g)
 
 def _d_body(x, y): return rrect(x, y, 0, 0, CAR['bx'], CAR['by'], 1.5)
@@ -91,10 +100,10 @@ def carrier(z_bot=None):
     db = _d_body(x, y)
     body = I(db, slab(z, 0, CAR['h']))
     flange = I(db - CAR['flange_out'], slab(z, *CAR['flange']))
-    posts = I(db, CAR['post_y'] - np.abs(y), slab(z, 0, CAR['h'] + 1.05 + CAR['beam_h']))           # within the body outline
-    b0, b1 = CAR['beam']; ax = np.abs(x); zb = CAR['h'] + 1.05
+    posts = I(db, CAR['post_y'] - np.abs(y), slab(z, 0, CAR['h'] + CAR['slot'] + CAR['beam_h']))    # within the body outline
+    b0, b1 = CAR['beam']; ax = np.abs(x); zb = CAR['h'] + CAR['slot']
     beam = I(np.maximum(b0 - ax, ax - b1), np.abs(y) - (CAR['post_y'] + 0.4), slab(z, zb, zb + CAR['beam_h']),
-             (z - (zb + 0.2 + (ax - b0) * 0.55 / 0.8)) / 1.2)                  # sloped top: lead-in for the flange
+             (z - (zb + 0.2 + (ax - b0) * (CAR['beam_h'] - 0.2) / 0.8)) / 1.2)                  # sloped top: lead-in for the flange
     pocket = I(stadium(x, y, 0, 0, CON['B'] / 2 + FIT, CON['Wb'] / 2 + FIT), slab(z, -1, CAR['h'] + 3))
     f = D(U(body, flange, posts, beam), pocket)
     return _mesh(f, g)
@@ -108,7 +117,7 @@ def frame(mount='bar'):
     if mount == 'bar':
         g, X, Y, Z = _grid((XC - hx - 0.4, -BAR['end'] - 0.4, zb - 0.3), (BAR['x'][1] + 0.4, BAR['end'] + 0.4, top + 0.3))
     else:
-        g, X, Y, Z = _grid((XC - hx - 0.4, yb0 - 0.4, zb - 0.3), (TAPE['x'] + 0.4, yb1 + 0.4, TAPE['top'] + 0.3))
+        g, X, Y, Z = _grid((XC - hx - 0.4, yb0 - TIE['y'] - 0.4, zb - 0.3), (TAPE['x'] + 0.4, yb1 + 0.4, TAPE['top'] + 0.3))
     x, y, z = X - XC, Y - YC, Z - zb
     db = _d_body(x, y)
     outer = I(rrect(x, y, 0, 0, hx, hy, 2.0), slab(z, 0, top - zb))
@@ -120,7 +129,15 @@ def frame(mount='bar'):
         bar = U(box3(X, Y, Z, *BAR['x'], -BAR['end'], yb0 + 1.0, zb, bt), box3(X, Y, Z, *BAR['x'], yb1 - 1.0, BAR['end'], zb, bt))
     else:                                                                   # tape face, as tall as the lid allows
         bar = box3(X, Y, Z, XC + hx - 1.0, TAPE['x'], yb0, yb1, zb, TAPE['top'])
-    f = D(U(outer, bar), hole_floor, cavity, hole_lip)
+    tie = box3(X, Y, Z, *BAR['x'], yb0 - TIE['y'], yb0 + 1.0, zb, zb + BAR['top_dz'])
+    tie_slot = box3(X, Y, Z, (BAR['x'][0] + BAR['x'][1] - TIE['slot'][0]) / 2, (BAR['x'][0] + BAR['x'][1] + TIE['slot'][0]) / 2,
+                    yb0 - TIE['y'] + 1.2, yb0 - TIE['y'] + 1.2 + TIE['slot'][1], zb - 1, top + 1)
+    bumps = U(*[np.sqrt((x - bx_) ** 2 + (y - by_) ** 2 + (z - (FR['floor'] + FR['bump'] - 0.9)) ** 2) - 0.9
+                for bx_ in (-3.0, 3.0) for by_ in (-(CAR['by'] + 1.85), CAR['by'] + 1.85)])
+    arrow = I(_tri2d(x - (CAR['bx'] + 2.4), y - (CAR['by'] - 2.0), 2.4, 4.0), slab(z, top - zb - 0.4, top - zb + 1))
+    f = D(U(outer, bar, tie), hole_floor, cavity, hole_lip, tie_slot)
+    f = U(f, I(bumps.astype(np.float32), slab(z, FR['floor'] - 0.5, FR['floor'] + FR['bump'])))
+    f = D(f, arrow)                                                     # +Y arrow engraved in the top
     # spool side (-X) and filament side (-Y end) lower edges chamfered 45 deg
     xa = XC - hx
     f = np.maximum(f, ((FR['chamfer_x'] - (X - xa) - z) / np.sqrt(2)).astype(np.float32))
@@ -147,6 +164,18 @@ def bumper_placed(side):
     V = V * [1, s, 1] + [(BAR['x'][0] + BAR['x'][1]) / 2, s * BAR['end'], Z_BED]
     return V, (T if s > 0 else T[:, ::-1])
 
+def tape_gauge(gasket):
+    """lid-off fitting gauge for the taped block: rests on the box rim at the +X end; the block's tape face top is
+    pushed up against its arm. Rim top = channel ceiling 65.2 - G, with G = gasket - 1 (clay test)."""
+    G = gasket - 1.0; z_r = 65.2 - G; z_p = TAPE['top'] - TAPE['drop']
+    y0, y1 = YC + 7.0, YC + 17.0
+    import printed_lid as P
+    g = P.Grid((99.0, y0 - 0.4, z_p - 0.4), (112.4, y1 + 0.4, z_r + 2.4), H); X, Y, Z = g.X(), g.Y(), g.Z()
+    foot = box3(X, Y, Z, 99.5, 112.0, y0, y1, z_r, z_r + 2.0)
+    leg = box3(X, Y, Z, 99.5, 101.5, y0, y1, z_p, z_r + 1.0)
+    arm = box3(X, Y, Z, 99.5, 103.0, y0, y1, z_p, z_p + 1.2)
+    return _mesh(U(foot, leg, arm), g)
+
 def envelopes():
     """connector bodies (+ tails and 4 mm of soldered wire), as mated"""
     def body(face, sgn):
@@ -164,4 +193,5 @@ def report():
     return dict(connector='Yiwei MG0P25AM (male, lid) / MG0P25AF (female, box), 4 pin', centre_xy=[XC, YC],
                 faces_z=round(F_MALE, 2), carrier_float_mm=dict(up=FLOAT['up'], side=FLOAT['side']),
                 box_part_z=[round(Z_BED, 2), round(FR['top'], 2)], bar_x=list(BAR['x']), bar_ends_y=BAR['end'],
-                bumper=dict(od=BUMP['od'], free_reach_y=round(BAR['end'] + BUMP['sock_wall'] + BUMP['od'], 1)))
+                bumper=dict(od=BUMP['od'], free_reach_y=round(BAR['end'] + BUMP['sock_wall'] + BUMP['od'], 1)),
+                tape=dict(fitted_drop_mm=TAPE['drop'], gauge_depth_below_rim_mm={str(gk): round((65.2 - (gk - 1)) - (TAPE['top'] - TAPE['drop']), 2) for gk in (2.5, 3.5, 4.5)}))

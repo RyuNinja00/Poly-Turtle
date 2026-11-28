@@ -308,7 +308,8 @@ if __name__ == '__main__':
     mk.write_stl(out / '08-Printed-lid.stl', *E.merge((Vb, Tb), (Vt, Tt), (Vs, Ts), (Vp, Tp)))
     for name, (V, T) in {'08p-pogo-box-bar-print-in-place.stl': E.merge(pogo.frame(), pogo.carrier()),
                          '08q-TPU-pogo-bar-bumper-x2.stl': pogo.bumper(),
-                         '08r-pogo-box-block-tape-print-in-place.stl': E.merge(pogo.frame('tape'), pogo.carrier())}.items():
+                         '08r-pogo-box-block-tape-print-in-place.stl': E.merge(pogo.frame('tape'), pogo.carrier()),
+                         **{f'08s-pogo-tape-gauge-for-{gk}mm-gasket.stl': pogo.tape_gauge(gk) for gk in (2.5, 3.5, 4.5)}}.items():
         mk.write_stl(out / name, V, T); rep[name] = mk.check_mesh(V, T)
     rep['pogo'] = pogo.report()
     mk.write_stl(out / '08c-feeder-carrier.stl', Vc, Tc)

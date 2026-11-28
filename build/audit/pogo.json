@@ -1,18 +1,18 @@
 {
  "male vs lid (clipped in)": {
   "points": 5446,
-  "inside": 1,
+  "inside": 2,
   "min_gap_mm": 0.02,
   "inside_bbox": [
    [
-    91.2,
+    90.7,
     12.9,
     62.6
    ],
    [
     91.2,
-    12.9,
-    62.6
+    13.6,
+    63.3
    ]
   ],
   "note": "flange rests on the pocket beams by design"
@@ -28,37 +28,37 @@
   ]
  },
  "box part (carrier lifted 0.0 mm) vs lid +0.0 mm": {
-  "points": 207402,
+  "points": 210572,
   "inside": 0,
-  "min_gap_mm": 0.62,
+  "min_gap_mm": 0.6,
   "at": [
    89.5,
-   10.7,
+   35.2,
    59.6
   ]
  },
  "box part (carrier lifted 1.0 mm) vs lid +1.0 mm": {
-  "points": 207402,
+  "points": 210572,
   "inside": 0,
-  "min_gap_mm": 0.62,
+  "min_gap_mm": 0.6,
   "at": [
    89.5,
-   10.7,
+   35.2,
    60.6
   ]
  },
  "box part (carrier lifted 1.6 mm) vs lid +1.6 mm": {
-  "points": 207402,
+  "points": 210572,
   "inside": 0,
-  "min_gap_mm": 0.62,
+  "min_gap_mm": 0.6,
   "at": [
    89.5,
-   10.7,
+   35.2,
    61.2
   ]
  },
  "box part + bumpers vs feeder carrier": {
-  "points": 260974,
+  "points": 264144,
   "inside": 0,
   "min_gap_mm": 2.16,
   "at": [
@@ -68,13 +68,13 @@
   ]
  },
  "frame vs box proxy": {
-  "points": 115667,
+  "points": 118212,
   "inside": 0,
-  "min_gap_mm": 2.8,
+  "min_gap_mm": 2.51,
   "at": [
    102.6,
-   39.8,
-   58.1
+   39.9,
+   58.4
   ],
   "note": "bar ends stop 4+ mm short of the walls; the TPU bumpers take the gap"
  },
@@ -86,47 +86,81 @@
  "drive to box part min mm": 126.4,
  "filament path to box part min mm": 4.13,
  "bumper free reach |y|": 51.8,
- "TAPE: block (carrier lifted 0.0 mm) vs lid +0.0 mm": {
-  "points": 182977,
+ "TAPE: block (carrier -1 mm) vs lid -1 mm": {
+  "points": 197495,
   "inside": 0,
-  "min_gap_mm": 0.62,
+  "min_gap_mm": 0.6,
   "at": [
    89.5,
-   10.7,
+   35.2,
+   58.6
+  ]
+ },
+ "TAPE: block (carrier +0 mm) vs lid +0 mm": {
+  "points": 197495,
+  "inside": 0,
+  "min_gap_mm": 0.6,
+  "at": [
+   89.5,
+   35.2,
    59.6
   ]
  },
- "TAPE: block (carrier lifted 1.6 mm) vs lid +1.6 mm": {
-  "points": 182977,
+ "TAPE: block (carrier +1 mm) vs lid +1 mm": {
+  "points": 197495,
   "inside": 0,
-  "min_gap_mm": 0.62,
+  "min_gap_mm": 0.6,
   "at": [
    89.5,
-   10.7,
-   61.2
+   35.2,
+   60.6
   ]
  },
  "TAPE: block vs feeder carrier": {
-  "points": 182977,
+  "points": 197495,
   "inside": 0,
-  "min_gap_mm": 5.84,
+  "min_gap_mm": 3.77,
   "at": [
-   92.8,
-   4.7,
-   58.0
+   98.6,
+   -1.2,
+   55.6
   ]
  },
  "TAPE: block vs box proxy": {
-  "points": 91242,
+  "points": 105135,
   "inside": 0,
-  "min_gap_mm": 2.01,
+  "min_gap_mm": 2.24,
   "at": [
-   103.3,
-   40.9,
-   58.6
+   103.4,
+   41.2,
+   57.5
   ],
   "note": "gap = foam-tape thickness on the proxy"
  },
- "TAPE: spool gap": 2.4,
- "TAPE: filament path min mm": 4.13
+ "TAPE: spool gap": {
+  "block": 1.89,
+  "carrier_lid_off": 2.0
+ },
+ "TAPE: filament path min mm": 3.47,
+ "TAPE gauge (3.5 mm gasket) vs carrier + female, lid off": {
+  "points": 18356,
+  "inside": 0,
+  "min_gap_mm": 1.52,
+  "at": [
+   99.5,
+   35.3,
+   57.7
+  ]
+ },
+ "TAPE gauge vs block": {
+  "points": 18356,
+  "inside": 0,
+  "min_gap_mm": 0.01,
+  "at": [
+   101.8,
+   31.7,
+   57.6
+  ],
+  "note": "its arm touches the top of the tape face by design"
+ }
 }
