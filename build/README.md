@@ -39,4 +39,5 @@ Run `clouds.py` first; it needs the restored cad/01. See [docs/printed-lid.md](.
 `build/audit/` re-checks the published STLs together, in the model frame:
 - `assembly.py`: interference and gaps between every pair (lid, carrier, drive parts, gaskets, Micro-Fit plate and housing, PC4-M10 envelope, spool) → `assembly.json`;
 - `thin.py`: walls thinner than about two nozzle widths → `thin.json`;
+- `pogo_check.py`: the N20 pogo disconnect (holder, puck, lip plate, box block, connectors) against the lid, carrier, spool, box proxy and filament paths → `pogo.json`;
 - `supports.py STL up-axis [voxel]`: regions that start in mid-air or overhang past 45° in a print orientation, e.g. `supports.py ../../cad/08-printed-lid/08c-feeder-carrier.stl +y`.

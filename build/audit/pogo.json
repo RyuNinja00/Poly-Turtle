@@ -1,0 +1,120 @@
+{
+ "male + puck, lid off (resting on the lip) vs lid": {
+  "points": 10322,
+  "inside": 0,
+  "min_gap_mm": 0.65,
+  "at": [
+   92.0,
+   9.1,
+   61.2
+  ]
+ },
+ "male + puck, top of float vs lid": {
+  "points": 10322,
+  "inside": 0,
+  "min_gap_mm": 0.07,
+  "at": [
+   91.7,
+   29.3,
+   66.0
+  ],
+  "note": "puck touches the holder roof at the top of its float"
+ },
+ "male + puck vs lip plate": {
+  "points": 10322,
+  "inside": 713,
+  "min_gap_mm": 0.08,
+  "inside_bbox": [
+   [
+    85.4,
+    9.1,
+    61.2
+   ],
+   [
+    98.6,
+    36.9,
+    61.2
+   ]
+  ],
+  "note": "puck rests on the plate"
+ },
+ "male + puck vs carrier": {
+  "points": 10322,
+  "inside": 0,
+  "min_gap_mm": 10.05,
+  "at": [
+   92.0,
+   9.1,
+   64.0
+  ]
+ },
+ "female + box block vs lid, plate and screw heads, lid +0 mm": {
+  "points": 10916,
+  "inside": 0,
+  "min_gap_mm": 1.43,
+  "at": [
+   92.4,
+   36.5,
+   58.5
+  ]
+ },
+ "female + box block vs lid, plate and screw heads, lid -1 mm": {
+  "points": 10916,
+  "inside": 0,
+  "min_gap_mm": 0.6,
+  "at": [
+   90.5,
+   35.4,
+   58.6
+  ]
+ },
+ "female + box block vs lid, plate and screw heads, lid +1 mm": {
+  "points": 10916,
+  "inside": 0,
+  "min_gap_mm": 2.04,
+  "at": [
+   92.0,
+   34.0,
+   60.0
+  ]
+ },
+ "female + box block vs carrier": {
+  "points": 10916,
+  "inside": 0,
+  "min_gap_mm": 10.58,
+  "at": [
+   92.6,
+   9.5,
+   58.3
+  ]
+ },
+ "box block vs box proxy": {
+  "points": 5470,
+  "inside": 0,
+  "min_gap_mm": 4.32,
+  "at": [
+   102.4,
+   36.4,
+   58.6
+  ],
+  "note": "positive = gap to the proxy wall, filled with VHB"
+ },
+ "male (lid off) vs box proxy": {
+  "points": 10322,
+  "inside": 0,
+  "min_gap_mm": 8.83,
+  "at": [
+   97.4,
+   34.2,
+   61.2
+  ]
+ },
+ "spool gap": {
+  "block": 2.53,
+  "male_lid_off": 5.69,
+  "holder": 2.83,
+  "plate_and_heads": 3.64
+ },
+ "drive to block min mm": 126.1,
+ "filament path to pogo parts min mm": 5.44
+}

@@ -302,7 +302,14 @@ if __name__ == '__main__':
     for n, (V, T) in dict(base=(Vb, Tb), canopy=(Vt, Tt), bushing=(Vs, Ts), carrier=(Vc, Tc)).items():
         rep[n] = mk.check_mesh(V, T); rep[n]['bbox'] = [V.min(0).round(2).tolist(), V.max(0).round(2).tolist()]
         print(n, rep[n])
-    mk.write_stl(out / '08-Printed-lid.stl', *E.merge((Vb, Tb), (Vt, Tt), (Vs, Ts)))
+    import pogo
+    Vp, Tp = pogo.lid_holder()
+    rep['pogo_holder'] = mk.check_mesh(Vp, Tp)
+    mk.write_stl(out / '08-Printed-lid.stl', *E.merge((Vb, Tb), (Vt, Tt), (Vs, Ts), (Vp, Tp)))
+    for name, (V, T) in {'08p-pogo-male-puck.stl': pogo.puck(), '08q-pogo-lip-plate.stl': pogo.lip_plate(),
+                         '08r-pogo-box-block.stl': pogo.box_block(placed=False)}.items():
+        mk.write_stl(out / name, V, T); rep[name] = mk.check_mesh(V, T)
+    rep['pogo'] = pogo.report()
     mk.write_stl(out / '08c-feeder-carrier.stl', Vc, Tc)
     mk.write_stl(HERE / 'base.stl', Vb, Tb)              # occ.py input (jojo base only)
     gk, ginfo = E.gaskets(Vb[Tb])

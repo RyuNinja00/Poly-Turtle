@@ -40,12 +40,15 @@ The lid is 101.8 mm tall overall. Print it in ASA with a brim. The bed contact i
 
 | File | Part |
 |---|---|
-| `08-Printed-lid.stl` | The lid. It is three touching shells in one file: jojo's exact base, the canopy, and the threaded outlet bushing. Every slicer merges them into one solid. Size: 7.7 MB, 154k triangles. Flat areas were decimated within 0.01 mm. |
+| `08-Printed-lid.stl` | The lid. It is four touching shells in one file: jojo's exact base, the canopy, the threaded outlet bushing and the pogo holder. Every slicer merges them into one solid. Size: 7.7 MB, 154k triangles. Flat areas were decimated within 0.01 mm. |
 | `08c-feeder-carrier.stl` | Sits under the Smol and replaces the BoxTurtle trayframe interface. It carries the two V1 heat-set inserts for the Smol's downward bolts, the PREP block (2 × M2 pilots, Ø1.7), the curved inlet guide (R20, 40°, Ø4.3 bore for a 4 × 2 mm PTFE liner, flared mouth with a Ø9.2 collar), and two wall inserts (−Y). Print it on its flat −Y face, no supports: a fin under the guide holds it up while printing. |
 | `08g-TPU-lid-gasket-2.5mm.stl` / `-3.5mm` / `-4.5mm` | Lid-to-box seal. A hollow TPU ring (0.8 mm walls) that snaps into jojo's rim channel. Choose the height as described under *Lid-to-box seal*. Print flat, in TPU 85A–95A. |
 | `08h-TPU-outlet-washer.stl` | Optional printed seal under the PC4-M10 hex, in place of a 10 × 1 mm O-ring. Print in TPU. |
 | `08m-microfit-2x6-plate.stl` | 2 mm bulkhead plate for a Micro-Fit 3.0 2 × 6 housing with panel-mount ears (Molex 43020-1200, or the seller's "5557-3.0-2*R"). Cutout after Wireheadarts' Micro-Fit library (Printables 1300761). Print in ASA. |
 | `08n-TPU-microfit-plate-gasket.stl` | 1 mm TPU gasket under the plate. |
+| `08p-pogo-male-puck.stl` | Puck the male pogo connector is glued into; it floats in the lid's pogo holder. Print flange down, ASA. |
+| `08q-pogo-lip-plate.stl` | 1 mm plate that closes the pogo holder from below, flush with the rim. 2 × M2 × 5 button head. Print flat, ASA. |
+| `08r-pogo-box-block.stl` | Block for the female pogo connector, stuck to the box's +X inner wall with foam tape. Print top face down, ASA. |
 | `checks.json`, `verify.json`, `verify-endcaps.txt`, `mesh-report.json` | Check, final-mesh verification and mesh results. |
 
 ## Lid features
@@ -61,7 +64,7 @@ The lid is 101.8 mm tall overall. Print it in ASA with a brim. The bed contact i
     - The **cable** gets the 2 × 6 housing with the **female 43030 terminals**: the seller's "5557-3.0-2*P (公壳, male shell)", the same as Molex 43025-1200.
   - The plate sits on a 1 mm TPU gasket over a 25 × 13.5 opening and is held by 2 × M3 × 10 with nuts inside.
   - With 12 circuits there is room for the N20 (2), LOAD (2–3), PREP (2) and spares.
-  - The N20 lives in the box, not on the lid. Put a small 2-pin inline connector (Micro-Fit 2-pin, JST-PH or similar) in its leads inside the box, so the lid can be lifted off without a cable tying it to the box.
+  - The N20 lives in the box, not on the lid. Its two leads cross from the box to the lid through the **pogo disconnect** (below), so the lid lifts off with no cable tying it to the box.
   - **The cutout shape** follows Wireheadarts' *OpenSCAD library for mounting Molex MicroFit 3.0 panel-mount plugs* (Printables 1300761). It has three parts:
     - a body opening;
     - a full-length slot so the snap ears can pass and spring back;
@@ -90,12 +93,53 @@ The lid is 101.8 mm tall overall. Print it in ASA with a brim. The bed contact i
 3. **Install.** Turn the lid upside down and lower the module straight in through the rim. The whole move is clear by at least 0.63 mm. Screw the two −Y wall screws in.
 4. **Outlet and wiring.**
    - Drop a 10 × 1 O-ring (or the TPU washer) into the outlet counterbore and screw in the PC4-M10. Run the PTFE to the hub.
-   - Crimp the lane leads into the 43020-1200 housing and snap it into the plate. Join the N20 leads through their inline 2-pin connector.
+   - Crimp the lane leads into the 43020-1200 housing and snap it into the plate. The two N20 circuits go to the male pogo connector (step 5).
    - Fit the plate with its gasket: 2 × M3 × 10 with nuts inside.
 5. **Seal.** Press the chosen TPU gasket into the rim channel (see below).
-6. **Spool.** Load it so filament pays out **up the +X side**, toward the guide. The cradle drive is unchanged and rewinds in the opposite direction.
+6. **Pogo disconnect.** See *Pogo disconnect* below; do it after the gasket, because the box block is placed from the gasket gap.
+7. **Spool.** Load it so filament pays out **up the +X side**, toward the guide. The cradle drive is unchanged and rewinds in the opposite direction.
 
-**Service:** unplug the N20's inline connector, remove the two wall screws and the whole feeder module, PREP included, lifts out through the rim.
+**Service:** lift the lid off (the pogo pair parts by itself), remove the two wall screws and the whole feeder module, PREP included, lifts out through the rim.
+
+## Pogo disconnect (N20)
+
+The N20 stays in the box and everything else is on the lid, so its two leads cross the lid-to-box joint through a **magnetic pogo pair**: Yiwei **MG0P25AM (male, 4 pin)** in the lid and **MG0P25AF (female, 4 pin)** in the box. Pins 1+2 carry one N20 lead and 3+4 the other, so each lead has two contacts (2 A each). The magnets are N/S keyed, so a lid put on backwards pushes away instead of connecting.
+
+![Pogo disconnect sections, lid closed](pogo-disconnect.png)
+
+**Where:** at the +X end, on the +Y side (connector centre X 92, Y 23 in the model frame). That keeps it clear of the inlet guide and the filament's climb to it (5.4 mm from the nearest straight-line path, any spool size and any point across the spool), of a full Ø205 spool (2.5 mm), and of the carrier (10 mm).
+
+**Lid side (powered side):**
+- The holder is part of the lid. It grows up from the rim plane, so it prints with the lid, rim down, with no supports; its roof is a 15.6 mm bridge split by the wire slot.
+- The male is glued (epoxy or CA) into the printed **puck**, face down. The puck rests on the **lip plate**, flush with the rim, and floats in the holder: **2 mm up**, **±1.0 mm** across and **±0.5 mm** along the connector.
+- With the lid off, the male face sits 1.2 mm below the rim plane, so its spring pins stay recessed in their pocket, away from fingers and dust. Take care putting the lid down on a bench: it rests on the connector and the plate's two screw heads.
+- The plate holds the puck in with 2 × M2 × 5 button-head screws from the rim side, so the connector comes out without touching anything else.
+- The wires leave through the slot in the holder roof and join the Micro-Fit harness (2 circuits).
+
+**Box side (motor side):**
+- The female is glued into the **box block**, face up, with its flange in the block's 0.8 mm recess. Its wires leave through the bottom of the block to the N20.
+- The block sticks to the box's +X inner wall with foam tape (VHB). It doesn't need to be exact: the puck's float covers ±1 mm of lid height and the side errors above.
+
+**Fitting it:**
+1. Mate the two connectors and mark both on the same end. Install both with that mark toward +Y.
+2. Glue the male into the puck and the female into the block. Solder the wires to the tails first, with heat-shrink.
+3. Fit the puck from below and screw the lip plate on.
+4. Place the block on the box's +X inner wall, centred 23 mm toward +Y from the box's centreline:
+   - **Height:** the block's top goes (6.59 − G) mm below the box rim, where G is the clay-test gap (rim to channel ceiling, no gasket). For G = 3 that is 3.6 mm.
+   - **Tape:** the block's wall face is designed 103.4 mm from the box centre. Measure the box's inside length 5–10 mm below the rim; the tape thickness is half that length minus 103.4. The proxy box gives about 2 mm (two layers of 1.1 mm VHB).
+5. Close the lid. The male drops onto the female and the motor connects; lift the lid and it lets go.
+
+**Checks** (`build/audit/pogo_check.py`, results in `build/audit/pogo.json`):
+
+| Pair | Result |
+|---|---|
+| Female + block vs lid, plate and screw heads | 1.43 mm with the lid as designed; 0.6 mm with the lid 1 mm lower; 2.0 mm with it 1 mm higher |
+| Male + puck vs lid, at both ends of the float | Clear (0.65 mm resting; it touches the roof at the top of the float, by design) |
+| Holder, plate, block vs a full Ø205 spool | 2.8 / 3.6 / 2.5 mm |
+| Male, female, block vs the carrier | ≥ 10 mm |
+| Block vs box proxy wall | Gap (filled with tape) |
+| Smol, PREP and carrier while the module drops in | Smol passes 1.3 mm from the holder's −X corner (rounded for it); the whole drop-in is still clear by 0.63 mm |
+| Print overhangs | Holder: only the roof bridge. Puck and plate: none. Block (top down): a 1 mm ledge at the flange recess |
 
 ## Lid-to-box seal
 
